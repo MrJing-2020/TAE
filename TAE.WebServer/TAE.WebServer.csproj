@@ -192,6 +192,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Attribute\ApiCustomAuthorizeAttribute.cs" />
+    <Compile Include="Attribute\ApiExceptionFilterAttribute.cs" />
+    <Compile Include="Attribute\CustomAuthorizeAttribute.cs" />
     <Compile Include="Common\BaseApiController.cs" />
     <Compile Include="Common\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

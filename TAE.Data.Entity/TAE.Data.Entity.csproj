@@ -88,6 +88,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\ConfigurationBase.cs" />
     <Compile Include="Base\DbContextBase.cs" />
     <Compile Include="DbSetExtend.cs" />
     <Compile Include="Identity\AppIdentityDbContext.cs" />
