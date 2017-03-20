@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null;
+}
+@model List<TAE.Data.Model.Test>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Test</title>
+</head>
+<body>
+    <div> 
+        @foreach (var item in Model)
+        {
+            <h4>@item.Id: @item.Name</h4>
+        }
+    </div>
+</body>
+</html>
