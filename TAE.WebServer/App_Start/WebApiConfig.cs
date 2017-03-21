@@ -18,7 +18,7 @@ namespace TAE.WebServer
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{action}/{id}",
+                routeTemplate: "api/{area}/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
 

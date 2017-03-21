@@ -255,6 +255,14 @@
       <Project>{d2c585bf-cee0-4713-90e2-154b60e42381}</Project>
       <Name>TAE.IService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TAE.Repository\TAE.Repository.csproj">
+      <Project>{b1b56e71-19d6-4c1b-8ff8-504febd4c845}</Project>
+      <Name>TAE.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TAE.Service\TAE.Service.csproj">
+      <Project>{569f5166-90f9-420a-bbe9-71b2df80e7d5}</Project>
+      <Name>TAE.Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TAE.Utility.Common\TAE.Utility.Common.csproj">
       <Project>{0bde5378-ba68-45de-b3df-75ad4fda479a}</Project>
       <Name>TAE.Utility.Common</Name>
