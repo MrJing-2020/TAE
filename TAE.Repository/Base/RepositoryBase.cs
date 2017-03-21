@@ -52,6 +52,11 @@ namespace TAE.Repository
         {
             return context.FindAllBySql<T>(sql, parameters);
         }
+        public IQueryable<T> FindAllByPage<T>(int pageNumber, int pageSize, out int total) where T : BaseModel
+        {
+            var set = context.Set<T>();
+            return set.FindAll<T>().GetPage<T>(out total,pageNumber,pageSize);
+        }
         public IQueryable<T> FindAllByPage<T, TKey>(int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true) where T : class
         {
             var set = context.Set<T>();
@@ -61,6 +66,11 @@ namespace TAE.Repository
         {
             var set = context.Set<T>();
             return set.FindBy<T, TKey>(where, pageNumber, pageSize, out total, orderBy, isAsc);
+        }
+        public IQueryable<T> FindAllByPage<T, TKey>(string sql, int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true, params SqlParameter[] parameters) where T : class
+        {
+            var set = context.Set<T>();
+            return (context.FindAllBySql<T>(sql, parameters) as IQueryable<T>).FindBy<T, TKey>(m => true, pageNumber, pageSize, out total, orderBy, isAsc);
         }
         public IEnumerable<T> FindAllByProc<T>(string procName, params SqlParameter[] parameters) where T : class
         {
@@ -79,7 +89,7 @@ namespace TAE.Repository
         }
         public T SaveEntity<T>(T entity) where T : BaseModel
         {
-            if (string.IsNullOrEmpty(entity.Id))
+            if (entity.Id != null)
             {
                 Update<T>(entity);
             }
@@ -103,7 +113,7 @@ namespace TAE.Repository
         #endregion
 
         #region 删除相关
-        public void Remove<T>(params string[] ids) where T : BaseModel
+        public void Remove<T>(params object[] ids) where T : BaseModel
         {
             context.Remove<T>(ids);
         }

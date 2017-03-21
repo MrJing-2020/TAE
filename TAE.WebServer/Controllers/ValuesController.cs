@@ -4,21 +4,24 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using TAE.Utility.Common;
+using TAE.WebServer.Common;
 
 namespace TAE.WebServer.Controllers
 {
-    public class ValuesController : ApiController
+    public class ValuesController : BaseApiController
     {
         // GET api/values
+        [Authorize]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
-        public string Get(int id)
+        public int Get(int id)
         {
-            return "value";
+            return 1;
         }
 
         // POST api/values

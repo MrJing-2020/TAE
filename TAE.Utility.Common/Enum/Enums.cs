@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TAE.Data.Model
+namespace TAE.Utility.Common
 {
-    public class BaseModel
+    public enum MenuType
     {
-        public object Id { get; set; }
-        public bool IsDel { get; set; }
     }
 }

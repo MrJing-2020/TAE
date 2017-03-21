@@ -86,7 +86,7 @@ namespace TAE.Data.Entity
             return tEntities;
         }
 
-        public static TEntity FindById<TEntity>(this DbSet<TEntity> dbSet, string id)
+        public static TEntity FindById<TEntity>(this DbSet<TEntity> dbSet, object id)
         where TEntity : BaseModel
         {
             return dbSet.FirstOrDefault((TEntity p) => p.Id == id);
@@ -122,11 +122,11 @@ namespace TAE.Data.Entity
         #endregion
 
         #region 删除相关
-        public static void Delete<TEntity>(this DbSet<TEntity> dbSet, params string[] ids)
+        public static void Delete<TEntity>(this DbSet<TEntity> dbSet, params object[] ids)
         where TEntity : BaseModel
         {
             List<TEntity> tEntities = new List<TEntity>();
-            string[] objArray = ids;
+            object[] objArray = ids;
             for (int i = 0; i < objArray.Length; i++)
             {
                 tEntities.Add(dbSet.FindById<TEntity>(objArray[i]));

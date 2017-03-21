@@ -49,6 +49,10 @@ namespace TAE.Service
         {
             return repositoryBase.FindBy<T>(sql, parameters);
         }
+        public IQueryable<T> FindAllByPage<T>(int pageNumber, int pageSize, out int total) where T : BaseModel
+        {
+            return repositoryBase.FindAllByPage<T>(pageNumber, pageSize,out total);
+        }
         public IQueryable<T> FindAllByPage<T, TKey>(int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true) where T : class
         {
             return repositoryBase.FindAllByPage<T, TKey>(pageNumber, pageSize, out total, orderBy, isAsc);
@@ -56,6 +60,10 @@ namespace TAE.Service
         public IQueryable<T> FindAllByPage<T, TKey>(Expression<Func<T, bool>> where, int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true) where T : class
         {
             return repositoryBase.FindAllByPage<T, TKey>(where, pageNumber, pageSize, out total, orderBy, isAsc);
+        }
+        public IQueryable<T> FindAllByPage<T, TKey>(string sql, int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true, params SqlParameter[] parameters) where T : class
+        {
+            return repositoryBase.FindAllByPage<T, TKey>(sql, pageNumber, pageSize, out total, orderBy, isAsc, parameters);
         }
         public IEnumerable<T> FindAllByProc<T>(string sql, params SqlParameter[] parameters) where T : class
         {
@@ -90,7 +98,7 @@ namespace TAE.Service
         #endregion
 
         #region 删除相关
-        public void Remove<T>(params string[] ids) where T : BaseModel
+        public void Remove<T>(params object[] ids) where T : BaseModel
         {
             repositoryBase.Remove<T>(ids);
         }

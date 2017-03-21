@@ -121,7 +121,7 @@ namespace TAE.Data.Entity
             this.SaveChanges();
         }
 
-        public void Remove<T>(params string[] ids) where T : BaseModel
+        public void Remove<T>(params object[] ids) where T : BaseModel
         {
             this.Set<T>().Delete(ids);
             this.SaveChanges();
@@ -130,6 +130,9 @@ namespace TAE.Data.Entity
 
         #region 映射的数据库表
         public DbSet<Test> Test { get; set; }
+        public DbSet<Menu> Menu { get; set; }
+        public DbSet<MenuRole> MenuRole { get; set; }
+
         #endregion
     }
 }

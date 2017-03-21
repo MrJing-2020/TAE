@@ -14,7 +14,6 @@ namespace TAE.WebServer.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
-
             return View();
         }
         public ActionResult Test()

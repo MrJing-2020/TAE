@@ -9,6 +9,8 @@ using System.Web.Routing;
 
 namespace TAE.WebServer
 {
+    using System.Data.Entity;
+    using TAE.Data.Entity;
     public class WebApiApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
@@ -18,6 +20,10 @@ namespace TAE.WebServer
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //EntityModel表更自动更新数据表结构
+            Database.SetInitializer<AppIdentityDbContext>(new MigrateDatabaseToLatestVersion<AppIdentityDbContext, ConfigurationIdentity>());
+            Database.SetInitializer<DbContextBase>(new MigrateDatabaseToLatestVersion<DbContextBase, ConfigurationBase>());
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace TAE.WebServer.Attribute
 {
+    using TAE.Data.Model;
     using TAE.IService;
     using TAE.Utility.Common;
     /// <summary>
@@ -64,21 +65,21 @@ namespace TAE.WebServer.Attribute
         /// <param name="filterContext"></param>
         public override void OnAuthorization(System.Web.Mvc.AuthorizationContext filterContext)
         {
-            //string areaName = filterContext.RequestContext.RouteData.DataTokens["area"].ToString();
-            //string controllerName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
-            //string actionName = filterContext.ActionDescriptor.ActionName;
-            ////根据控制器名和方法名获取角色名
-            //var menu = ServiceBase.FindBy<Menu>(m => m.Area == areaName && m.Controller == controllerName && m.Action == actionName).FirstOrDefault();
-            //string menuId = "";
-            //if (menu != null)
-            //{
-            //    menuId = menu.Id;
-            //}
-            //string[] roleIds = ServiceBase.FindBy<MenuRole>(m => m.MenuId == menuId).Select(m => m.RoleId).ToArray();
-            ////开启新线程执行async方法，防止线程锁死
-            //Task.Run<string[]>(() => ServiceIdentity.FindRoleGeneral(m => roleIds.Any(y => y == m.Id)).Select(m => m.Name).ToArray())
-            //.ContinueWith(m => { m.Wait(); RoleNames = m.Result; })
-            //.Wait();
+            string areaName = filterContext.RequestContext.RouteData.DataTokens["area"].ToString();
+            string controllerName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+            string actionName = filterContext.ActionDescriptor.ActionName;
+            //根据控制器名和方法名获取角色名
+            var menu = ServiceBase.FindBy<Menu>(m => m.Area == areaName && m.Controller == controllerName && m.Action == actionName).FirstOrDefault();
+            int menuId = 0;
+            if (menu != null)
+            {
+                menuId = menu.Id;
+            }
+            string[] roleIds = ServiceBase.FindBy<MenuRole>(m => m.MenuId == menuId).Select(m => m.RoleId).ToArray();
+            //开启新线程执行async方法，防止线程锁死
+            Task.Run<string[]>(() => ServiceIdentity.FindRoleGeneral(m => roleIds.Any(y => y == m.Id)).Select(m => m.Name).ToArray())
+            .ContinueWith(m => { m.Wait(); RoleNames = m.Result; })
+            .Wait();
             base.OnAuthorization(filterContext);
         }
     }
