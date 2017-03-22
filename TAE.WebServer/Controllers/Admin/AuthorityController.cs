@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace TAE.WebServer.Areas.Admin.Controllers
+namespace TAE.WebServer.Controllers.Admin
 {
     using System.Data.SqlClient;
     using System.Threading.Tasks;

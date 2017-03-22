@@ -10,12 +10,13 @@ using System.Web.Routing;
 namespace TAE.WebServer
 {
     using System.Data.Entity;
+    using System.Web.Http.Dispatcher;
     using TAE.Data.Entity;
+    using TAE.WebServer.Common;
     public class WebApiApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
         {
-            AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
