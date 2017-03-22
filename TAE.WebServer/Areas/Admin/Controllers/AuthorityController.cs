@@ -22,6 +22,7 @@ namespace TAE.WebServer.Areas.Admin.Controllers
         /// </summary>
         /// <param name="id">用户Id</param>
         /// <returns></returns>
+        [HttpGet]
         public HttpResponseMessage GetUserAuthority(string id)
         {
             List<Menu> menuList;
@@ -39,6 +40,7 @@ namespace TAE.WebServer.Areas.Admin.Controllers
         /// </summary>
         /// <param name="id">角色Id</param>
         /// <returns></returns>
+        [HttpGet]
         public HttpResponseMessage GetRoleAuthority(string id)
         {
             List<Menu> menuList = new List<Menu>();
@@ -53,6 +55,7 @@ namespace TAE.WebServer.Areas.Admin.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [HttpPost]
         public HttpResponseMessage UpdateAuthority(BindOptionModel model)
         {
             var roleId = model.Id;

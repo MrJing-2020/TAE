@@ -1,0 +1,26 @@
+﻿#header {
+height:45px !important;
+}
+.markdown p {
+margin:0px !important;
+}
+.heading h2 {
+    margin-top:5px !important;
+}
+[type=submit]{
+    margin-top:5px !important;
+}
+[name=responseContentType] {
+    margin-top:5px !important;
+    width:200px;
+}
+.response_hider {
+    margin-top:5px !important;
+    height:32px !important;
+    text-align:center !important;
+    padding:5px !important;
+    color:white !important;
+}
+.parameter.required{
+    height:18px !important;
+}

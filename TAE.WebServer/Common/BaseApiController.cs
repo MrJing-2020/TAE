@@ -48,6 +48,10 @@ namespace TAE.WebServer.Common
         {
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+        protected HttpResponseMessage Response(object obj)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK,obj);
+        }
         protected HttpResponseMessage Response<T>(T data)
         {
             return Request.CreateResponse<T>(HttpStatusCode.OK, data);
