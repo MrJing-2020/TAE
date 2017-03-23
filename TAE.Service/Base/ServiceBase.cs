@@ -57,6 +57,10 @@ namespace TAE.Service
         {
             return repositoryBase.FindAllByPage<T, TKey>(pageNumber, pageSize, out total, orderBy, isAsc);
         }
+        public IQueryable<T> FindAllByPage<T>(Expression<Func<T, bool>> where, int pageNumber, int pageSize, out int total, bool isAsc = true) where T : BaseModel
+        {
+            return repositoryBase.FindAllByPage<T,object>(where, pageNumber, pageSize, out total, m=>m.Id, isAsc);
+        }
         public IQueryable<T> FindAllByPage<T, TKey>(Expression<Func<T, bool>> where, int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true) where T : class
         {
             return repositoryBase.FindAllByPage<T, TKey>(where, pageNumber, pageSize, out total, orderBy, isAsc);
@@ -69,6 +73,54 @@ namespace TAE.Service
         {
             return repositoryBase.FindAllByProc<T>(sql, parameters);
         }
+        public PageList<T> FindAllByPage<T, TKey>(Expression<Func<T, bool>> where, Expression<Func<T, TKey>> orderBy, RequestArg arg) where T : class
+        {
+            int total;
+            PageList<T> pageList = new PageList<T>() 
+            {
+                PageNumber=arg.PageNumber,
+                PageSize=arg.PageSize,
+            };
+            pageList.DataList = repositoryBase.FindAllByPage<T, TKey>(where, arg.PageNumber, arg.PageSize, out total, orderBy, arg.IsAsc);
+            pageList.Total = total;
+            return pageList;
+        }
+        public PageList<T> FindAllByPage<T>(Expression<Func<T, bool>> where, RequestArg arg) where T : BaseModel
+        {
+            int total;
+            PageList<T> pageList = new PageList<T>()
+            {
+                PageNumber = arg.PageNumber,
+                PageSize = arg.PageSize
+            };
+            pageList.DataList = repositoryBase.FindAllByPage<T, object>(where, arg.PageNumber, arg.PageSize, out total, m => m.Id, arg.IsAsc);
+            pageList.Total = total;
+            return pageList;
+        }
+        public PageList<T> FindAllByPage<T>(RequestArg arg) where T : BaseModel
+        {
+            int total;
+            PageList<T> pageList = new PageList<T>()
+            {
+                PageNumber = arg.PageNumber,
+                PageSize = arg.PageSize,
+            };
+            pageList.DataList = repositoryBase.FindAllByPage<T>(arg.PageNumber, arg.PageSize, out total);
+            pageList.Total = total;
+            return pageList;
+        }
+        public PageList<T> FindAllByPage<T>(string sql, RequestArg arg, params SqlParameter[] parameters) where T : class
+        {
+            PageList<T> pageList = new PageList<T>()
+            {
+                PageNumber = arg.PageNumber,
+                PageSize = arg.PageSize,
+            };
+            pageList.DataList = repositoryBase.FindBy<T>(sql, parameters).Skip((arg.PageNumber - 1) * arg.PageSize).Take(arg.PageSize).AsQueryable<T>();
+            pageList.Total = pageList.DataList.Count();
+            return pageList;
+        }
+
         #endregion
 
         #region 更新相关

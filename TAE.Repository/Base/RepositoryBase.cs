@@ -70,7 +70,7 @@ namespace TAE.Repository
         public IQueryable<T> FindAllByPage<T, TKey>(string sql, int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true, params SqlParameter[] parameters) where T : class
         {
             var set = context.Set<T>();
-            return (context.FindAllBySql<T>(sql, parameters) as IQueryable<T>).FindBy<T, TKey>(m => true, pageNumber, pageSize, out total, orderBy, isAsc);
+            return (context.FindAllBySql<T>(sql, parameters).AsQueryable<T>()).FindBy<T, TKey>(m => true, pageNumber, pageSize, out total, orderBy, isAsc);
         }
         public IEnumerable<T> FindAllByProc<T>(string procName, params SqlParameter[] parameters) where T : class
         {

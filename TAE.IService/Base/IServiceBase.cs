@@ -25,6 +25,11 @@ namespace TAE.IService
         IEnumerable<T> FindAllByProc<T>(string procName, params SqlParameter[] parameters) where T : class;
         IQueryable<T> FindAllByPage<T, TKey>(string sql, int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true, params SqlParameter[] parameters) where T : class;
         IQueryable<T> FindAllByPage<T>(int pageNumber, int pageSize, out int total) where T : BaseModel;
+        IQueryable<T> FindAllByPage<T>(Expression<Func<T, bool>> where, int pageNumber, int pageSize, out int total, bool isAsc = true) where T : BaseModel;
+        PageList<T> FindAllByPage<T, TKey>(Expression<Func<T, bool>> where, Expression<Func<T, TKey>> orderBy, RequestArg arg) where T : class;
+        PageList<T> FindAllByPage<T>(Expression<Func<T, bool>> where, RequestArg arg) where T : BaseModel;
+        PageList<T> FindAllByPage<T>(RequestArg arg) where T : BaseModel;
+        PageList<T> FindAllByPage<T>(string sql, RequestArg arg, params SqlParameter[] parameters) where T : class;
 
         T Update<T>(T entity) where T : class;
         void Update<T>(params T[] entitis) where T : class;

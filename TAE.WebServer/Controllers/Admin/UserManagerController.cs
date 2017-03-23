@@ -7,8 +7,10 @@ using System.Web.Http;
 
 namespace TAE.WebServer.Controllers.Admin
 {
+    using System.Data.SqlClient;
     using System.Threading.Tasks;
     using TAE.Data.Model;
+    using TAE.Utility.Common;
     using TAE.WebServer.Common;
 
     /// <summary>
@@ -17,10 +19,20 @@ namespace TAE.WebServer.Controllers.Admin
     public class UserManagerController : BaseApiController
     {
         [HttpGet]
-        public HttpResponseMessage GetAllUsers()
+        public HttpResponseMessage GetAllUsers(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "")
         {
+            RequestArg arg = new RequestArg()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
             string sqlGetAll = "select Id, Email,PhoneNumber,UserName from AspNetUsers";
-            var list = ServiceBase.FindBy<UserViewModel>(sqlGetAll);
+            if (!string.IsNullOrEmpty(orderName))
+            {
+                SqlParameter para = new SqlParameter("@orderName", orderName);
+                sqlGetAll = "select Id, Email,PhoneNumber,UserName from AspNetUsers order by @orderName";
+            }
+            var list = ServiceBase.FindAllByPage<UserViewModel>(sqlGetAll, arg);
             if (list != null)
             {
                 return Response(list);

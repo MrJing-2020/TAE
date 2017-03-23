@@ -13,7 +13,7 @@ namespace TAE.WebServer.Common
     using System.Web.Http.Dispatcher;
 
     /// <summary>  
-    /// Represents a area System.Web.Http.Dispatcher.IHttpControllerSelector instance  
+    /// 控制器查找类，用来替换默认查找器，以支持不同命名空间下同名的webapi
     /// </summary>  
     public class AreaHttpControllerSelector : DefaultHttpControllerSelector
     {

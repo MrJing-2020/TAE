@@ -67,6 +67,8 @@
     <Compile Include="Identity\RefreshToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\BindOptionModel.cs" />
+    <Compile Include="ViewModel\PageList.cs" />
+    <Compile Include="ViewModel\RequestArg.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup />

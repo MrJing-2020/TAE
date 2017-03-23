@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace TAE.WebServer.Controllers.Admin
 {
+    using System.Data.SqlClient;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using TAE.Data.Model;
@@ -18,9 +19,20 @@ namespace TAE.WebServer.Controllers.Admin
     public class MenuManagerController : BaseApiController
     {
         [HttpGet]
-        public HttpResponseMessage GetAllMenus()
+        public HttpResponseMessage GetAllMenus(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "")
         {
-            var list = ServiceBase.FindBy<Menu>(m => m.IsDel == false);
+            RequestArg arg = new RequestArg()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
+            string sqlGetAll = "select * from Menu";
+            if (!string.IsNullOrEmpty(orderName))
+            {
+                SqlParameter para = new SqlParameter("@orderName", orderName);
+                sqlGetAll = "select * from Menu order by @orderName";
+            }
+            var list = ServiceBase.FindAllByPage<UserViewModel>(sqlGetAll, arg);
             if (list != null)
             {
                 return Response(list);

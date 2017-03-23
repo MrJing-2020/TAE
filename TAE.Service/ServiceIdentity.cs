@@ -32,6 +32,23 @@ namespace TAE.Service
         {
             return repositoryIdentity.FindUser(conditions);
         }
+        public PageList<AppUser> FindUserByPage(Expression<Func<AppUser, bool>> conditions, Expression<Func<AppUser, object>> orderBy, RequestArg arg)
+        {
+            PageList<AppUser> pageList = new PageList<AppUser>() 
+            {
+                DataList = repositoryIdentity.FindUser(conditions),
+                PageNumber = arg.PageNumber,
+                PageSize = arg.PageSize,
+            };
+            pageList.Total = pageList.DataList.Count();
+            pageList.DataList = (!arg.IsAsc ? pageList.DataList.OrderByDescending<AppUser, object>(orderBy) : pageList.DataList.OrderBy<AppUser, object>(orderBy));
+            pageList.DataList = pageList.DataList.Skip((arg.PageNumber - 1) * arg.PageSize).Take(arg.PageSize);
+            return pageList;
+        }
+        public PageList<AppUser> FindUserByPage(Expression<Func<AppUser, bool>> conditions)
+        {
+            return FindUserByPage(m => true, n => n.Id, new RequestArg());
+        }
         public async Task<AppUser> FindByNameAndPas(string userName, string password)
         {
             return await repositoryIdentity.FindByNameAndPas(userName, userName);
@@ -88,6 +105,23 @@ namespace TAE.Service
         public IQueryable<AppRole> FindRole(Expression<Func<AppRole, bool>> conditions = null)
         {
             return repositoryIdentity.FindRole(conditions);
+        }
+        public PageList<AppRole> FindRoleByPage(Expression<Func<AppRole, bool>> conditions, Expression<Func<AppRole, object>> orderBy, RequestArg arg)
+        {
+            PageList<AppRole> pageList = new PageList<AppRole>()
+            {
+                DataList = repositoryIdentity.FindRole(conditions),
+                PageNumber = arg.PageNumber,
+                PageSize = arg.PageSize,
+            };
+            pageList.Total = pageList.DataList.Count();
+            pageList.DataList = (!arg.IsAsc ? pageList.DataList.OrderByDescending<AppRole, object>(orderBy) : pageList.DataList.OrderBy<AppRole, object>(orderBy));
+            pageList.DataList = pageList.DataList.Skip((arg.PageNumber - 1) * arg.PageSize).Take(arg.PageSize);
+            return pageList;
+        }
+        public PageList<AppRole> FindRoleByPage(Expression<Func<AppRole, bool>> conditions)
+        {
+            return FindRoleByPage(m => true, n => n.Id, new RequestArg());
         }
         public async Task<AppRole> FindRoleById(string roleId)
         {

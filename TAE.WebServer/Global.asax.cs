@@ -25,6 +25,8 @@ namespace TAE.WebServer
             //EntityModel表更自动更新数据表结构
             Database.SetInitializer<AppIdentityDbContext>(new MigrateDatabaseToLatestVersion<AppIdentityDbContext, ConfigurationIdentity>());
             Database.SetInitializer<DbContextBase>(new MigrateDatabaseToLatestVersion<DbContextBase, ConfigurationBase>());
+            //AutoMapper配置
+            ConfigurationAutoMapper.Configure();
         }
     }
 }

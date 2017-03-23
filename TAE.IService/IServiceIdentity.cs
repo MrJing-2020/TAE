@@ -15,6 +15,8 @@ namespace TAE.IService
         #region AppUser查询
         IQueryable<AppUser> FindUser();
         IQueryable<AppUser> FindUser(Expression<Func<AppUser, bool>> conditions = null);
+        PageList<AppUser> FindUserByPage(Expression<Func<AppUser, bool>> conditions, Expression<Func<AppUser, object>> orderBy, RequestArg arg);
+        PageList<AppUser> FindUserByPage(Expression<Func<AppUser, bool>> conditions);
         Task<AppUser> FindByNameAndPas(string userName, string password);
         Task<AppUser> FindUserById(string userId);
         Task<AppUser> FindUserByEmail(string email);
@@ -37,6 +39,8 @@ namespace TAE.IService
         #region AppRole查询
         IQueryable<AppRole> FindRole();
         IQueryable<AppRole> FindRole(Expression<Func<AppRole, bool>> conditions = null);
+        PageList<AppRole> FindRoleByPage(Expression<Func<AppRole, bool>> conditions, Expression<Func<AppRole, object>> orderBy, RequestArg arg);
+        PageList<AppRole> FindRoleByPage(Expression<Func<AppRole, bool>> conditions);
         Task<AppRole> FindRoleById(string roleId);
         Task<AppRole> FindRoleByName(string roleName);
         Task<bool> RoleExists(string roleName);
