@@ -27,7 +27,6 @@ namespace TAE.WebServer.Controllers.Admin
             var provider = new MultipartFormDataStreamProvider(root);
             // 阅读表格数据并返回一个异步任务.
             await Request.Content.ReadAsMultipartAsync(provider);
-
             // 如何上传文件到文件名.
             foreach (var file in provider.FileData)
             {

@@ -44,7 +44,7 @@ namespace TAE.WebServer.Attribute
             response.Content = new StringContent(Json.Encode(new
             {
                 success = false,
-                errs = new[] { "访问被拒绝:您没有权限!" }
+                errs = "访问被拒绝:您没有权限!"
             }), Encoding.UTF8, "application/json");
         }
 
