@@ -59,9 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseModel.cs" />
-    <Compile Include="EntityModel\Menu.cs" />
-    <Compile Include="EntityModel\MenuRole.cs" />
-    <Compile Include="EntityModel\Test.cs" />
+    <Compile Include="EntityModel\Base\File.cs" />
+    <Compile Include="EntityModel\Base\Menu.cs" />
+    <Compile Include="EntityModel\Base\MenuRole.cs" />
+    <Compile Include="EntityModel\Base\Test.cs" />
     <Compile Include="Identity\AppRole.cs" />
     <Compile Include="Identity\AppUser.cs" />
     <Compile Include="Identity\RefreshToken.cs" />

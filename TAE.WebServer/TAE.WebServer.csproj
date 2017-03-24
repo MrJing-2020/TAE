@@ -195,6 +195,7 @@
     <Compile Include="Common\AutoMapper\ConfigurationAutoMapper.cs" />
     <Compile Include="Common\BaseApiController.cs" />
     <Compile Include="Common\BaseController.cs" />
+    <Compile Include="Common\Upload\UploadHelper.cs" />
     <Compile Include="Controllers\Admin\AuthorityController.cs" />
     <Compile Include="Controllers\Admin\FileController.cs" />
     <Compile Include="Controllers\Admin\MenuManagerController.cs" />
