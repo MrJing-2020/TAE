@@ -9,29 +9,52 @@ namespace TAE.WebServer.Common.Upload
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+    using TAE.Data.Model;
+    using TAE.Utility.Common;
     public class UploadHelper
     {
+        private ServiceContext serviceContext;
+        public UploadHelper()
+        {
+            serviceContext = ServiceContext.Current;
+        }
         private static string UploadPath
         {   get 
             {
                 return HttpContext.Current.Server.MapPath("~/App_Data"); 
             } 
         }
-        public static async Task<string> uploadFile(HttpContent content)
+        /// <summary>
+        /// 文件上传，返回FilesInfo列表，需要补充文件类型，业务类型，关联id后插入数据库
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static async Task<List<FilesInfo>> uploadFile(HttpContent content)
         {
             StringBuilder sb = new StringBuilder();
             var provider = new MultipartFormDataStreamProvider(UploadPath);
             await content.ReadAsMultipartAsync(provider);
+            List<FilesInfo> list = new List<FilesInfo>();
             foreach (var file in provider.FileData)
             {
+                
                 string oldFilename = file.Headers.ContentDisposition.FileName.TrimStart('"').TrimEnd('"');
                 //获取文件绝对地址
                 FileInfo fileinfo = new FileInfo(file.LocalFileName);
                 //文件扩展名
                 string fileExt = oldFilename.Substring(oldFilename.LastIndexOf('.'));
-                string newFileName = fileinfo.Name.Substring(fileinfo.Name.IndexOf('-') + 1) + fileExt;
+                string newFileName = fileinfo.Name.Substring(fileinfo.Name.IndexOf('_') + 1) + fileExt;
                 fileinfo.CopyTo(Path.Combine(UploadPath, newFileName), true);
                 sb.Append("~/App_Data/" + newFileName);
+                FilesInfo filesInfo = new FilesInfo()
+                {
+                    OldFileName = oldFilename,
+                    ExtName = fileExt,
+                    NewFileName = newFileName,
+                    RelativePath = sb.ToString(),
+                    AbsolutePath = HttpContext.Current.Server.MapPath(sb.ToString())
+                };
+                list.Add(filesInfo);
                 fileinfo.Delete();//删除原文件
 
                 //sb.Append(string.Format("Uploaded file: {0} ({1} bytes)\n", fileInfo.Name, fileInfo.Length));
@@ -50,7 +73,7 @@ namespace TAE.WebServer.Common.Upload
                 //String newFileName = DateTime.Now.ToString("yyyyMMddHHmmss_ffff", System.Globalization.DateTimeFormatInfo.InvariantInfo);
                 //}
             }
-            return sb.ToString() ;
+            return list ;
         }
     }
 }

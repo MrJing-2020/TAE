@@ -12,6 +12,6 @@ namespace TAE.Data.Model
     public class BindOptionModel
     {
         public string Id { get; set; }
-        public int[] BindIds { get; set; }
+        public string[] BindIds { get; set; }
     }
 }

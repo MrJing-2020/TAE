@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
-    public class File : BaseModel
+    public class FilesInfo : BaseModel
     {
         [Key]
         public new int Id { get; set; }
@@ -29,7 +29,9 @@ namespace TAE.Data.Model
         /// </summary>
         public string LinkId { get; set; }
         public string NewFileName { get; set; }
-        public string Path { get; set; }
+        public string AbsolutePath { get; set; }
+        public string RelativePath { get; set; }
+
 
     }
 }

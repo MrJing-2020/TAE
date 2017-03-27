@@ -132,6 +132,10 @@ namespace TAE.Data.Entity
         public DbSet<Test> Test { get; set; }
         public DbSet<Menu> Menu { get; set; }
         public DbSet<MenuRole> MenuRole { get; set; }
+        public DbSet<FilesInfo> FilesInfo { get; set; }
+        public DbSet<WorkFlow> WorkFlow { get; set; }
+        public DbSet<WorkFlowDetail> WorkFlowDetail { get; set; }
+        public DbSet<WorkFlowDetailInfo> WorkFlowDetailInfo { get; set; }
 
         #endregion
     }

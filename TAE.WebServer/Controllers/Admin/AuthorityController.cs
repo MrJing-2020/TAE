@@ -59,13 +59,13 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage UpdateAuthority(BindOptionModel model)
         {
             var roleId = model.Id;
-            int[] menuIds = model.BindIds;
+            string[] menuIds = model.BindIds;
             List<MenuRole> menuRoleList = new List<MenuRole>();
             foreach (var item in menuIds)
 	        {
                 var menurole = new MenuRole()
                 {
-                    MenuId = item,
+                    MenuId = Convert.ToInt32(item),
                     RoleId = roleId
                 };
                 menuRoleList.Add(menurole);
