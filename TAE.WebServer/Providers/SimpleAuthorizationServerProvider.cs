@@ -32,7 +32,7 @@ namespace TAE.WebServer.Providers
                 AppUser user = await manager.FindAsync(context.UserName, context.Password);
                 if (user == null)
                 {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
+                    context.SetError("错误:", "用户名或密码错误");
                     return;
                 }
                 claimsIdentity = await manager.CreateIdentityAsync(user, context.Options.AuthenticationType);
