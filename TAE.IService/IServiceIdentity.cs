@@ -58,9 +58,16 @@ namespace TAE.IService
 
         Task<IQueryable<AppUser>> FindUserNotInToRole(string roleId);
 
-        Task<bool> AddToRole(string userId, string roleName);
+        Task<bool> AddToRoleById(string userId, string roleId);
+        Task<bool> AddToRoleById(string userId, string[] roleIds);
+        Task<bool> AddToRoleByName(string userId, string roleName);
+        Task<bool> AddToRoleByName(string userId, string[] roleNames);
 
-        Task<bool> RemoveFromRole(string userId, string roleName);
+        Task<bool> RemoveFromRoleById(string userId, string roleId);
+        Task<bool> RemoveFromRoleById(string userId, string[] roleIds);
+        Task<bool> RemoveFromRoleByName(string userId, string roleName);
+        Task<bool> RemoveFromRoleByName(string userId, string[] roleNames);
+
         Task<bool> AddRefreshToken(RefreshToken token);
 
         Task<bool> RemoveRefreshToken(string refreshTokenId);

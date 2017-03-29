@@ -7,6 +7,7 @@ using System.Web.Http;
 namespace TAE.WebServer.Common
 {
     using AutoMapper;
+    using System.Data.SqlClient;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -77,6 +78,29 @@ namespace TAE.WebServer.Common
         protected T2 Map<T1, T2>(T1 model)
         {
             return Mapper.Map<T2>(model);
+        }
+
+        protected HttpResponseMessage GetDataList<T>(int pageNumber, int pageSize, string orderName, string sqlGetAll) where T : class
+        {
+            RequestArg arg = new RequestArg()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
+            if (!string.IsNullOrEmpty(orderName))
+            {
+                SqlParameter para = new SqlParameter("@orderName", orderName);
+                sqlGetAll += " order by @orderName";
+            }
+            var list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
+            if (list != null)
+            {
+                return Request.CreateResponse(list);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NotFound, new { error_description = "未找到任何信息" });
+            }
         }
     }
 }

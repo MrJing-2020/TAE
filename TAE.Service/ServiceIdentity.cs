@@ -167,14 +167,38 @@ namespace TAE.Service
             return await repositoryIdentity.FindUserNotInToRole(roleId);
         }
 
-        public async Task<bool> AddToRole(string userId, string roleName)
+        public async Task<bool> AddToRoleById(string userId, string roleId)
         {
-            return await repositoryIdentity.AddToRole(userId,roleName);
+            return await repositoryIdentity.AddToRoleById(userId, roleId);
+        }
+        public async Task<bool> AddToRoleById(string userId, string[] roleIds)
+        {
+            return await repositoryIdentity.AddToRoleById(userId, roleIds);
+        }
+        public async Task<bool> AddToRoleByName(string userId, string roleName)
+        {
+            return await repositoryIdentity.AddToRoleByName(userId, roleName);
+        }
+        public async Task<bool> AddToRoleByName(string userId, string[] roleNames)
+        {
+            return await repositoryIdentity.AddToRoleByName(userId, roleNames);
         }
 
-        public async Task<bool> RemoveFromRole(string userId, string roleName)
+        public async Task<bool> RemoveFromRoleById(string userId, string roleId)
         {
-            return await repositoryIdentity.RemoveFromRole(userId, roleName);
+            return await repositoryIdentity.RemoveFromRoleById(userId, roleId);
+        }
+        public async Task<bool> RemoveFromRoleById(string userId, string[] roleIds)
+        {
+            return await repositoryIdentity.RemoveFromRoleById(userId, roleIds);
+        }
+        public async Task<bool> RemoveFromRoleByName(string userId, string roleName)
+        {
+            return await repositoryIdentity.RemoveFromRoleByName(userId, roleName);
+        }
+        public async Task<bool> RemoveFromRoleByName(string userId, string[] roleNames)
+        {
+            return await repositoryIdentity.RemoveFromRoleByName(userId, roleNames);
         }
 
         public async Task<bool> AddRefreshToken(RefreshToken token)

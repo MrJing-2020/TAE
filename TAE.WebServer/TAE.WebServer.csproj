@@ -205,6 +205,7 @@
     <Compile Include="Controllers\Admin\FileManagerController.cs" />
     <Compile Include="Controllers\Admin\FlowManagerController.cs" />
     <Compile Include="Controllers\Admin\MenuManagerController.cs" />
+    <Compile Include="Controllers\Admin\RoleManagerController.cs" />
     <Compile Include="Controllers\Admin\UserManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TestArea\UserManagerController.cs">

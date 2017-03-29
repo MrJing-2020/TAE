@@ -21,39 +21,21 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpGet]
         public HttpResponseMessage GetAllUsers(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "")
         {
-            RequestArg arg = new RequestArg()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-            };
             string sqlGetAll = "select Id, Email,PhoneNumber,UserName from AspNetUsers";
-            if (!string.IsNullOrEmpty(orderName))
-            {
-                SqlParameter para = new SqlParameter("@orderName", orderName);
-                sqlGetAll = "select Id, Email,PhoneNumber,UserName from AspNetUsers order by @orderName";
-            }
-            var list = ServiceBase.FindAllByPage<UserViewModel>(sqlGetAll, arg);
-            if (list != null)
-            {
-                return Response(list);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NotFound, "未找到任何信息");
-            }
+            return GetDataList<UserViewModel>(pageNumber, pageSize, orderName, sqlGetAll);
         }
         [HttpGet]
         public async Task<HttpResponseMessage> GetUserDetail(string id)
         {
-            var AppUser = await ServiceIdentity.FindUserById(id);
-            var user = Map<AppUser, UserViewModel>(AppUser);
-            if (user != null)
+            var appUser = await ServiceIdentity.FindUserById(id);
+            //var user = Map<AppUser, UserViewModel>(AppUser);
+            if (appUser != null)
             {
-                return Response(user);
+                return Response(appUser);
             }
             else
             {
-                return Response(HttpStatusCode.NotFound, "未找到任何信息");
+                return Response(HttpStatusCode.NotFound, new { error_description = "未找到任何信息" });
             }
         }
         [HttpPost]
@@ -70,7 +52,7 @@ namespace TAE.WebServer.Controllers.Admin
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError, "服务器错误");
+                    return Response(HttpStatusCode.InternalServerError);
                 }
             }
             else
@@ -78,23 +60,41 @@ namespace TAE.WebServer.Controllers.Admin
                 AppUser user = await ServiceIdentity.FindUserById(model.Id);
                 if (user != null)
                 {
+                    user.PasswordHash = ServiceIdentity.GetHashPassword(model.Password);
+                    user.Email = model.Email;
+                    user.UserName = model.UserName;
                     bool result = await ServiceIdentity.UpdateUser(user);
                     if (result == true)
                     {
-                        user.PasswordHash = ServiceIdentity.GetHashPassword(model.Password);
-                        user.Email = model.Email;
                         return Response(user);
                     }
                     else
                     {
-                        return Response(HttpStatusCode.InternalServerError, "服务器错误");
+                        return Response(HttpStatusCode.InternalServerError, new { error_description = "服务器错误" });
                     }
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError, "服务器错误");
+                    return Response(HttpStatusCode.InternalServerError, new { error_description = "服务器错误" });
                 }
             }
+        }
+
+        /// <summary>
+        /// 角色分配
+        /// </summary>
+        /// <param name="model">Id:用户Id,BindIds:分配的角色Id(数组，可为多个)</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> RoleAllocation(BindOptionModel model)
+        {
+            var userId = model.Id;
+            var appUser = await ServiceIdentity.FindUserById(userId);
+            string[] oldRoleIds=appUser.Roles.Select(m=>m.RoleId).ToArray();
+            //删除旧数据
+            await ServiceIdentity.RemoveFromRoleById(userId, oldRoleIds);
+            await ServiceIdentity.AddToRoleById(userId, model.BindIds);
+            return Response();
         }
     }
 }

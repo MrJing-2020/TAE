@@ -229,7 +229,33 @@ namespace TAE.Repository
             return nonMembers;
         }
 
-        public async Task<bool> AddToRole(string userId, string roleName)
+        public async Task<bool> AddToRoleById(string userId, string roleId)
+        {
+            string roleName = FindRole(m => m.Id == roleId).FirstOrDefault().Name;
+            IdentityResult result = await UserManager.AddToRoleAsync(userId, roleName);
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public async Task<bool> AddToRoleById(string userId, string[] roleIds)
+        {
+            string[] roleNames = FindRole(m => roleIds.Any(y => y == m.Id)).Select(m=>m.Name).ToArray();
+            IdentityResult result = await UserManager.AddToRolesAsync(userId, roleNames);
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public async Task<bool> AddToRoleByName(string userId, string roleName)
         {
             IdentityResult result = await UserManager.AddToRoleAsync(userId, roleName);
             if (result.Succeeded)
@@ -241,10 +267,60 @@ namespace TAE.Repository
                 return false;
             }
         }
+        public async Task<bool> AddToRoleByName(string userId, string[] roleNames)
+        {
+            IdentityResult result = await UserManager.AddToRolesAsync(userId, roleNames);
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-        public async Task<bool> RemoveFromRole(string userId, string roleName)
+        public async Task<bool> RemoveFromRoleById(string userId, string roleId)
+        {
+            string roleName = FindRole(m => m.Id == roleId).FirstOrDefault().Name;
+            IdentityResult result = await UserManager.RemoveFromRoleAsync(userId, roleName);
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public async Task<bool> RemoveFromRoleById(string userId, string[] roleIds)
+        {
+            string[] roleNames = FindRole(m => roleIds.Any(y => y == m.Id)).Select(m => m.Name).ToArray();
+            IdentityResult result = await UserManager.RemoveFromRolesAsync(userId, roleNames);
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public async Task<bool> RemoveFromRoleByName(string userId, string roleName)
         {
             IdentityResult result = await UserManager.RemoveFromRoleAsync(userId, roleName);
+            if (result.Succeeded)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public async Task<bool> RemoveFromRoleByName(string userId, string[] roleNames)
+        {
+            IdentityResult result = await UserManager.RemoveFromRolesAsync(userId, roleNames);
             if (result.Succeeded)
             {
                 return true;
