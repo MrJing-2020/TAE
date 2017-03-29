@@ -244,7 +244,7 @@ namespace TAE.Repository
         }
         public async Task<bool> AddToRoleById(string userId, string[] roleIds)
         {
-            string[] roleNames = FindRole(m => roleIds.Any(y => y == m.Id)).Select(m=>m.Name).ToArray();
+            string[] roleNames = FindRole(m => roleIds.Any(y => y == m.Id)).Select(m => m.Name).ToArray();
             IdentityResult result = await UserManager.AddToRolesAsync(userId, roleNames);
             if (result.Succeeded)
             {
@@ -254,6 +254,23 @@ namespace TAE.Repository
             {
                 return false;
             }
+        }
+        //==============此处以循环异步的方式建立多次连接,数据量大时可能造成问题,等待更好的实现(对identity的妥协)==============
+        public async Task<bool> AddToRoleById(string[] userId, string roleId)
+        {
+            string roleName = FindRole(m => m.Id == roleId).FirstOrDefault().Name;
+            try
+            {
+                foreach (var item in userId)
+                {
+                    await UserManager.AddToRoleAsync(item, roleName);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
         }
         public async Task<bool> AddToRoleByName(string userId, string roleName)
         {
@@ -305,6 +322,22 @@ namespace TAE.Repository
             {
                 return false;
             }
+        }
+        public async Task<bool> RemoveFromRoleById(string[] userIds, string roleId)
+        {
+            string roleName = FindRole(m => m.Id == roleId).FirstOrDefault().Name;
+            try
+            {
+                foreach (var item in userIds)
+                {
+                    await UserManager.RemoveFromRolesAsync(item, roleName);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
         }
         public async Task<bool> RemoveFromRoleByName(string userId, string roleName)
         {

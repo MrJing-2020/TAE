@@ -79,7 +79,15 @@ namespace TAE.WebServer.Controllers.Admin
                 }
             }
         }
-
+        [HttpGet]
+        public async Task<HttpResponseMessage> GetRoleByUser(string id)
+        {
+            AppUser user = await ServiceIdentity.FindUserById(id);
+            string[] roleIds = user.Roles.Select(x => x.RoleId).ToArray();
+            List<AppRole> members = ServiceIdentity.FindRole().Where(m=>roleIds.Any(n=>n==m.Id)).ToList();
+            List<AppRole> nonMembers = ServiceIdentity.FindRole().Where(m => roleIds.Any(n => n != m.Id)).ToList();
+            return Response(new { UserIn = members, UserNotIn = nonMembers });
+        }
         /// <summary>
         /// 角色分配
         /// </summary>

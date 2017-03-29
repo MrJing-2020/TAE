@@ -60,11 +60,13 @@ namespace TAE.IService
 
         Task<bool> AddToRoleById(string userId, string roleId);
         Task<bool> AddToRoleById(string userId, string[] roleIds);
+        Task<bool> AddToRoleById(string[] userId, string roleId);
         Task<bool> AddToRoleByName(string userId, string roleName);
         Task<bool> AddToRoleByName(string userId, string[] roleNames);
 
         Task<bool> RemoveFromRoleById(string userId, string roleId);
         Task<bool> RemoveFromRoleById(string userId, string[] roleIds);
+        Task<bool> RemoveFromRoleById(string[] userIds, string roleId);
         Task<bool> RemoveFromRoleByName(string userId, string roleName);
         Task<bool> RemoveFromRoleByName(string userId, string[] roleNames);
 

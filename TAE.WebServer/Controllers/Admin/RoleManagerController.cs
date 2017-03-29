@@ -72,13 +72,24 @@ namespace TAE.WebServer.Controllers.Admin
             }
         }
         [HttpGet]
-        public async Task<HttpResponseMessage> RoleAllocation(string id)
+        public async Task<HttpResponseMessage> GetUserByRole(string id)
         {
             AppRole role = await ServiceIdentity.FindRoleById(id);
-            string[] memberIDs = role.Users.Select(x => x.UserId).ToArray();
+            string[] memberIds = role.Users.Select(x => x.UserId).ToArray();
             IEnumerable<AppUser> members = await ServiceIdentity.FindUserInRole(id);
             IEnumerable<AppUser> nonMembers = await ServiceIdentity.FindUserNotInRole(id); 
-            return Response(new { UserIn = members, UserNotIn = nonMembers });
+            return Response(new { UserIn = members.ToList(), UserNotIn = nonMembers.ToList() });
+        }
+        [HttpPost]
+        public async Task<HttpResponseMessage> RoleAllocationSub(BindOptionModel model)
+        {
+            var roleId = model.Id;
+            AppRole appRole = await ServiceIdentity.FindRoleById(roleId);
+            string[] oldUserIds = appRole.Users.Select(m => m.UserId).ToArray();
+            //删除旧数据
+            await ServiceIdentity.RemoveFromRoleById(oldUserIds, roleId);
+            await ServiceIdentity.AddToRoleById(model.BindIds, roleId);
+            return Response();
         }
     }
 }
