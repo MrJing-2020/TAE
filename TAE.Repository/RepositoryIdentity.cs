@@ -213,14 +213,14 @@ namespace TAE.Repository
         }
         #endregion
 
-        public async Task<IQueryable<AppUser>> FindUserInToRole(string roleId)
+        public async Task<IQueryable<AppUser>> FindUserInRole(string roleId)
         {
             AppRole role = await RoleManager.FindByIdAsync(roleId);
             string[] memberIDs = role.Users.Select(x => x.UserId).ToArray();
             return UserManager.Users.Where(x => memberIDs.Any(y => y == x.Id));
         }
 
-        public async Task<IQueryable<AppUser>> FindUserNotInToRole(string roleId)
+        public async Task<IQueryable<AppUser>> FindUserNotInRole(string roleId)
         {
             AppRole role = await RoleManager.FindByIdAsync(roleId);
             string[] memberIDs = role.Users.Select(x => x.UserId).ToArray();

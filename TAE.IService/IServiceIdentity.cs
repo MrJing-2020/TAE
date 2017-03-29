@@ -54,9 +54,9 @@ namespace TAE.IService
         Task<bool> DeleteRole(AppRole role);
         #endregion
 
-        Task<IQueryable<AppUser>> FindUserInToRole(string roleId);
+        Task<IQueryable<AppUser>> FindUserInRole(string roleId);
 
-        Task<IQueryable<AppUser>> FindUserNotInToRole(string roleId);
+        Task<IQueryable<AppUser>> FindUserNotInRole(string roleId);
 
         Task<bool> AddToRoleById(string userId, string roleId);
         Task<bool> AddToRoleById(string userId, string[] roleIds);

@@ -86,7 +86,7 @@ namespace TAE.WebServer.Controllers.Admin
         /// <param name="model">Id:用户Id,BindIds:分配的角色Id(数组，可为多个)</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<HttpResponseMessage> RoleAllocation(BindOptionModel model)
+        public async Task<HttpResponseMessage> RoleAllocationSub(BindOptionModel model)
         {
             var userId = model.Id;
             var appUser = await ServiceIdentity.FindUserById(userId);

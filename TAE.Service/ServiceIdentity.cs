@@ -157,14 +157,14 @@ namespace TAE.Service
         }
         #endregion
 
-        public async Task<IQueryable<AppUser>> FindUserInToRole(string roleId)
+        public async Task<IQueryable<AppUser>> FindUserInRole(string roleId)
         {
-            return await repositoryIdentity.FindUserInToRole(roleId);
+            return await repositoryIdentity.FindUserInRole(roleId);
         }
 
-        public async Task<IQueryable<AppUser>> FindUserNotInToRole(string roleId)
+        public async Task<IQueryable<AppUser>> FindUserNotInRole(string roleId)
         {
-            return await repositoryIdentity.FindUserNotInToRole(roleId);
+            return await repositoryIdentity.FindUserNotInRole(roleId);
         }
 
         public async Task<bool> AddToRoleById(string userId, string roleId)
