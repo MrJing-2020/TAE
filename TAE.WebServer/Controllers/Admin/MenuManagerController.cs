@@ -45,7 +45,7 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpGet]
         public HttpResponseMessage GetMenuDetail(int id)
         {
-            var menu = ServiceBase.FindBy<Menu>(m => m.Id == id);
+            var menu = ServiceBase.FindBy<Menu>(m => m.Id == id).FirstOrDefault();
             if (menu != null)
             {
                 return Response(menu);

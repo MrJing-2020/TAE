@@ -7,6 +7,7 @@ using System.Web.Http;
 namespace TAE.WebServer.Common
 {
     using AutoMapper;
+    using Newtonsoft.Json.Linq;
     using System.Data.SqlClient;
     using System.Net;
     using System.Net.Http;
@@ -84,32 +85,43 @@ namespace TAE.WebServer.Common
         /// <summary>
         /// 获取列表数据通用方法
         /// </summary>
-        protected HttpResponseMessage GetDataList<T>(int pageNumber, int pageSize, string orderName,string orderType, string sqlGetAll) where T : class
+        protected HttpResponseMessage GetDataList<T>(dynamic param,string sqlGetAll) where T : class
         {
             RequestArg arg = new RequestArg()
             {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageNumber = Convert.ToInt32(param.pageNumber),
+                PageSize = Convert.ToInt32(param.pageSize),
             };
             PageList<T> list = new PageList<T>();
-            if (!string.IsNullOrEmpty(orderName))
+            try
             {
-                //SqlParameter para = new SqlParameter("@orderName", orderName);
-                sqlGetAll += " order by " + orderName + ' ' + orderType;
-                list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
+                if (param.search != null)
+                {
+                    string sqlSearchPart = " where ";
+                    JObject searchField = JObject.Parse(param.search.ToString());
+                    foreach (var item in searchField)
+                    {
+                        sqlSearchPart += item.Key + " like " + "'%" + item.Value + "%' and ";
+                    }
+                    sqlSearchPart = sqlSearchPart.Substring(0, sqlSearchPart.LastIndexOf("and"));
+                    sqlGetAll += sqlSearchPart;
+                }
             }
-            else 
+            catch (Exception)
             {
+                if (!string.IsNullOrEmpty(param.orderName.ToString()))
+                {
+                    sqlGetAll += " order by " + param.orderName.ToString() + ' ' + param.orderType.ToString();
+                }
                 list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
-            }
-            if (list != null)
-            {
                 return Request.CreateResponse(list);
             }
-            else
+            if (!string.IsNullOrEmpty(param.orderName.ToString()))
             {
-                return Response(HttpStatusCode.NotFound, new { error_description = "未找到任何信息" });
+                sqlGetAll += " order by " + param.orderName.ToString() + ' ' + param.orderType.ToString();
             }
+            list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
+            return Request.CreateResponse(list);
         }
     }
 }

@@ -13,11 +13,11 @@ namespace TAE.WebServer.Controllers.Admin
     using TAE.WebServer.Common;
     public class RoleManagerController : BaseApiController
     {
-        [HttpGet]
-        public HttpResponseMessage GetAllRoles(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "",string orderType="")
+        [HttpPost]
+        public HttpResponseMessage AllRoles(dynamic param)
         {
             string sqlGetAll = "select * from AspNetRoles";
-            return GetDataList<AppRole>(pageNumber, pageSize, orderName, orderType, sqlGetAll);
+            return GetDataList<AppRole>(param, sqlGetAll);
         }
         [HttpGet]
         public async Task<HttpResponseMessage> GetRoleDetail(string id)

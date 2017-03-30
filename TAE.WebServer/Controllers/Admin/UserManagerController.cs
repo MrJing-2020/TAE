@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace TAE.WebServer.Controllers.Admin
 {
+    using Newtonsoft.Json.Linq;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
     using TAE.Data.Model;
@@ -18,11 +19,11 @@ namespace TAE.WebServer.Controllers.Admin
     /// </summary>
     public class UserManagerController : BaseApiController
     {
-        [HttpGet]
-        public HttpResponseMessage GetAllUsers(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "", string orderType="")
+        [HttpPost]
+        public HttpResponseMessage AllUsers(dynamic param)
         {
             string sqlGetAll = "select Id, Email,PhoneNumber,UserName from AspNetUsers";
-            return GetDataList<UserViewModel>(pageNumber, pageSize, orderName, orderType,sqlGetAll);
+            return GetDataList<UserViewModel>(param, sqlGetAll);
         }
         [HttpGet]
         public async Task<HttpResponseMessage> GetUserDetail(string id)
