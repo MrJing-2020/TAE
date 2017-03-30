@@ -86,9 +86,10 @@ namespace TAE.WebServer.Attribute
             }
             string[] roleIds = ServiceBase.FindBy<MenuRole>(m => m.MenuId == menuId).Select(m => m.RoleId).ToArray();
             //开启新线程执行async方法，防止线程锁死
-            Task.Run<string[]>(() => ServiceIdentity.FindRoleGeneral(m => roleIds.Any(y => y == m.Id)).Select(m => m.Name).ToArray())
-            .ContinueWith(m => { m.Wait(); RoleNames = m.Result; })
-            .Wait();
+            //Task.Run<string[]>(() => ServiceIdentity.FindRoleGeneral(m => roleIds.Any(y => y == m.Id)).Select(m => m.Name).ToArray())
+            //.ContinueWith(m => { m.Wait(); RoleNames = m.Result; })
+            //.Wait();
+            RoleNames = ServiceIdentity.FindRole(m => roleIds.Any(y => y == m.Id)).Select(m => m.Name).ToArray();
             base.OnAuthorization(filterContext);
         }
     }

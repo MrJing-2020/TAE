@@ -185,7 +185,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\UserCenter\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +210,7 @@
     <Compile Include="Controllers\TestArea\UserManagerController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\UserCenter\MyCenterController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

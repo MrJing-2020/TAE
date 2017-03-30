@@ -81,11 +81,21 @@ namespace TAE.Repository
         public async Task<AppUser> FindUserByName(string userName)
         {
             return await UserManager.FindByNameAsync(userName);
+
         }
         public async Task<AppUser> FindLoginUserByName(string userName)
         {
             return await UserManagerForFind.FindByNameAsync(userName);
         }
+        //public AppUser FindUserByIdGnr(string userId)
+        //{
+        //    return UserManager.FindById(userId);
+        //}
+        //public AppUser FindUserByNameGnr(string userName)
+        //{
+        //    return UserManager.FindByName(userName);
+        //}
+        
         #endregion
 
         public async Task<bool> CreateUser(AppUser user, string password)
@@ -255,7 +265,7 @@ namespace TAE.Repository
                 return false;
             }
         }
-        //==============此处以循环异步的方式建立多次连接,数据量大时可能造成问题,等待更好的实现(对identity的妥协)==============
+        //==============此处以循环异步的方式建立多次连接,数据量大时可能造成问题,等待更好的实现(使用identity的副作用)==============
         public async Task<bool> AddToRoleById(string[] userId, string roleId)
         {
             string roleName = FindRole(m => m.Id == roleId).FirstOrDefault().Name;
@@ -323,6 +333,7 @@ namespace TAE.Repository
                 return false;
             }
         }
+        //==============此处以循环异步的方式建立多次连接,数据量大时可能造成问题,等待更好的实现(使用identity的副作用)==============
         public async Task<bool> RemoveFromRoleById(string[] userIds, string roleId)
         {
             string roleName = FindRole(m => m.Id == roleId).FirstOrDefault().Name;

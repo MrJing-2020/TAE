@@ -19,10 +19,10 @@ namespace TAE.WebServer.Controllers.Admin
     public class UserManagerController : BaseApiController
     {
         [HttpGet]
-        public HttpResponseMessage GetAllUsers(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "")
+        public HttpResponseMessage GetAllUsers(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "", string orderType="")
         {
             string sqlGetAll = "select Id, Email,PhoneNumber,UserName from AspNetUsers";
-            return GetDataList<UserViewModel>(pageNumber, pageSize, orderName, sqlGetAll);
+            return GetDataList<UserViewModel>(pageNumber, pageSize, orderName, orderType,sqlGetAll);
         }
         [HttpGet]
         public async Task<HttpResponseMessage> GetUserDetail(string id)

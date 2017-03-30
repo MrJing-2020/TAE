@@ -35,13 +35,14 @@ namespace TAE.WebServer.Common
         {
             get
             {
-                string userName = User.Identity.Name;
-                AppUser user = null;
-                //开启新线程执行async方法，防止线程锁死(使用async await可不必如此，这里想让它以同步方式执行)
-                Task.Run<AppUser>(() => ServiceIdentity.FindLoginUserByName(User.Identity.Name))
-                .ContinueWith(m => { m.Wait(); user = m.Result; })
-                .Wait();
-                return user;
+                //string userName = User.Identity.Name;
+                //AppUser user = null;
+                ////开启新线程执行async方法，防止线程锁死(使用async await可不必如此，这里想让它以同步方式执行)
+                //Task.Run<AppUser>(() => ServiceIdentity.FindLoginUserByName(User.Identity.Name))
+                //.ContinueWith(m => { m.Wait(); user = m.Result; })
+                //.Wait();
+                //return user;
+                return ServiceIdentity.FindUser(m => m.UserName == User.Identity.Name).FirstOrDefault();
             }
         }
 
@@ -80,19 +81,27 @@ namespace TAE.WebServer.Common
             return Mapper.Map<T2>(model);
         }
 
-        protected HttpResponseMessage GetDataList<T>(int pageNumber, int pageSize, string orderName, string sqlGetAll) where T : class
+        /// <summary>
+        /// 获取列表数据通用方法
+        /// </summary>
+        protected HttpResponseMessage GetDataList<T>(int pageNumber, int pageSize, string orderName,string orderType, string sqlGetAll) where T : class
         {
             RequestArg arg = new RequestArg()
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
             };
+            PageList<T> list = new PageList<T>();
             if (!string.IsNullOrEmpty(orderName))
             {
-                SqlParameter para = new SqlParameter("@orderName", orderName);
-                sqlGetAll += " order by @orderName";
+                //SqlParameter para = new SqlParameter("@orderName", orderName);
+                sqlGetAll += " order by " + orderName + ' ' + orderType;
+                list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
             }
-            var list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
+            else 
+            {
+                list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
+            }
             if (list != null)
             {
                 return Request.CreateResponse(list);

@@ -116,8 +116,9 @@ namespace TAE.Service
                 PageNumber = arg.PageNumber,
                 PageSize = arg.PageSize,
             };
-            pageList.DataList = repositoryBase.FindBy<T>(sql, parameters).Skip((arg.PageNumber - 1) * arg.PageSize).Take(arg.PageSize).AsQueryable<T>();
-            pageList.Total = pageList.DataList.Count();
+            var listAll = repositoryBase.FindBy<T>(sql, parameters);
+            pageList.Total = listAll.Count();
+            pageList.DataList = listAll.Skip((arg.PageNumber - 1) * arg.PageSize).Take(arg.PageSize).AsQueryable<T>();
             return pageList;
         }
 

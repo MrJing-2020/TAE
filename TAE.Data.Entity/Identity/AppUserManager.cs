@@ -37,11 +37,5 @@ namespace TAE.Data.Entity
             AppUserManager manager = new AppUserManager(new UserStore<AppUser>(db));
             return manager;
         }
-
-        public static bool AddToRole(string[] userId, string roleId)
-        {
-            
-            return true;
-        }
     }
 }

@@ -14,10 +14,10 @@ namespace TAE.WebServer.Controllers.Admin
     public class RoleManagerController : BaseApiController
     {
         [HttpGet]
-        public HttpResponseMessage GetAllRoles(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "")
+        public HttpResponseMessage GetAllRoles(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "",string orderType="")
         {
             string sqlGetAll = "select * from AspNetRoles";
-            return GetDataList<AppRole>(pageNumber, pageSize, orderName, sqlGetAll);
+            return GetDataList<AppRole>(pageNumber, pageSize, orderName, orderType, sqlGetAll);
         }
         [HttpGet]
         public async Task<HttpResponseMessage> GetRoleDetail(string id)
@@ -33,7 +33,7 @@ namespace TAE.WebServer.Controllers.Admin
             }
         }
         [HttpPost]
-        public async Task<HttpResponseMessage> SubUserData(AppRole model)
+        public async Task<HttpResponseMessage> SubRoleData(AppRole model)
         {
             if (string.IsNullOrEmpty(model.Id))
             {
