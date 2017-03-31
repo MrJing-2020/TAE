@@ -86,7 +86,7 @@ namespace TAE.WebServer.Controllers.Admin
             AppUser user = await ServiceIdentity.FindUserById(id);
             string[] roleIds = user.Roles.Select(x => x.RoleId).ToArray();
             List<AppRole> members = ServiceIdentity.FindRole().Where(m=>roleIds.Any(n=>n==m.Id)).ToList();
-            List<AppRole> nonMembers = ServiceIdentity.FindRole().Where(m => roleIds.Any(n => n != m.Id)).ToList();
+            List<AppRole> nonMembers = ServiceIdentity.FindRole().ToList().Except(members).ToList();
             return Response(new { UserIn = members, UserNotIn = nonMembers });
         }
         /// <summary>
