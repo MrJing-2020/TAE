@@ -6,15 +6,9 @@ using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
-    using System.ComponentModel.DataAnnotations;
-
-    /// <summary>
-    /// 菜单实体
-    /// </summary>
-    public class Menu : BaseModel
+    public class MenuViewModel
     {
-        [Key]
-        public new int Id { get; set; }
+        public  int Id { get; set; }
         public string MenuName { get; set; }
         public string App { get; set; }
         public string Area { get; set; }
@@ -26,5 +20,6 @@ namespace TAE.Data.Model
         public int Sort { get; set; }
         public int MenuPareId { get; set; }
         public string MenuIco { get; set; }
+        public string PareMenuName { get; set; }
     }
 }

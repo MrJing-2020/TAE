@@ -97,7 +97,7 @@ namespace TAE.WebServer.Common
             {
                 if (param.search != null)
                 {
-                    string sqlSearchPart = " where ";
+                    string sqlSearchPart =sqlGetAll.Contains("where")? " where ":" and ";
                     JObject searchField = JObject.Parse(param.search.ToString());
                     foreach (var item in searchField)
                     {

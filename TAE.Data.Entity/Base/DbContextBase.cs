@@ -129,7 +129,6 @@ namespace TAE.Data.Entity
         #endregion
 
         #region 映射的数据库表
-        public DbSet<Test> Test { get; set; }
         public DbSet<Menu> Menu { get; set; }
         public DbSet<MenuRole> MenuRole { get; set; }
         public DbSet<FilesInfo> FilesInfo { get; set; }

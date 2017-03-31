@@ -31,6 +31,7 @@ namespace TAE.WebServer.Controllers.Admin
                 item.LinkId=LoginUser.Id;
                 item.FileType = 1;
                 item.BusinessType = 1;
+                item.UploadUserId = LoginUser.Id;
             }
             ServiceBase.Insert<FilesInfo>(fileList);
             return Response();

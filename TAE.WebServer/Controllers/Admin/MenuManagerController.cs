@@ -18,29 +18,13 @@ namespace TAE.WebServer.Controllers.Admin
     /// </summary>
     public class MenuManagerController : BaseApiController
     {
-        [HttpGet]
-        public HttpResponseMessage GetAllMenus(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "")
+        [HttpPost]
+        public HttpResponseMessage AllMenus(dynamic param)
         {
-            RequestArg arg = new RequestArg()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-            };
-            string sqlGetAll = "select * from Menu";
-            if (!string.IsNullOrEmpty(orderName))
-            {
-                SqlParameter para = new SqlParameter("@orderName", orderName);
-                sqlGetAll = "select * from Menu order by @orderName";
-            }
-            var list = ServiceBase.FindAllByPage<UserViewModel>(sqlGetAll, arg);
-            if (list != null)
-            {
-                return Response(list);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NotFound, "未找到任何信息");
-            }
+            string sqlGetAll = @"select a.*,b.MenuName as PareMenuName from Menu as a left join Menu as b
+                                on a.MenuPareId=b.Id
+                                where (a.MenuLever=1 or a.MenuLever=2)";
+            return GetDataList<MenuViewModel>(param, sqlGetAll);
         }
         [HttpGet]
         public HttpResponseMessage GetMenuDetail(int id)
@@ -61,17 +45,5 @@ namespace TAE.WebServer.Controllers.Admin
             var menuEntity = ServiceBase.SaveEntity<Menu>(menu);
             return Response(menuEntity);
         }
-
-
-        #region 私有方法
-
-        //[NonAction]
-        //private HttpResponseMessage GetList<T>(Expression<Func<T, bool>> where) where T:class
-        //{
-        //    var list = ServiceBase.FindBy<T>(where);
-        //    return Response(list);
-        //} 
-
-        #endregion
     }
 }

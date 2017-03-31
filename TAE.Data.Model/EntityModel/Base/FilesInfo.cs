@@ -31,7 +31,6 @@ namespace TAE.Data.Model
         public string NewFileName { get; set; }
         public string AbsolutePath { get; set; }
         public string RelativePath { get; set; }
-
-
+        public string UploadUserId { get; set; }
     }
 }

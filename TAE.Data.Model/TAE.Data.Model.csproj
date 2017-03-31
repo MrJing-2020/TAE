@@ -62,7 +62,6 @@
     <Compile Include="EntityModel\Base\FilesInfo.cs" />
     <Compile Include="EntityModel\Base\Menu.cs" />
     <Compile Include="EntityModel\Base\MenuRole.cs" />
-    <Compile Include="EntityModel\Base\Test.cs" />
     <Compile Include="EntityModel\Base\WorkFlow.cs" />
     <Compile Include="EntityModel\Base\WorkFlowDetail.cs" />
     <Compile Include="EntityModel\Base\WorkFlowDetailInfo.cs" />
@@ -74,6 +73,7 @@
     <Compile Include="ViewModel\FlowViewModel.cs" />
     <Compile Include="Common\PageList.cs" />
     <Compile Include="Common\RequestArg.cs" />
+    <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup />

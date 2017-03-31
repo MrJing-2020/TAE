@@ -14,5 +14,6 @@ namespace TAE.Data.Model
         public int WorkFlowId { get; set; }
         public string Name { get; set; }
         public int Step { get; set; }
+        public string DefualtAuditUserId { get; set; }
     }
 }

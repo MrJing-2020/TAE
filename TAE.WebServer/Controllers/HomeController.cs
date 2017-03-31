@@ -16,10 +16,5 @@ namespace TAE.WebServer.Controllers
             ViewBag.Title = "Home Page";
             return View();
         }
-        public ActionResult Test()
-        {
-            var test = ServiceBase.FindBy<Test>().ToList();
-            return View(test);
-        }
     }
 }
