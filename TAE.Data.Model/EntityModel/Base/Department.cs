@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
-    public class WorkFlow : ComBaseModel
+    public class Department : BaseModel
     {
-        public string Name { get; set; }
+        public string DepartName { get; set; }
         public int CompanyId { get; set; }
-        public int DepartmentId { get; set; }
-        public int Type { get; set; }
     }
 }

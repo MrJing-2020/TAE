@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
-    public class WorkFlowDetailInfo : BaseModel
+    public class WorkFlowDetailInfo : ComBaseModel
     {
-        [Key]
-        public new int Id { get; set; }
-        public int WorkFlowDetailId { get; set; }
+        public string WorkFlowDetailId { get; set; }
         //待审核条目Id（例 项目，财务条目Id)
         public string LinkId { get; set; }
         //业务类型（例 是项目审核 还是 财务审核）

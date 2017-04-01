@@ -28,10 +28,12 @@ namespace TAE.WebServer.Controllers.Admin
             var fileList = await UploadHelper.uploadFile(Request.Content);
             foreach (var item in fileList)
             {
-                item.LinkId=LoginUser.Id;
+                item.LinkId = LoginUser.UserInfo.Id;
                 item.FileType = 1;
                 item.BusinessType = 1;
-                item.UploadUserId = LoginUser.Id;
+                item.UploadUserId = LoginUser.UserInfo.Id;
+                item.CompanyId = LoginUser.UserInfo.CompanyId;
+                item.DepartmentId = LoginUser.UserInfo.DepartmentId;
             }
             ServiceBase.Insert<FilesInfo>(fileList);
             return Response();

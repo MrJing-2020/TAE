@@ -32,7 +32,7 @@ namespace TAE.WebServer.Common
                 return ServiceContext.Current.ServiceIdentity;
             }
         }
-        protected AppUser LoginUser
+        protected LoginUser LoginUser
         {
             get
             {
@@ -43,7 +43,13 @@ namespace TAE.WebServer.Common
                 //.ContinueWith(m => { m.Wait(); user = m.Result; })
                 //.Wait();
                 //return user;
-                return ServiceIdentity.FindUser(m => m.UserName == User.Identity.Name).FirstOrDefault();
+                LoginUser loginUser = new LoginUser();
+                AppUser appUser = ServiceIdentity.FindUser(m => m.UserName == User.Identity.Name).FirstOrDefault();
+                string[] roleIds = appUser.Roles.Select(m => m.RoleId).ToArray();
+                List<DataRole> dataPower = ServiceBase.FindBy<DataRole>(m => roleIds.Any(n => n == m.RoleId)).ToList();
+                loginUser.UserInfo = appUser;
+                loginUser.DataPower = dataPower;
+                return loginUser;
             }
         }
 
@@ -95,8 +101,10 @@ namespace TAE.WebServer.Common
             PageList<T> list = new PageList<T>();
             try
             {
+                //若为{}无法判断，所以这里放都try中
                 if (param.search != null)
                 {
+                    //多字段模糊查询
                     string sqlSearchPart =sqlGetAll.Contains("where")? " where ":" and ";
                     JObject searchField = JObject.Parse(param.search.ToString());
                     foreach (var item in searchField)
@@ -109,6 +117,7 @@ namespace TAE.WebServer.Common
             }
             catch (Exception)
             {
+                //单字段排序
                 if (!string.IsNullOrEmpty(param.orderName.ToString()))
                 {
                     sqlGetAll += " order by " + param.orderName.ToString() + ' ' + param.orderType.ToString();
@@ -116,6 +125,61 @@ namespace TAE.WebServer.Common
                 list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
                 return Request.CreateResponse(list);
             }
+            //单字段排序
+            if (!string.IsNullOrEmpty(param.orderName.ToString()))
+            {
+                sqlGetAll += " order by " + param.orderName.ToString() + ' ' + param.orderType.ToString();
+            }
+            list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
+            return Request.CreateResponse(list);
+        }
+
+        /// <summary>
+        /// 获取列表数据(通过数据权限过滤)
+        /// </summary>
+        protected HttpResponseMessage GetDataListFilt<T>(dynamic param, string sqlGetAll) where T : class
+        {
+            //数据权限过滤
+            string sqlDataPowerPart = sqlGetAll.Contains("where") ? " where " : " and ";
+            foreach (var item in LoginUser.DataPower)
+            {
+                sqlDataPowerPart += "(CompanyId = " + item.CompanyId + " and DepartmentId = " + item.DepartmentId + ") or";
+            }
+            sqlDataPowerPart = sqlDataPowerPart.Substring(0, sqlDataPowerPart.LastIndexOf("or"));
+            sqlGetAll += sqlDataPowerPart;
+            RequestArg arg = new RequestArg()
+            {
+                PageNumber = Convert.ToInt32(param.pageNumber),
+                PageSize = Convert.ToInt32(param.pageSize),
+            };
+            PageList<T> list = new PageList<T>();
+            try
+            {
+                //若为{} 无法判断，所以这里放都try中
+                if (param.search != null)
+                {
+                    //多字段模糊查询
+                    string sqlSearchPart = sqlGetAll.Contains("where") ? " where " : " and ";
+                    JObject searchField = JObject.Parse(param.search.ToString());
+                    foreach (var item in searchField)
+                    {
+                        sqlSearchPart += item.Key + " like " + "'%" + item.Value + "%' and ";
+                    }
+                    sqlSearchPart = sqlSearchPart.Substring(0, sqlSearchPart.LastIndexOf("and"));
+                    sqlGetAll += sqlSearchPart;
+                }
+            }
+            catch (Exception)
+            {
+                //单字段排序
+                if (!string.IsNullOrEmpty(param.orderName.ToString()))
+                {
+                    sqlGetAll += " order by " + param.orderName.ToString() + ' ' + param.orderType.ToString();
+                }
+                list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
+                return Request.CreateResponse(list);
+            }
+            //单字段排序
             if (!string.IsNullOrEmpty(param.orderName.ToString()))
             {
                 sqlGetAll += " order by " + param.orderName.ToString() + ' ' + param.orderType.ToString();

@@ -35,8 +35,10 @@ namespace TAE.IService
         void Update<T>(params T[] entitis) where T : class;
         T SaveEntity<T>(T entity) where T : BaseModel;
 
-        T Insert<T>(T entity) where T : class;
-        void Insert<T>(IEnumerable<T> entities) where T : class;
+        T Insert<T>(T entity) where T : BaseModel;
+        void Insert<T>(IEnumerable<T> entities) where T : BaseModel;
+        T InsertGeneral<T>(T entity) where T : class;
+        void InsertGeneral<T>(IEnumerable<T> entities) where T : class;
 
         void Remove<T>(params object[] ids) where T : BaseModel;
         void Remove<T>(Expression<Func<T, bool>> where) where T : class;

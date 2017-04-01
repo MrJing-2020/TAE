@@ -131,11 +131,14 @@ namespace TAE.Data.Entity
         #region 映射的数据库表
         public DbSet<Menu> Menu { get; set; }
         public DbSet<MenuRole> MenuRole { get; set; }
+        public DbSet<DataRole> DataRole { get; set; }
         public DbSet<FilesInfo> FilesInfo { get; set; }
         public DbSet<WorkFlow> WorkFlow { get; set; }
         public DbSet<WorkFlowDetail> WorkFlowDetail { get; set; }
         public DbSet<WorkFlowDetailInfo> WorkFlowDetailInfo { get; set; }
-
+        public DbSet<Company> Company { get; set; }
+        public DbSet<Department> Department { get; set; }
+        public DbSet<Position> Position { get; set; }
         #endregion
     }
 }

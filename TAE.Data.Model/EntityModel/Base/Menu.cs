@@ -13,18 +13,22 @@ namespace TAE.Data.Model
     /// </summary>
     public class Menu : BaseModel
     {
-        [Key]
-        public new int Id { get; set; }
         public string MenuName { get; set; }
         public string App { get; set; }
+        //例：Admin
         public string Area { get; set; }
+        //例：UserManager
         public string Controller { get; set; }
+        //例：AllUsers
         public string Action { get; set; }
-        public string MenuUrl { get; set; }
+        //页面地址
+        public string MenuHtmlUrl { get; set; }
+        //api地址
+        public string MenuApiUrl { get; set; }
         //1对应到Area，2对应到Controller，3对应到Action
         public int MenuLever { get; set; }
         public int Sort { get; set; }
-        public int MenuPareId { get; set; }
+        public string MenuPareId { get; set; }
         public string MenuIco { get; set; }
     }
 }

@@ -65,7 +65,7 @@ namespace TAE.WebServer.Controllers.Admin
 	        {
                 var menurole = new MenuRole()
                 {
-                    MenuId = Convert.ToInt32(item),
+                    MenuId = item,
                     RoleId = roleId
                 };
                 menuRoleList.Add(menurole);

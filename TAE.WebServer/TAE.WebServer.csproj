@@ -206,12 +206,7 @@
     <Compile Include="Controllers\Admin\MenuManagerController.cs" />
     <Compile Include="Controllers\Admin\RoleManagerController.cs" />
     <Compile Include="Controllers\Admin\UserManagerController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\TestArea\UserManagerController.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Controllers\UserCenter\MyCenterController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -249,11 +244,6 @@
     </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Views\Web.config" />
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>

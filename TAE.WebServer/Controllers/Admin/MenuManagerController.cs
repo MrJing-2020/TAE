@@ -27,7 +27,7 @@ namespace TAE.WebServer.Controllers.Admin
             return GetDataList<MenuViewModel>(param, sqlGetAll);
         }
         [HttpGet]
-        public HttpResponseMessage GetMenuDetail(int id)
+        public HttpResponseMessage GetMenuDetail(string id)
         {
             var menu = ServiceBase.FindBy<Menu>(m => m.Id == id).FirstOrDefault();
             if (menu != null)

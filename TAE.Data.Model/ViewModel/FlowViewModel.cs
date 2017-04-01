@@ -8,7 +8,7 @@ namespace TAE.Data.Model
 {
     public class FlowViewModel
     {
-        public new int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public int CompId { get; set; }
         public int DepId { get; set; }

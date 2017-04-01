@@ -79,7 +79,7 @@ namespace TAE.WebServer.Attribute
             string actionName = filterContext.ActionDescriptor.ActionName;
             //根据控制器名和方法名获取角色名
             var menu = ServiceBase.FindBy<Menu>(m => m.Controller == controllerName && m.Action == actionName).FirstOrDefault();
-            int menuId = 0;
+            string menuId="";
             if (menu != null)
             {
                 menuId = menu.Id;

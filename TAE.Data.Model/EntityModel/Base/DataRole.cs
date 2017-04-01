@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
-    public class AppUser : IdentityUser
+    public class DataRole:BaseModel
     {
+        public string RoleId { get; set; }
         public string CompanyId { get; set; }
         public string DepartmentId { get; set; }
-        public string PositionId { get; set; }
     }
 }

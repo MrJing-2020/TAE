@@ -12,6 +12,7 @@ namespace TAE.Service
     using TAE.IService;
     using TAE.Data.Model;
     using TAE.Core.ServiceProvider;
+    using TAE.Utility.Tool;
 
     /// <summary>
     /// 基础服务类（提供基本增删查改，调用仓储层方法）
@@ -135,16 +136,41 @@ namespace TAE.Service
         }
         public T SaveEntity<T>(T entity) where T : BaseModel
         {
-            return repositoryBase.SaveEntity(entity);
+            if (string.IsNullOrEmpty(entity.Id))
+            {
+                return Insert(entity);
+            }
+            else
+            {
+                return Update(entity);
+            }
         }
         #endregion
 
         #region 新增相关
-        public T Insert<T>(T entity) where T : class
+        public T Insert<T>(T entity) where T : BaseModel
+        {
+            string guiId = Guid.NewGuid().ToString("n");
+            entity.Id = guiId.GetHash();
+            entity.CreateTime = DateTime.Now;
+            return repositoryBase.Insert<T>(entity);
+        }
+        public void Insert<T>(IEnumerable<T> entities) where T : BaseModel
+        {
+            foreach (var item in entities)
+            {
+                string guiId = Guid.NewGuid().ToString("n");
+                item.Id = guiId.GetHash();
+                item.CreateTime = DateTime.Now;
+            }
+            repositoryBase.Insert<T>(entities);
+        }
+
+        public T InsertGeneral<T>(T entity) where T : class
         {
             return repositoryBase.Insert<T>(entity);
         }
-        public void Insert<T>(IEnumerable<T> entities) where T : class
+        public void InsertGeneral<T>(IEnumerable<T> entities) where T : class
         {
             repositoryBase.Insert<T>(entities);
         }
@@ -171,7 +197,7 @@ namespace TAE.Service
         /// <param name="bussType">业务类型</param>
         /// <param name="userIds">审核人(认为一人对应一个WorkFlowDetail)</param>
         /// <returns></returns>
-        public bool AuditReport(int workFlowId, string linkId, int bussType, string[] userIds)
+        public bool AuditReport(string workFlowId, string linkId, int bussType, string[] userIds)
         {
             try
             {
@@ -208,7 +234,7 @@ namespace TAE.Service
         /// <param name="bussType">业务类型</param>
         /// <param name="userIds">审核人(BindOptionModel中Id对应WorkFlowDetailId，BindIds数组对应用户Id，可为多用户)</param>
         /// <returns></returns>
-        public bool AuditReport(int workFlowId, string linkId, int bussType, List<BindOptionModel> BindOption)
+        public bool AuditReport(string workFlowId, string linkId, int bussType, List<BindOptionModel> BindOption)
         {
             try
             {
@@ -246,7 +272,7 @@ namespace TAE.Service
         /// <param name="pass">是否通过</param>
         /// <param name="isEnd">流程是否结束</param>
         /// <returns></returns>
-        public bool Audit(int WorkFlowDetailInfoId, string linkId, string idea, bool pass, out bool isEnd)
+        public bool Audit(string WorkFlowDetailInfoId, string linkId, string idea, bool pass, out bool isEnd)
         {
             try
             {

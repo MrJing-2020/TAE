@@ -9,9 +9,7 @@ namespace TAE.Data.Model
     using System.ComponentModel.DataAnnotations;
     public class MenuRole:BaseModel
     {
-        [Key]
-        public new int Id { get; set; }
         public string RoleId { get; set; }
-        public int MenuId { get; set; }
+        public string MenuId { get; set; }
     }
 }

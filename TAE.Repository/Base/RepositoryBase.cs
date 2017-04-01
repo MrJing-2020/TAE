@@ -89,7 +89,7 @@ namespace TAE.Repository
         }
         public T SaveEntity<T>(T entity) where T : BaseModel
         {
-            if (entity.Id != null)
+            if (!string.IsNullOrEmpty(entity.Id))
             {
                 Update<T>(entity);
             }

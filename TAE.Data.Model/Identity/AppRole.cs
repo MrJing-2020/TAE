@@ -10,5 +10,8 @@ namespace TAE.Data.Model
     {
         public AppRole() : base() { }
         public AppRole(string name) : base(name) { }
+        public string Description { get; set; }
+        public string CompanyId { get; set; }
+        public string DepartmentId { get; set; }
     }
 }
