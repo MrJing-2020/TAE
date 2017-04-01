@@ -30,7 +30,7 @@ namespace TAE.WebServer.Controllers.Admin
             {
                 item.LinkId = LoginUser.UserInfo.Id;
                 item.FileType = 1;
-                item.BusinessType = 1;
+                item.BusinessType = "";
                 item.UploadUserId = LoginUser.UserInfo.Id;
                 item.CompanyId = LoginUser.UserInfo.CompanyId;
                 item.DepartmentId = LoginUser.UserInfo.DepartmentId;

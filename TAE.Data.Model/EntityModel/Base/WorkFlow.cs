@@ -9,8 +9,6 @@ namespace TAE.Data.Model
     public class WorkFlow : ComBaseModel
     {
         public string Name { get; set; }
-        public int CompanyId { get; set; }
-        public int DepartmentId { get; set; }
         public int Type { get; set; }
     }
 }

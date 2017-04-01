@@ -11,7 +11,7 @@ namespace TAE.Data.Model
         public string CompanyName { get; set; }
         //公司级别
         public int Grade { get; set; }
-        public int PreCompanyId { get; set; }
+        public string PreCompanyId { get; set; }
         public string LegalPersonName { get; set; }
         public string LinkPersonName { get; set; }
         public int PhoneNumber { get; set; }

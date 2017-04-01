@@ -20,7 +20,7 @@ namespace TAE.Data.Model
         /// <summary>
         /// 文件对应的业务类型
         /// </summary>
-        public int BusinessType { get; set; }
+        public string BusinessType { get; set; }
         /// <summary>
         /// 文件对应的业务Id(如用户id)
         /// </summary>
