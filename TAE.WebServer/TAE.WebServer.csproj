@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -204,6 +205,7 @@
     <Compile Include="Controllers\Admin\FileManagerController.cs" />
     <Compile Include="Controllers\Admin\FlowManagerController.cs" />
     <Compile Include="Controllers\Admin\MenuManagerController.cs" />
+    <Compile Include="Controllers\Admin\OrganizationController.cs" />
     <Compile Include="Controllers\Admin\RoleManagerController.cs" />
     <Compile Include="Controllers\Admin\UserManagerController.cs" />
     <Compile Include="Controllers\UserCenter\MyCenterController.cs" />
@@ -281,7 +283,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

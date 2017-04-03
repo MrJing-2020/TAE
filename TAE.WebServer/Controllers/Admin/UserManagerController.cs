@@ -36,7 +36,7 @@ namespace TAE.WebServer.Controllers.Admin
             }
             else
             {
-                return Response(HttpStatusCode.NotFound, new { error_description = "未找到任何信息" });
+                return Response(HttpStatusCode.NoContent, new { msg = "未找到任何信息" });
             }
         }
         [HttpPost]
@@ -44,7 +44,10 @@ namespace TAE.WebServer.Controllers.Admin
         {
             if (string.IsNullOrEmpty(model.Id))
             {
-                var user = new AppUser { UserName = model.UserName, Email = model.Email };
+                //var user = new AppUser { UserName = model.UserName, Email = model.Email };
+                var user = new AppUser();
+                model.Id = user.Id;
+                user = Map<UserViewModel, AppUser>(model, user);
                 //传入Password并转换成PasswordHash
                 bool result = await ServiceIdentity.CreateUser(user, model.Password);
                 if (result == true)
@@ -53,7 +56,7 @@ namespace TAE.WebServer.Controllers.Admin
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError);
+                    return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
                 }
             }
             else
@@ -61,9 +64,8 @@ namespace TAE.WebServer.Controllers.Admin
                 AppUser user = await ServiceIdentity.FindUserById(model.Id);
                 if (user != null)
                 {
+                    user = Map<UserViewModel, AppUser>(model, user);
                     user.PasswordHash = ServiceIdentity.GetHashPassword(model.Password);
-                    user.Email = model.Email;
-                    user.UserName = model.UserName;
                     bool result = await ServiceIdentity.UpdateUser(user);
                     if (result == true)
                     {
@@ -71,12 +73,12 @@ namespace TAE.WebServer.Controllers.Admin
                     }
                     else
                     {
-                        return Response(HttpStatusCode.InternalServerError, new { error_description = "服务器错误" });
+                        return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
                     }
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError, new { error_description = "服务器错误" });
+                    return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
                 }
             }
         }
@@ -103,7 +105,7 @@ namespace TAE.WebServer.Controllers.Admin
             //删除旧数据
             await ServiceIdentity.RemoveFromRoleById(userId, oldRoleIds);
             await ServiceIdentity.AddToRoleById(userId, model.BindIds);
-            return Response();
+            return Response(new { msg="修改成功！"});
         }
     }
 }

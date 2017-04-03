@@ -17,7 +17,6 @@ namespace TAE.Data.Model
         [Key]
         public string Id { get; set; }
         public bool IsDel { get; set; }
-        public DateTime CreateTime { get; set; }
         public DateTime LastModifiedTime { get; set; }
     }
 }

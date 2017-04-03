@@ -125,7 +125,7 @@ namespace TAE.Data.Entity
         {
             this.Set<T>().Delete(ids);
             this.SaveChanges();
-        } 
+        }
         #endregion
 
         #region 映射的数据库表

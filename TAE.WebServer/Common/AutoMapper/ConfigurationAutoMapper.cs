@@ -18,6 +18,7 @@ namespace TAE.WebServer.Common
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<AppUser, UserViewModel>();
+                cfg.CreateMap<UserViewModel, AppUser>();
             });
 
         }

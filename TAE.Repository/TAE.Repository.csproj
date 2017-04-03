@@ -94,6 +94,10 @@
     <Compile Include="RepositoryIdentity.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TAE.Core.Cache\TAE.Core.Cache.csproj">
+      <Project>{e6024da9-d324-4efd-8599-c362285bc9e9}</Project>
+      <Name>TAE.Core.Cache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TAE.Data.Entity\TAE.Data.Entity.csproj">
       <Project>{891742bf-574d-4282-9498-26ed601ae769}</Project>
       <Name>TAE.Data.Entity</Name>

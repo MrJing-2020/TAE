@@ -29,7 +29,7 @@ namespace TAE.WebServer.Controllers.Admin
             }
             else
             {
-                return Response(HttpStatusCode.NotFound);
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
             }
         }
         [HttpPost]
@@ -46,7 +46,7 @@ namespace TAE.WebServer.Controllers.Admin
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError);
+                    return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
                 }
             }
             else
@@ -62,12 +62,12 @@ namespace TAE.WebServer.Controllers.Admin
                     }
                     else
                     {
-                        return Response(HttpStatusCode.InternalServerError);
+                        return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
                     }
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError);
+                    return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
                 }
             }
         }

@@ -152,7 +152,6 @@ namespace TAE.Service
         {
             string guiId = Guid.NewGuid().ToString("n");
             entity.Id = guiId.GetHash();
-            entity.CreateTime = DateTime.Now;
             return repositoryBase.Insert<T>(entity);
         }
         public void Insert<T>(IEnumerable<T> entities) where T : BaseModel
@@ -161,7 +160,6 @@ namespace TAE.Service
             {
                 string guiId = Guid.NewGuid().ToString("n");
                 item.Id = guiId.GetHash();
-                item.CreateTime = DateTime.Now;
             }
             repositoryBase.Insert<T>(entities);
         }

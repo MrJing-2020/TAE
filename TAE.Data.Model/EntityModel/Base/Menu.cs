@@ -30,5 +30,6 @@ namespace TAE.Data.Model
         public int Sort { get; set; }
         public string MenuPareId { get; set; }
         public string MenuIco { get; set; }
+        public bool IsParent { get; set; }
     }
 }

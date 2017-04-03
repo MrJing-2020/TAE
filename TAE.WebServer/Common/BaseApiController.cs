@@ -83,11 +83,14 @@ namespace TAE.WebServer.Common
         /// <typeparam name="T2">返回类型</typeparam>
         /// <param name="model"></param>
         /// <returns></returns>
-        protected T2 Map<T1, T2>(T1 model)
+        protected T2 Map<T1, T2>(T1 source)
         {
-            return Mapper.Map<T2>(model);
+            return Mapper.Map<T2>(source);
         }
-
+        protected T2 Map<T1, T2>(T1 source, T2 destination)
+        {
+            return Mapper.Map(source,destination);
+        }
         /// <summary>
         /// 获取列表数据通用方法
         /// </summary>

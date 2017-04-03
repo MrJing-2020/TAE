@@ -36,14 +36,57 @@ namespace TAE.WebServer.Controllers.Admin
             }
             else
             {
-                return Response(HttpStatusCode.NotFound, "未找到任何信息");
+                return Response(HttpStatusCode.NoContent,new { msg="没有任何信息"});
             }
         }
-        [HttpPost]
-        public HttpResponseMessage SubUserData(Menu menu)
+        [HttpGet]
+        public HttpResponseMessage GetActions(string id)
         {
-            var menuEntity = ServiceBase.SaveEntity<Menu>(menu);
-            return Response(menuEntity);
+            var actions = ServiceBase.FindBy<Menu>(m => m.MenuPareId == id && m.MenuLever == 3).ToList();
+            if (actions.Count()>0)
+            {
+                return Response(actions);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+        }
+        /// <summary>
+        /// model包含（Id:自身Id，Action:方法名，MenuName：菜单名，MenuPareId：父菜单Id）
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage SubAction(dynamic model)
+        {
+            if (string.IsNullOrEmpty(model.Id.ToString()))
+            {
+                string menuPareId = model.MenuPareId;
+                var menu = ServiceBase.FindBy<Menu>("select * from Menu where Id = @Id",new SqlParameter("@Id",menuPareId)).FirstOrDefault();
+                menu.Id = "";
+                menu.MenuPareId = menuPareId;
+                menu.MenuLever = 3;
+                menu.Action = model.Action;
+                menu.MenuName = model.MenuName;
+                ServiceBase.Insert<Menu>(menu);
+            }
+            else
+            {
+                string id = model.Id;
+                var menu = ServiceBase.FindBy<Menu>(m => m.Id == id).FirstOrDefault();
+                menu.Action = model.Action;
+                menu.MenuName = model.MenuName;
+                ServiceBase.Update<Menu>(menu);
+            }
+            return Response(new { msg = "提交成功！" });
+        }
+
+        [HttpPost]
+        public HttpResponseMessage SubMenuData(Menu model)
+        {
+            ServiceBase.SaveEntity<Menu>(model);
+            return Response(new { msg = "提交成功" });
         }
     }
 }

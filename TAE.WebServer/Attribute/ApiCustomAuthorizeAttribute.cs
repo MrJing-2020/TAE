@@ -43,7 +43,7 @@ namespace TAE.WebServer.Attribute
             response.StatusCode = HttpStatusCode.Forbidden;
             response.Content = new StringContent(Json.Encode(new
             {
-                error_description = "访问被拒绝:您没有权限!"
+                msg = "访问被拒绝:您没有权限!"
             }), Encoding.UTF8, "application/json");
         }
 
