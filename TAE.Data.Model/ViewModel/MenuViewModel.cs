@@ -24,5 +24,6 @@ namespace TAE.Data.Model
         public string PareMenuName { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime LastModifiedTime { get; set; }
+        public bool IsParent { get; set; }
     }
 }

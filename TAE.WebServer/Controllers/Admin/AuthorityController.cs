@@ -36,18 +36,20 @@ namespace TAE.WebServer.Controllers.Admin
         }
 
         /// <summary>
-        /// 获取角色信息
+        /// 获取角色权限信息
         /// </summary>
         /// <param name="id">角色Id</param>
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage GetRoleAuthority(string id)
         {
+            List<Menu> menuListIn = new List<Menu>();
             List<Menu> menuList = new List<Menu>();
             SqlParameter parameter = new SqlParameter("@roleId", id);
             string sqlGetAuthority = "select * from Menu where Id in (select MenuId from MenuRole where RoleId = @roleId)";
-            menuList = ServiceBase.FindBy<Menu>(sqlGetAuthority,parameter).ToList();
-            return Response(menuList);
+            menuListIn = ServiceBase.FindBy<Menu>(sqlGetAuthority,parameter).ToList();
+            menuList = ServiceBase.FindBy<Menu>().Except<Menu>(menuListIn).ToList();
+            return Response(new { menuIn = menuListIn, menuAll = menuList });
         }
 
         /// <summary>
