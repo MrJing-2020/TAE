@@ -77,10 +77,6 @@
       <Project>{d2c585bf-cee0-4713-90e2-154b60e42381}</Project>
       <Name>TAE.IService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TAE.Utility.Tool\TAE.Utility.Tool.csproj">
-      <Project>{3655d693-0d2b-4e55-8a99-97a84080b451}</Project>
-      <Name>TAE.Utility.Tool</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

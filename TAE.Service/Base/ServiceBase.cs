@@ -12,7 +12,6 @@ namespace TAE.Service
     using TAE.IService;
     using TAE.Data.Model;
     using TAE.Core.ServiceProvider;
-    using TAE.Utility.Tool;
 
     /// <summary>
     /// 基础服务类（提供基本增删查改，调用仓储层方法）
@@ -150,16 +149,14 @@ namespace TAE.Service
         #region 新增相关
         public T Insert<T>(T entity) where T : BaseModel
         {
-            string guiId = Guid.NewGuid().ToString("n");
-            entity.Id = guiId.GetHash();
+            entity.Id = Guid.NewGuid().ToString("n");
             return repositoryBase.Insert<T>(entity);
         }
         public void Insert<T>(IEnumerable<T> entities) where T : BaseModel
         {
             foreach (var item in entities)
             {
-                string guiId = Guid.NewGuid().ToString("n");
-                item.Id = guiId.GetHash();
+                item.Id = Guid.NewGuid().ToString("n");
             }
             repositoryBase.Insert<T>(entities);
         }

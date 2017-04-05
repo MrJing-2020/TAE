@@ -97,6 +97,7 @@ namespace TAE.Data.Entity
             var set = this.Set<T>();
             foreach (var item in entitis)
             {
+                set.Attach(item);
                 this.Entry<T>(item).State = EntityState.Modified;
             }
             this.SaveChanges();

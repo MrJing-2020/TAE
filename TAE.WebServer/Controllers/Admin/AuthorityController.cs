@@ -36,7 +36,7 @@ namespace TAE.WebServer.Controllers.Admin
         }
 
         /// <summary>
-        /// 获取角色权限信息
+        /// 获取角色操作权限信息
         /// </summary>
         /// <param name="id">角色Id</param>
         /// <returns></returns>
@@ -63,7 +63,7 @@ namespace TAE.WebServer.Controllers.Admin
         }
 
         /// <summary>
-        /// 更新角色权限
+        /// 更新角色操作权限
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -84,6 +84,65 @@ namespace TAE.WebServer.Controllers.Admin
 	        }
             ServiceBase.Remove<MenuRole>(m => m.RoleId == roleId);
             ServiceBase.Insert<MenuRole>(menuRoleList);
+            return Response();
+        }
+
+        /// <summary>
+        /// 获取角色数据权限信息
+        /// </summary>
+        /// <param name="id">角色Id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetRoleDataAuthority(string id)
+        {
+            IEnumerable<DepViewModel> depList;
+            SqlParameter parameter = new SqlParameter("@roleId", id);
+            string sqlGetDataAuthority = "select Id from Department where Id in (select MenuId from RoleData where RoleId = @roleId)";
+            string[] depIdsIn = ServiceBase.FindBy<string>(sqlGetDataAuthority, parameter).ToArray();
+            depList = ServiceBase.FindBy<DepViewModel>("select * from Department");
+            foreach (var item in depList)
+            {
+                if (depIdsIn.Contains(item.Id))
+                {
+                    item.IsInAuthority = true;
+                }
+                else
+                {
+                    item.IsInAuthority = false;
+                }
+            }
+            IEnumerable<OrgnViewModel> orgList= ServiceBase.FindBy<OrgnViewModel>("select * from Company");
+            foreach (var item in orgList)
+            {
+                item.Departments = depList.Where(m => m.CompanyId == item.Id).ToList();
+            }
+            return Response(orgList);
+        }
+
+        /// <summary>
+        /// 更新角色数据权限
+        /// </summary>
+        /// <param name="model">model.BindIds传公司和部门Id，用$分割开</param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage UpdateDataAuthority(BindOptionModel model)
+        {
+            var roleId = model.Id;
+            string[] depIds = model.BindIds;
+            List<DataRole> dataRoleList = new List<DataRole>();
+            foreach (var item in depIds)
+            {
+                var arrTemp= item.Split(new Char[] { '$' }, StringSplitOptions.RemoveEmptyEntries);
+                var datarole = new DataRole()
+                {
+                    CompanyId=arrTemp[0],
+                    DepartmentId = arrTemp[1],
+                    RoleId = roleId
+                };
+                dataRoleList.Add(datarole);
+            }
+            ServiceBase.Remove<DataRole>(m => m.RoleId == roleId);
+            ServiceBase.Insert<DataRole>(dataRoleList);
             return Response();
         }
     }

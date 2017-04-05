@@ -92,9 +92,17 @@ namespace TAE.WebServer.Common
             return Mapper.Map(source,destination);
         }
         /// <summary>
-        /// 获取列表数据通用方法
+        /// 获取列表数据通用方法(直接反回http响应)
         /// </summary>
         protected HttpResponseMessage GetDataList<T>(dynamic param,string sqlGetAll) where T : class
+        {
+            PageList<T> list = GetPageList<T>(param, sqlGetAll);
+            return Request.CreateResponse(list);
+        }
+        /// <summary>
+        /// 获取列表数据通用方法(返回PageList，方便对数据进行进一步处理)
+        /// </summary>
+        protected PageList<T> GetPageList<T>(dynamic param, string sqlGetAll) where T : class
         {
             RequestArg arg = new RequestArg()
             {
@@ -108,7 +116,7 @@ namespace TAE.WebServer.Common
                 if (param.search != null)
                 {
                     //多字段模糊查询
-                    string sqlSearchPart =sqlGetAll.Contains("where")? " where ":" and ";
+                    string sqlSearchPart = sqlGetAll.Contains("where") ? " where " : " and ";
                     JObject searchField = JObject.Parse(param.search.ToString());
                     foreach (var item in searchField)
                     {
@@ -126,7 +134,7 @@ namespace TAE.WebServer.Common
                     sqlGetAll += " order by " + param.orderName.ToString() + ' ' + param.orderType.ToString();
                 }
                 list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
-                return Request.CreateResponse(list);
+                return list;
             }
             //单字段排序
             if (!string.IsNullOrEmpty(param.orderName.ToString()))
@@ -134,7 +142,7 @@ namespace TAE.WebServer.Common
                 sqlGetAll += " order by " + param.orderName.ToString() + ' ' + param.orderType.ToString();
             }
             list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
-            return Request.CreateResponse(list);
+            return list;
         }
 
         /// <summary>
