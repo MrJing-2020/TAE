@@ -89,7 +89,7 @@ namespace TAE.Data.Entity
         public static TEntity FindById<TEntity>(this DbSet<TEntity> dbSet, object id)
         where TEntity : BaseModel
         {
-            return dbSet.FirstOrDefault((TEntity p) => p.Id == id);
+            return dbSet.FirstOrDefault((TEntity p) => p.Id == id.ToString());
         }
 
         public static IQueryable<TEntity> GetPage<TEntity>(this IQueryable<TEntity> entities, out int total, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, int pageNumber = 1, int pageSize = 20)

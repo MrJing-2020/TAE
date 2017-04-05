@@ -105,7 +105,7 @@ namespace TAE.WebServer.Controllers.Admin
             //删除旧数据
             await ServiceIdentity.RemoveFromRoleById(userId, oldRoleIds);
             await ServiceIdentity.AddToRoleById(userId, model.BindIds);
-            return Response(new { msg="修改成功！"});
+            return Response();
         }
     }
 }

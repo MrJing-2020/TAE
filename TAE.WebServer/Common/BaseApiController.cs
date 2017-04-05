@@ -55,7 +55,7 @@ namespace TAE.WebServer.Common
 
         protected HttpResponseMessage Response()
         {
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return Request.CreateResponse(HttpStatusCode.OK, new { msg = "数据提交成功" });
         }
         protected HttpResponseMessage Response(object obj)
         {

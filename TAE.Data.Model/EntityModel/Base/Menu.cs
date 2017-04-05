@@ -30,6 +30,7 @@ namespace TAE.Data.Model
         public int Sort { get; set; }
         public string MenuPareId { get; set; }
         public string MenuIco { get; set; }
+        //是否为父菜单(此处针对一级菜单是否有二级子菜单，仅有三级子菜单的仍然为false)
         public bool IsParent { get; set; }
     }
 }

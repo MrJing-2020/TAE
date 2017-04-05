@@ -40,6 +40,19 @@ namespace TAE.WebServer.Controllers.Admin
             }
         }
         [HttpGet]
+        public HttpResponseMessage GetParMenus()
+        {
+            var menuList = ServiceBase.FindBy<Menu>(m => m.IsParent==true).ToList();
+            if (menuList.Count() >0)
+            {
+                return Response(menuList);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+        }
+        [HttpGet]
         public HttpResponseMessage GetActions(string id)
         {
             var actions = ServiceBase.FindBy<Menu>(m => m.MenuPareId == id && m.MenuLever == 3).ToList();
@@ -79,14 +92,15 @@ namespace TAE.WebServer.Controllers.Admin
                 menu.MenuName = model.MenuName;
                 ServiceBase.Update<Menu>(menu);
             }
-            return Response(new { msg = "提交成功！" });
+            return Response();
         }
 
         [HttpPost]
         public HttpResponseMessage SubMenuData(Menu model)
         {
+            model.MenuApiUrl = "api/" + model.Area + "/" + model.Controller + "/" + model.Action;
             ServiceBase.SaveEntity<Menu>(model);
-            return Response(new { msg = "提交成功" });
+            return Response();
         }
     }
 }

@@ -43,13 +43,23 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpGet]
         public HttpResponseMessage GetRoleAuthority(string id)
         {
-            List<Menu> menuListIn = new List<Menu>();
-            List<Menu> menuList = new List<Menu>();
+            List<MenuViewModel> menuList = new List<MenuViewModel>();
             SqlParameter parameter = new SqlParameter("@roleId", id);
-            string sqlGetAuthority = "select * from Menu where Id in (select MenuId from MenuRole where RoleId = @roleId)";
-            menuListIn = ServiceBase.FindBy<Menu>(sqlGetAuthority,parameter).ToList();
-            menuList = ServiceBase.FindBy<Menu>().Except<Menu>(menuListIn).ToList();
-            return Response(new { menuIn = menuListIn, menuAll = menuList });
+            string sqlGetAuthority = "select Id from Menu where Id in (select MenuId from MenuRole where RoleId = @roleId)";
+            string[] menuIdsIn = ServiceBase.FindBy<string>(sqlGetAuthority,parameter).ToArray();
+            menuList = ServiceBase.FindBy<MenuViewModel>("select * from Menu").ToList();
+            foreach (var item in menuList)
+            {
+                if (menuIdsIn.Contains(item.Id))
+                {
+                    item.IsInAuthority = true;
+                }
+                else
+                {
+                    item.IsInAuthority = false;
+                }
+            }
+            return Response(menuList);
         }
 
         /// <summary>
