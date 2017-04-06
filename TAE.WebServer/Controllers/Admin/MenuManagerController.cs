@@ -26,6 +26,7 @@ namespace TAE.WebServer.Controllers.Admin
                                 where (a.MenuLever=1 or a.MenuLever=2)";
             return GetDataList<MenuViewModel>(param, sqlGetAll);
         }
+
         [HttpGet]
         public HttpResponseMessage GetMenuDetail(string id)
         {
@@ -39,6 +40,7 @@ namespace TAE.WebServer.Controllers.Admin
                 return Response(HttpStatusCode.NoContent,new { msg="没有任何信息"});
             }
         }
+
         [HttpGet]
         public HttpResponseMessage GetParMenus()
         {
@@ -52,6 +54,7 @@ namespace TAE.WebServer.Controllers.Admin
                 return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
             }
         }
+
         [HttpGet]
         public HttpResponseMessage GetActions(string id)
         {
@@ -65,6 +68,7 @@ namespace TAE.WebServer.Controllers.Admin
                 return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
             }
         }
+
         /// <summary>
         /// model包含（Id:自身Id，Action:方法名，MenuName：菜单名，MenuPareId：父菜单Id）
         /// </summary>
@@ -98,7 +102,10 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpPost]
         public HttpResponseMessage SubMenuData(Menu model)
         {
-            model.MenuApiUrl = "api/" + model.Area + "/" + model.Controller + "/" + model.Action;
+            if (model.IsParent != true)
+            {
+                model.MenuApiUrl = "api/" + model.Area + "/" + model.Controller + "/" + model.Action;
+            }
             ServiceBase.SaveEntity<Menu>(model);
             return Response();
         }

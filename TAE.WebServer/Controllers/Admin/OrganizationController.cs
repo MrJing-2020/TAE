@@ -17,20 +17,43 @@ namespace TAE.WebServer.Controllers.Admin
     public class OrganizationController : BaseApiController
     {
         /// <summary>
-        /// 获取组织结构树
+        /// 获取组织结构树(手动递归生成数据)
+        /// </summary>
+        /// <returns></returns>
+        //[HttpGet]
+        //public HttpResponseMessage GetAllOrgz()
+        //{
+        //    var comList = ServiceBase.FindBy<Company>().ToList();
+        //    var treeList = new List<TreeModelView>();
+        //    foreach (var item in comList.Where(m=>string.IsNullOrEmpty(m.PreCompanyId)))
+        //    {
+        //        TreeModelView treeItem = new TreeModelView { id = item.Id, text = item.CompanyName, type = "root" };
+        //        treeList.Add(treeItem);
+        //    }
+        //    InitTreeList(comList, treeList);
+        //    return Response(treeList);
+        //}
+
+        /// <summary>
+        /// 获取组织结构树(让前端jstree自动遍历)，两种方法速度未知
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage GetAllOrgz()
         {
             var comList = ServiceBase.FindBy<Company>().ToList();
-            var treeList = new List<TreeModelView>();
-            foreach (var item in comList.Where(m=>string.IsNullOrEmpty(m.PreCompanyId)))
+            List<JsTreeModel> treeList = new List<JsTreeModel>();
+            foreach (var item in comList)
             {
-                TreeModelView treeItem = new TreeModelView { id = item.Id, text = item.CompanyName, type = "root" };
+                var treeItem = new JsTreeModel
+                {
+                    id = item.Id,
+                    text = item.CompanyName,
+                    parent = item.PreCompanyId,
+                    icon = "fa fa-folder"
+                };
                 treeList.Add(treeItem);
             }
-            InitTreeList(comList, treeList);
             return Response(treeList);
         }
 

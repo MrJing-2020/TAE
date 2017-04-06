@@ -35,41 +35,14 @@ namespace TAE.WebServer.Controllers.Admin
             return Response(menuList);
         }
 
-        /// <summary>
-        /// 获取角色操作权限信息
-        /// </summary>
-        /// <param name="id">角色Id</param>
-        /// <returns></returns>
-        //[HttpGet]
-        //public HttpResponseMessage GetRoleAuthority(string id)
-        //{
-        //    List<MenuViewModel> menuList = new List<MenuViewModel>();
-        //    SqlParameter parameter = new SqlParameter("@roleId", id);
-        //    string sqlGetAuthority = "select Id from Menu where Id in (select MenuId from MenuRole where RoleId = @roleId)";
-        //    string[] menuIdsIn = ServiceBase.FindBy<string>(sqlGetAuthority,parameter).ToArray();
-        //    menuList = ServiceBase.FindBy<MenuViewModel>("select * from Menu").ToList();
-        //    foreach (var item in menuList)
-        //    {
-        //        if (menuIdsIn.Contains(item.Id))
-        //        {
-        //            item.IsInAuthority = true;
-        //        }
-        //        else
-        //        {
-        //            item.IsInAuthority = false;
-        //        }
-        //    }
-        //    return Response(menuList);
-        //}
-
         [HttpGet]
         public HttpResponseMessage GetRoleAuthority(string id)
         {
-            List<MenuViewModel> menuList = new List<MenuViewModel>();
+            List<Menu> menuList = new List<Menu>();
             SqlParameter parameter = new SqlParameter("@roleId", id);
             string sqlGetAuthority = "select Id from Menu where Id in (select MenuId from MenuRole where RoleId = @roleId)";
             string[] menuIdsIn = ServiceBase.FindBy<string>(sqlGetAuthority, parameter).ToArray();
-            menuList = ServiceBase.FindBy<MenuViewModel>("select * from Menu").ToList();
+            menuList = ServiceBase.FindBy<Menu>("select * from Menu").ToList();
             List<JsTreeModel> treeList = new List<JsTreeModel>();
             foreach (var item in menuList)
             {
