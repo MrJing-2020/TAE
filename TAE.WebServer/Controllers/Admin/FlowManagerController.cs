@@ -13,26 +13,17 @@ namespace TAE.WebServer.Controllers.Admin
     public class FlowManagerController : BaseApiController
     {
         [HttpGet]
-        public HttpResponseMessage GetAllFlow(int pageNumber = 1, int pageSize = RequestArg.defualtPageSize, string orderName = "")
+        public HttpResponseMessage GetAllFlow(dynamic param)
         {
-            RequestArg arg = new RequestArg()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-            };
-            string sqlGetAll = "select * WorkFlow";
-            if (!string.IsNullOrEmpty(orderName))
-            {
-                SqlParameter para = new SqlParameter("@orderName", orderName);
-                sqlGetAll += " order by @orderName";
-            }
-            var list = ServiceBase.FindAllByPage<FlowViewModel>(sqlGetAll, arg);
+            string sqlGetAll = "select * from WorkFlow";
+            var list = GetPageList<FlowViewModel>(param, sqlGetAll);
             var listDetail = ServiceBase.FindBy<WorkFlowDetail>(m => m.IsDel == false);
             foreach (var item in list.DataList)
             {
-                item.WorkFlowDetail = listDetail.Where(m => m.WorkFlowId == item.Id).ToList();
+                string tempId = item.Id;
+                item.WorkFlowDetail = listDetail.Where(m => m.WorkFlowId == tempId).ToList();
             }
-            if (list != null)
+            if (list.Count()>0)
             {
                 return Response(list);
             }

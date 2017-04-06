@@ -8,9 +8,154 @@ using System.Web.Http;
 
 namespace TAE.WebServer.Controllers.Admin
 {
+    using TAE.Data.Model;
     using TAE.WebServer.Common;
 
+    /// <summary>
+    /// 组织结构管理
+    /// </summary>
     public class OrganizationController : BaseApiController
     {
+        /// <summary>
+        /// 获取组织结构树
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetAllOrgz()
+        {
+            var comList = ServiceBase.FindBy<Company>().ToList();
+            var treeList = new List<TreeModelView>();
+            foreach (var item in comList.Where(m=>string.IsNullOrEmpty(m.PreCompanyId)))
+            {
+                TreeModelView treeItem = new TreeModelView { id = item.Id, text = item.CompanyName, type = "root" };
+                treeList.Add(treeItem);
+            }
+            InitTreeList(comList, treeList);
+            return Response(treeList);
+        }
+
+        /// <summary>
+        /// 获取公司下拉框数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetAllCompany()
+        {
+            string sql = "select Id as 'Key',CompanyName as 'Value' from Company";
+            List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql).ToList();
+            return Response(list);
+        }
+
+        /// <summary>
+        /// 根据id获取公司具体信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetComDetail(string id)
+        {
+            var company = ServiceBase.FindBy<Company>(m => m.Id == id).FirstOrDefault();
+            if (company != null)
+            {
+                return Response(company);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+        }
+
+        /// <summary>
+        /// 提交新增和编辑公司数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage SubComData(Company model)
+        {
+            ServiceBase.SaveEntity<Company>(model);
+            return Response();
+        }
+
+        /// <summary>
+        /// 根据id获取公司部门
+        /// </summary>
+        /// <param name="id">公司id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetComDeps(string id)
+        {
+            var dep = ServiceBase.FindBy<Department>(m => m.CompanyId == id).ToList();
+            if (dep.Count() > 0)
+            {
+                return Response(dep);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+        }
+
+        /// <summary>
+        /// 根据id获取部门用户
+        /// </summary>
+        /// <param name="id">部门id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetDepUsers(string id)
+        {
+            var users = ServiceIdentity.FindUser(m=>m.DepartmentId==id).ToList();
+            if (users.Count() > 0)
+            {
+                return Response(users);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+        }
+
+        /// <summary>
+        /// 提交新增和编辑部门数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage SubDepData(Department model)
+        {
+            ServiceBase.SaveEntity<Department>(model);
+            return Response();
+        }
+
+        #region 私有方法
+
+        /// <summary>
+        /// 递归的方式遍历Company结构，把数据填充到TreeModelView中
+        /// </summary>
+        /// <param name="comList"></param>
+        /// <param name="treeList"></param>
+        /// <returns></returns>
+        [NonAction]
+        private List<TreeModelView> InitTreeList(List<Company> comList, List<TreeModelView> treeList)
+        {
+            foreach (var item in treeList)
+            {
+                var comChildList = comList.Where(m => m.PreCompanyId == item.id);
+                if (comChildList.Count() <= 0)
+                {
+                    continue;
+                }
+                foreach (var item1 in comChildList)
+                {
+                    TreeModelView treeItem = new TreeModelView { id = item1.Id, text = item1.CompanyName, type = "file" };
+                    item.children = new List<TreeModelView>();
+                    item.children.Add(treeItem);
+                }
+                InitTreeList(comList, item.children);
+            }
+            return treeList;
+        } 
+
+        #endregion
     }
 }

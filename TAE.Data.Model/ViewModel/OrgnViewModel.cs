@@ -16,7 +16,7 @@ namespace TAE.Data.Model
         public string PreCompanyId { get; set; }
         public string LegalPersonName { get; set; }
         public string LinkPersonName { get; set; }
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         public int BusinessType { get; set; }
         public string BusinessRange { get; set; }
         public string Address { get; set; }

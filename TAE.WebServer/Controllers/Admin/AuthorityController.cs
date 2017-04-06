@@ -40,26 +40,53 @@ namespace TAE.WebServer.Controllers.Admin
         /// </summary>
         /// <param name="id">角色Id</param>
         /// <returns></returns>
+        //[HttpGet]
+        //public HttpResponseMessage GetRoleAuthority(string id)
+        //{
+        //    List<MenuViewModel> menuList = new List<MenuViewModel>();
+        //    SqlParameter parameter = new SqlParameter("@roleId", id);
+        //    string sqlGetAuthority = "select Id from Menu where Id in (select MenuId from MenuRole where RoleId = @roleId)";
+        //    string[] menuIdsIn = ServiceBase.FindBy<string>(sqlGetAuthority,parameter).ToArray();
+        //    menuList = ServiceBase.FindBy<MenuViewModel>("select * from Menu").ToList();
+        //    foreach (var item in menuList)
+        //    {
+        //        if (menuIdsIn.Contains(item.Id))
+        //        {
+        //            item.IsInAuthority = true;
+        //        }
+        //        else
+        //        {
+        //            item.IsInAuthority = false;
+        //        }
+        //    }
+        //    return Response(menuList);
+        //}
+
         [HttpGet]
         public HttpResponseMessage GetRoleAuthority(string id)
         {
             List<MenuViewModel> menuList = new List<MenuViewModel>();
             SqlParameter parameter = new SqlParameter("@roleId", id);
             string sqlGetAuthority = "select Id from Menu where Id in (select MenuId from MenuRole where RoleId = @roleId)";
-            string[] menuIdsIn = ServiceBase.FindBy<string>(sqlGetAuthority,parameter).ToArray();
+            string[] menuIdsIn = ServiceBase.FindBy<string>(sqlGetAuthority, parameter).ToArray();
             menuList = ServiceBase.FindBy<MenuViewModel>("select * from Menu").ToList();
+            List<JsTreeModel> treeList = new List<JsTreeModel>();
             foreach (var item in menuList)
             {
+                var treeItem = new JsTreeModel
+                {
+                    id = item.Id,
+                    text = item.MenuName,
+                    parent = item.MenuPareId,
+                    icon = "fa fa-folder"
+                };
                 if (menuIdsIn.Contains(item.Id))
                 {
-                    item.IsInAuthority = true;
+                    treeItem.state = new TreeStateModel { selected = true };
                 }
-                else
-                {
-                    item.IsInAuthority = false;
-                }
+                treeList.Add(treeItem);
             }
-            return Response(menuList);
+            return Response(treeList);
         }
 
         /// <summary>
