@@ -51,15 +51,21 @@ namespace TAE.WebServer.Controllers.Admin
                 string fileName = new Guid() + suffix;
                 //文件保存的路径
                 url = HttpContext.Current.Server.MapPath(UploadHelper.UploadPath) + fileName;
-                byte[] fileBuffer = Convert.FromBase64String(strBase64);
-                using (FileStream fs = new FileStream(url, FileMode.CreateNew, FileAccess.Write))
+                //byte[] fileBuffer = Convert.FromBase64String(strBase64);
+                //using (FileStream fs = new FileStream(url, FileMode.CreateNew))
+                //{
+                //    fs.Write(fileBuffer, 0, fileBuffer.Length);
+                //}
+                MemoryStream ms = new MemoryStream(Convert.FromBase64String(strBase64));
+                using (FileStream fs = new FileStream(url, FileMode.CreateNew))
                 {
-                    fs.Write(fileBuffer, 0, fileBuffer.Length);
+                    ms.WriteTo(fs);
+                    ms.Close();
                 }
             }
             catch (Exception)
             {
-                throw;
+                return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
             }
             return Response(url);
         }
