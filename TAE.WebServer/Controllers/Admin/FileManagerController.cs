@@ -38,5 +38,36 @@ namespace TAE.WebServer.Controllers.Admin
             ServiceBase.Insert<FilesInfo>(fileList);
             return Response();
         }
+
+        [HttpPost]
+        public HttpResponseMessage UploadFileByBase64(dynamic model)
+        {
+            string url = "";
+            try
+            {
+                var strFile = model.file;
+                var suffix = strFile.Substring(strFile.IndexOf("/") + 1, strFile.IndexOf(";") - strFile.IndexOf("/") - 1);
+                string strBase64 = strFile.Substring(strFile.LastIndexOf(",") + 1);
+                string fileName = new Guid() + suffix;
+                //文件保存的路径
+                url = HttpContext.Current.Server.MapPath(UploadHelper.UploadPath) + fileName;
+                byte[] fileBuffer = Convert.FromBase64String(strBase64);
+                using (FileStream fs = new FileStream(url, FileMode.CreateNew, FileAccess.Write))
+                {
+                    fs.Write(fileBuffer, 0, fileBuffer.Length);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Response(url);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetFileList()
+        {
+            return Response();
+        }
     }
 }

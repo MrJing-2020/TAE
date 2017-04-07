@@ -32,7 +32,19 @@ namespace TAE.WebServer.Controllers.Admin
             string sqlGetAuthority = "select * from Menu where Id in (select MenuId from MenuRole where RoleId in ( '" + roleIdsStr + "' )) ";
             //根据角色id获取菜单列表
             menuList = ServiceBase.FindBy<Menu>(sqlGetAuthority).ToList();
-            return Response(menuList);
+            List<JsTreeModel> treeList = new List<JsTreeModel>();
+            foreach (var item in menuList)
+            {
+                var treeItem = new JsTreeModel
+                {
+                    id = item.Id,
+                    text = item.MenuName,
+                    parent = item.MenuPareId,
+                    icon = "fa fa-folder"
+                };
+                treeList.Add(treeItem);
+            }
+            return Response(treeList);
         }
 
         [HttpGet]
@@ -53,7 +65,7 @@ namespace TAE.WebServer.Controllers.Admin
                     parent = item.MenuPareId,
                     icon = "fa fa-folder"
                 };
-                if (menuIdsIn.Contains(item.Id))
+                if (menuIdsIn.Contains(item.Id) && item.MenuLever == 3)
                 {
                     treeItem.state = new TreeStateModel { selected = true };
                 }
@@ -70,17 +82,39 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpPost]
         public HttpResponseMessage UpdateAuthority(BindOptionModel model)
         {
+            var menuList = ServiceBase.FindBy<Menu>("select * from Menu").ToList();
             var roleId = model.Id;
             string[] menuIds = model.BindIds;
             List<MenuRole> menuRoleList = new List<MenuRole>();
             foreach (var item in menuIds)
 	        {
-                var menurole = new MenuRole()
+                //判断父菜单是否被选中，若没有，则添加
+                var parentId = menuList.Where(m => m.Id == item).Select(m => m.MenuPareId).FirstOrDefault();
+                var parentMenu = menuList.Where(m => m.Id == parentId).FirstOrDefault();
+                if (!menuIds.Contains(parentId))
+                {
+                    var menuPraRole = new MenuRole()
+                    {
+                        MenuId = parentId,
+                        RoleId = roleId
+                    };
+                    menuRoleList.Add(menuPraRole);
+                    if (parentMenu != null && !menuIds.Contains(parentMenu.MenuPareId) && parentMenu.MenuPareId != "#")
+                    {
+                        var menuGraPraRole = new MenuRole()
+                        {
+                            MenuId = parentMenu.MenuPareId,
+                            RoleId = roleId
+                        };
+                        menuRoleList.Add(menuGraPraRole);
+                    }
+                }
+                var menuRole = new MenuRole()
                 {
                     MenuId = item,
                     RoleId = roleId
                 };
-                menuRoleList.Add(menurole);
+                menuRoleList.Add(menuRole);
 	        }
             ServiceBase.Remove<MenuRole>(m => m.RoleId == roleId);
             ServiceBase.Insert<MenuRole>(menuRoleList);

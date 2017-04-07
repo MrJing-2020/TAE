@@ -33,6 +33,20 @@ namespace TAE.WebServer.Controllers.Admin
             }
         }
 
+        [HttpGet]
+        public HttpResponseMessage GetFlowDetails(string id)
+        {
+            var list = ServiceBase.FindBy<WorkFlowDetail>(m => m.WorkFlowId == id).ToList();
+            if (list.Count() > 0)
+            {
+                return Response(list);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NotFound, "未找到任何信息");
+            }
+        }
+
         [HttpPost]
         public HttpResponseMessage SubFlow(WorkFlow flow)
         {

@@ -9,6 +9,7 @@ namespace TAE.Data.Model
     public class Department : BaseModel
     {
         public string DepartName { get; set; }
+        public string Duty { get; set; }
         public string CompanyId { get; set; }
     }
 }

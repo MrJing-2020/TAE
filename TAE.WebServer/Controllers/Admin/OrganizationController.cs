@@ -62,7 +62,7 @@ namespace TAE.WebServer.Controllers.Admin
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetAllCompany()
+        public HttpResponseMessage ComSelectList()
         {
             string sql = "select Id as 'Key',CompanyName as 'Value' from Company";
             List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql).ToList();
@@ -101,12 +101,31 @@ namespace TAE.WebServer.Controllers.Admin
         }
 
         /// <summary>
+        /// 根据公司id获取公司用户
+        /// </summary>
+        /// <param name="id">部门id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetComUsers(string id)
+        {
+            var users = ServiceIdentity.FindUser(m => m.CompanyId == id).ToList();
+            if (users.Count() > 0)
+            {
+                return Response(users);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+        }
+
+        /// <summary>
         /// 根据id获取公司部门
         /// </summary>
         /// <param name="id">公司id</param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetComDeps(string id)
+        public HttpResponseMessage GetDeps(string id)
         {
             var dep = ServiceBase.FindBy<Department>(m => m.CompanyId == id).ToList();
             if (dep.Count() > 0)

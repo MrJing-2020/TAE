@@ -25,6 +25,7 @@ namespace TAE.WebServer.Controllers.Admin
             string sqlGetAll = "select Id, Email,PhoneNumber,UserName from AspNetUsers";
             return GetDataList<UserViewModel>(param, sqlGetAll);
         }
+
         [HttpGet]
         public async Task<HttpResponseMessage> GetUserDetail(string id)
         {
@@ -37,6 +38,25 @@ namespace TAE.WebServer.Controllers.Admin
             else
             {
                 return Response(HttpStatusCode.NoContent, new { msg = "未找到任何信息" });
+            }
+        }
+
+        /// <summary>
+        /// 根据用户名判断用户是否已存在
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<HttpResponseMessage> ExistingUser(string name)
+        {
+            var appUser = await ServiceIdentity.FindUserByName(name);
+            if (appUser == null)
+            {
+                return Response(new { Existing = false });
+            }
+            else
+            {
+                return Response(new { Existing = true });
             }
         }
         [HttpPost]
@@ -106,6 +126,33 @@ namespace TAE.WebServer.Controllers.Admin
             await ServiceIdentity.RemoveFromRoleById(userId, oldRoleIds);
             await ServiceIdentity.AddToRoleById(userId, model.BindIds);
             return Response();
+        }
+
+        /// <summary>
+        /// 部门下拉框
+        /// </summary>
+        /// <param name="id">公司id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage DepSelectList(string id)
+        {
+            string sql = "select Id as 'Key',DepartName as 'Value' from Department where CompanyId = @Id";
+            SqlParameter param = new SqlParameter("@Id", id);
+            List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql,param).ToList();
+            return Response(list);
+        }
+        /// <summary>
+        /// 职位下拉框
+        /// </summary>
+        /// <param name="id">部门id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage PosSelectList(string id)
+        {
+            string sql = "select Id as 'Key',PositionName as 'Value' from Position where DepartmentId Id = @Id";
+            SqlParameter param = new SqlParameter("@Id", id);
+            List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
+            return Response(list);
         }
     }
 }

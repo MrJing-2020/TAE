@@ -18,10 +18,10 @@ namespace TAE.WebServer.Common.Upload
         {
             serviceContext = ServiceContext.Current;
         }
-        private static string UploadPath
+        public static string UploadPath
         {   get 
             {
-                return HttpContext.Current.Server.MapPath("~/App_Data"); 
+                return HttpContext.Current.Server.MapPath("~/App_Data/"); 
             } 
         }
         /// <summary>
@@ -45,7 +45,7 @@ namespace TAE.WebServer.Common.Upload
                 string fileExt = oldFilename.Substring(oldFilename.LastIndexOf('.'));
                 string newFileName = fileinfo.Name.Substring(fileinfo.Name.IndexOf('_') + 1) + fileExt;
                 fileinfo.CopyTo(Path.Combine(UploadPath, newFileName), true);
-                sb.Append("~/App_Data/" + newFileName);
+                sb.Append(UploadPath + newFileName);
                 FilesInfo filesInfo = new FilesInfo()
                 {
                     OldFileName = oldFilename,
