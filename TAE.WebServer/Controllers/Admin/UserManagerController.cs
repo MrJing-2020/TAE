@@ -19,10 +19,15 @@ namespace TAE.WebServer.Controllers.Admin
     /// </summary>
     public class UserManagerController : BaseApiController
     {
+        private static string sqlGetUser = @"select a.*,b.CompanyName,c.DepartName,d.PositionName from AspNetUsers a 
+                                            left join Company b on a.CompanyId=b.Id
+                                            left join Department c on a.DepartmentId=c.Id
+                                            left join Position d on a.PositionId=d.Id";
+
         [HttpPost]
         public HttpResponseMessage AllUsers(dynamic param)
         {
-            string sqlGetAll = "select Id, Email,PhoneNumber,UserName from AspNetUsers";
+            string sqlGetAll = sqlGetUser;
             return GetDataList<UserViewModel>(param, sqlGetAll);
         }
 
@@ -76,7 +81,7 @@ namespace TAE.WebServer.Controllers.Admin
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
+                    return Response(HttpStatusCode.InternalServerError);
                 }
             }
             else
@@ -93,12 +98,12 @@ namespace TAE.WebServer.Controllers.Admin
                     }
                     else
                     {
-                        return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
+                        return Response(HttpStatusCode.InternalServerError);
                     }
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
+                    return Response(HttpStatusCode.InternalServerError);
                 }
             }
         }
@@ -144,12 +149,12 @@ namespace TAE.WebServer.Controllers.Admin
         /// <summary>
         /// 职位下拉框
         /// </summary>
-        /// <param name="id">部门id</param>
+        /// <param name="id">公司id</param>
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage PosSelectList(string id)
         {
-            string sql = "select Id as 'Key',PositionName as 'Value' from Position where DepartmentId Id = @Id";
+            string sql = "select Id as 'Key',PositionName as 'Value' from Position where CompanyId = @Id";
             SqlParameter param = new SqlParameter("@Id", id);
             List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
             return Response(list);

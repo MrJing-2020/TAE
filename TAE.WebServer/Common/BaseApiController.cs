@@ -91,6 +91,7 @@ namespace TAE.WebServer.Common
         {
             return Mapper.Map(source,destination);
         }
+
         /// <summary>
         /// 获取列表数据通用方法(直接反回http响应)
         /// </summary>
@@ -99,6 +100,7 @@ namespace TAE.WebServer.Common
             PageList<T> list = GetPageList<T>(param, sqlGetAll);
             return Request.CreateResponse(list);
         }
+
         /// <summary>
         /// 获取列表数据通用方法(返回PageList，方便对数据进行进一步处理)
         /// </summary>

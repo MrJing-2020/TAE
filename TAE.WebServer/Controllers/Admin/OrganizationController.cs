@@ -169,6 +169,37 @@ namespace TAE.WebServer.Controllers.Admin
             return Response();
         }
 
+        /// <summary>
+        /// 根据id获取公司职位
+        /// </summary>
+        /// <param name="id">公司id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetPositions(string id)
+        {
+            var pos = ServiceBase.FindBy<Position>(m => m.CompanyId == id).ToList();
+            if (pos.Count() > 0)
+            {
+                return Response(pos);
+            }
+            else
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+        }
+
+        /// <summary>
+        /// 提交新增和编辑部门数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage SubPosData(Position model)
+        {
+            ServiceBase.SaveEntity<Position>(model);
+            return Response();
+        }
+
         #region 私有方法
 
         /// <summary>

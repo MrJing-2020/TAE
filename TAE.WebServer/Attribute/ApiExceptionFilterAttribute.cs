@@ -23,16 +23,21 @@ namespace TAE.WebServer.Attribute
             //返回调用方具体的异常信息
             if (actionExecutedContext.Exception is NotImplementedException)
             {
-                actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.NotImplemented, new { msg = "请求未执行!" });
+                actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.NotImplemented);
+                actionExecutedContext.Response.Content = new StringContent("请求未执行");
             }
             else if (actionExecutedContext.Exception is TimeoutException)
             {
-                actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.RequestTimeout, new { msg = "请求超时!" });
+                actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.RequestTimeout);
+                actionExecutedContext.Response.Content = new StringContent("请求超时");
             }
             //如果找不到相应的异常，统一返回服务端错误500
             else
             {
-                actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.InternalServerError, new { msg = "服务器错误!", exploitHint = actionExecutedContext.Exception.Message });
+                //exploitHint未开发人员提示
+                actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.InternalServerError, new { msg = "服务器错误!", exploitHint = "开发人员提示:"+actionExecutedContext.Exception.Message });
+                //actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.InternalServerError);
+                //actionExecutedContext.Response.Content = new StringContent("服务器错误");
             }
             base.OnException(actionExecutedContext);
         }

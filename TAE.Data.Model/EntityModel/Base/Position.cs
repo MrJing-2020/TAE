@@ -9,5 +9,6 @@ namespace TAE.Data.Model
     public class Position : ComBaseModel
     {
         public string PositionName { get; set; }
+        public string Duty { get; set; }
     }
 }

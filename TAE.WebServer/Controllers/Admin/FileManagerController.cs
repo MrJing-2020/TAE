@@ -73,7 +73,8 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpGet]
         public HttpResponseMessage GetFileList()
         {
-            return Response();
+            var fileList = ServiceBase.FindBy<FilesInfo>().ToList();
+            return Response(fileList);
         }
     }
 }

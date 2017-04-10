@@ -41,10 +41,7 @@ namespace TAE.WebServer.Attribute
             base.HandleUnauthorizedRequest(filterContext);
             var response = filterContext.Response = filterContext.Response ?? new HttpResponseMessage();
             response.StatusCode = HttpStatusCode.Forbidden;
-            response.Content = new StringContent(Json.Encode(new
-            {
-                msg = "访问被拒绝:您没有权限!"
-            }), Encoding.UTF8, "application/json");
+            response.Content = new StringContent("访问被拒绝:您未登陆或没有访问权限!");
         }
 
         protected override bool IsAuthorized(HttpActionContext filterContext)
@@ -74,12 +71,12 @@ namespace TAE.WebServer.Attribute
 
         public override void OnAuthorization(HttpActionContext filterContext)
         {
-            //string areaName = filterContext.RequestContext.RouteData.Route.DataTokens["area"].ToString();
+            string areaName = filterContext.RequestContext.RouteData.Values["area"].ToString();
             string controllerName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
             string actionName = filterContext.ActionDescriptor.ActionName;
             //根据控制器名和方法名获取角色名
-            var menu = ServiceBase.FindBy<Menu>(m => m.Controller == controllerName && m.Action == actionName).FirstOrDefault();
-            string menuId="";
+            var menu = ServiceBase.FindBy<Menu>(m => m.Controller == controllerName && m.Action == actionName && m.Area == areaName).FirstOrDefault();
+            string menuId = "";
             if (menu != null)
             {
                 menuId = menu.Id;

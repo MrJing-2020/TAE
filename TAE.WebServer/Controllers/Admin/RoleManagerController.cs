@@ -19,6 +19,7 @@ namespace TAE.WebServer.Controllers.Admin
             string sqlGetAll = "select * from AspNetRoles";
             return GetDataList<AppRole>(param, sqlGetAll);
         }
+
         [HttpGet]
         public async Task<HttpResponseMessage> GetRoleDetail(string id)
         {
@@ -32,6 +33,7 @@ namespace TAE.WebServer.Controllers.Admin
                 return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
             }
         }
+
         [HttpPost]
         public async Task<HttpResponseMessage> SubRoleData(AppRole model)
         {
@@ -46,7 +48,7 @@ namespace TAE.WebServer.Controllers.Admin
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
+                    return Response(HttpStatusCode.InternalServerError);
                 }
             }
             else
@@ -62,15 +64,16 @@ namespace TAE.WebServer.Controllers.Admin
                     }
                     else
                     {
-                        return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
+                        return Response(HttpStatusCode.InternalServerError);
                     }
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
+                    return Response(HttpStatusCode.InternalServerError);
                 }
             }
         }
+
         [HttpGet]
         public async Task<HttpResponseMessage> GetUserByRole(string id)
         {
@@ -80,6 +83,7 @@ namespace TAE.WebServer.Controllers.Admin
             IEnumerable<AppUser> nonMembers = await ServiceIdentity.FindUserNotInRole(id); 
             return Response(new { UserIn = members.ToList(), UserNotIn = nonMembers.ToList() });
         }
+
         [HttpPost]
         public async Task<HttpResponseMessage> RoleAllocationSub(BindOptionModel model)
         {

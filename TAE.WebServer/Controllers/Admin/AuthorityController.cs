@@ -25,14 +25,17 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpGet]
         public HttpResponseMessage GetUserAuthority(string id)
         {
-            List<Menu> menuList;
             //获取用户角色(或许有多个)
             var roleIds = ServiceIdentity.FindUser(m => m.Id == id).FirstOrDefault().Roles.Select(m => m.RoleId).ToArray();
             var roleIdsStr = string.Join("','", roleIds);
             string sqlGetAuthority = "select * from Menu where Id in (select MenuId from MenuRole where RoleId in ( '" + roleIdsStr + "' )) ";
+            string sqlGetDataAuthority = "select * from Department where Id in (select DepartmentId from DataRole where RoleId in ( '" + roleIdsStr + "' )) ";
             //根据角色id获取菜单列表
-            menuList = ServiceBase.FindBy<Menu>(sqlGetAuthority).ToList();
-            List<JsTreeModel> treeList = new List<JsTreeModel>();
+            List<Menu> menuList = ServiceBase.FindBy<Menu>(sqlGetAuthority).ToList();
+            List<Department> depList = ServiceBase.FindBy<Department>(sqlGetDataAuthority).ToList();
+            List<Company> comList = ServiceBase.FindBy<Company>().ToList(); 
+            List<JsTreeModel> optionList = new List<JsTreeModel>();
+            List<JsTreeModel> dataList = new List<JsTreeModel>();
             foreach (var item in menuList)
             {
                 var treeItem = new JsTreeModel
@@ -42,9 +45,21 @@ namespace TAE.WebServer.Controllers.Admin
                     parent = item.MenuPareId,
                     icon = "fa fa-folder"
                 };
-                treeList.Add(treeItem);
+                optionList.Add(treeItem);
             }
-            return Response(treeList);
+            foreach (var item in depList)
+            {
+                var treeItem = new JsTreeModel
+                {
+                    id = item.Id,
+                    text = item.DepartName,
+                    parent = item.CompanyId,
+                    icon = "fa fa-database"
+                };
+                dataList.Add(treeItem);
+                GetPreCompany(dataList, comList, item.CompanyId);
+            }
+            return Response(new { optionList = optionList, dataList = dataList });
         }
 
         [HttpGet]
@@ -129,28 +144,40 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpGet]
         public HttpResponseMessage GetRoleDataAuthority(string id)
         {
-            IEnumerable<DepViewModel> depList;
+            IEnumerable<Department> depList;
             SqlParameter parameter = new SqlParameter("@roleId", id);
-            string sqlGetDataAuthority = "select Id from Department where Id in (select MenuId from RoleData where RoleId = @roleId)";
+            string sqlGetDataAuthority = "select Id from Department where Id in (select DepartmentId from DataRole where RoleId = @roleId)";
             string[] depIdsIn = ServiceBase.FindBy<string>(sqlGetDataAuthority, parameter).ToArray();
-            depList = ServiceBase.FindBy<DepViewModel>("select * from Department");
+            depList = ServiceBase.FindBy<Department>("select * from Department");
+            List<JsTreeModel> treeList = new List<JsTreeModel>();
             foreach (var item in depList)
             {
+                var treeItem = new JsTreeModel
+                {
+                    id = item.CompanyId + "$" + item.Id,
+                    text = item.DepartName,
+                    parent = item.CompanyId,
+                    icon = "fa fa-database"
+                };
                 if (depIdsIn.Contains(item.Id))
                 {
-                    item.IsInAuthority = true;
+                    treeItem.state = new TreeStateModel { selected = true };
                 }
-                else
-                {
-                    item.IsInAuthority = false;
-                }
+                treeList.Add(treeItem);
             }
-            IEnumerable<OrgnViewModel> orgList= ServiceBase.FindBy<OrgnViewModel>("select * from Company");
-            foreach (var item in orgList)
+            IEnumerable<Company> comList = ServiceBase.FindBy<Company>("select * from Company");
+            foreach (var item in comList)
             {
-                item.Departments = depList.Where(m => m.CompanyId == item.Id).ToList();
+                var treeItem = new JsTreeModel
+                {
+                    id = item.Id,
+                    text = item.CompanyName,
+                    parent = item.PreCompanyId,
+                    icon = "fa fa-database"
+                };
+                treeList.Add(treeItem);
             }
-            return Response(orgList);
+            return Response(treeList);
         }
 
         /// <summary>
@@ -166,18 +193,51 @@ namespace TAE.WebServer.Controllers.Admin
             List<DataRole> dataRoleList = new List<DataRole>();
             foreach (var item in depIds)
             {
-                var arrTemp= item.Split(new Char[] { '$' }, StringSplitOptions.RemoveEmptyEntries);
-                var datarole = new DataRole()
+                if (item.Contains('$'))
                 {
-                    CompanyId=arrTemp[0],
-                    DepartmentId = arrTemp[1],
-                    RoleId = roleId
-                };
-                dataRoleList.Add(datarole);
+                    var arrTemp = item.Split(new Char[] { '$' }, StringSplitOptions.RemoveEmptyEntries);
+                    var datarole = new DataRole()
+                    {
+                        CompanyId = arrTemp[0],
+                        DepartmentId = arrTemp[1],
+                        RoleId = roleId
+                    };
+                    dataRoleList.Add(datarole);
+                }
             }
             ServiceBase.Remove<DataRole>(m => m.RoleId == roleId);
             ServiceBase.Insert<DataRole>(dataRoleList);
             return Response();
         }
+
+        #region 私有方法
+
+        /// <summary>
+        /// 递归获取母公司
+        /// </summary>
+        /// <param name="dataList"></param>
+        /// <param name="comList"></param>
+        /// <param name="PreCompanyId"></param>
+        private void GetPreCompany(List<JsTreeModel> dataList, List<Company> comList, string PreCompanyId)
+        {
+            if (PreCompanyId == "#")
+            {
+                return;
+            }
+            if (dataList.Where(m => m.id == PreCompanyId).Count() <= 0)
+            {
+                var company = comList.Where(m => m.Id == PreCompanyId).FirstOrDefault();
+                var treeItemCom = new JsTreeModel
+                {
+                    id = company.Id,
+                    text = company.CompanyName,
+                    parent = company.PreCompanyId,
+                    icon = "fa fa-database"
+                };
+                dataList.Add(treeItemCom);
+                GetPreCompany(dataList, comList, company.PreCompanyId);
+            }
+        } 
+        #endregion
     }
 }
