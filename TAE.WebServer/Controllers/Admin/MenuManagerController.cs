@@ -31,42 +31,21 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetMenuDetail(string id)
         {
             var menu = ServiceBase.FindBy<Menu>(m => m.Id == id).FirstOrDefault();
-            if (menu != null)
-            {
-                return Response(menu);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent,new { msg="没有任何信息"});
-            }
+            return Response(menu);
         }
 
         [HttpGet]
         public HttpResponseMessage GetParMenus()
         {
             var menuList = ServiceBase.FindBy<Menu>(m => m.IsParent==true).ToList();
-            if (menuList.Count() >0)
-            {
-                return Response(menuList);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
-            }
+            return ResponseList<Menu>(menuList);
         }
 
         [HttpGet]
         public HttpResponseMessage GetActions(string id)
         {
             var actions = ServiceBase.FindBy<Menu>(m => m.MenuPareId == id && m.MenuLever == 3).ToList();
-            if (actions.Count()>0)
-            {
-                return Response(actions);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
-            }
+            return ResponseList<Menu>(actions);
         }
 
         /// <summary>

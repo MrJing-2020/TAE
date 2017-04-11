@@ -77,6 +77,17 @@ namespace TAE.WebServer.Common
             response.Headers.Location = url;
             return response;
         }
+        protected HttpResponseMessage ResponseList<T>(IEnumerable<T> list)
+        {
+            if (list.Count() <= 0)
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+            else 
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, list);
+            }
+        }
         protected HttpResponseMessage ResponseException(HttpStatusCode statusCode, string msg)
         {
             var response = Request.CreateResponse(statusCode);
