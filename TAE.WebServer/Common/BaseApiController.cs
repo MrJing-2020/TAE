@@ -147,16 +147,21 @@ namespace TAE.WebServer.Common
             return list;
         }
 
+
         /// <summary>
         /// 获取列表数据(通过数据权限过滤)
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="param"></param>
+        /// <param name="sqlGetAll">**此处约定 需将待查询的数据表别名命名为'a'**</param>
+        /// <returns></returns>
         protected HttpResponseMessage GetDataListFilt<T>(dynamic param, string sqlGetAll) where T : class
         {
             //数据权限过滤
-            string sqlDataPowerPart = sqlGetAll.Contains("where") ? " where " : " and ";
+            string sqlDataPowerPart = sqlGetAll.Contains("where") ? " and " : " where ";
             foreach (var item in LoginUser.DataPower)
             {
-                sqlDataPowerPart += "(CompanyId = " + item.CompanyId + " and DepartmentId = " + item.DepartmentId + ") or";
+                sqlDataPowerPart += "(a.CompanyId = '" + item.CompanyId + "' and a.DepartmentId = '" + item.DepartmentId + "') or";
             }
             sqlDataPowerPart = sqlDataPowerPart.Substring(0, sqlDataPowerPart.LastIndexOf("or"));
             sqlGetAll += sqlDataPowerPart;
