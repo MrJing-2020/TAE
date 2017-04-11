@@ -66,6 +66,7 @@ namespace TAE.WebServer.Controllers.Admin
                 return Response(new { Existing = true });
             }
         }
+
         [HttpPost]
         public async Task<HttpResponseMessage> SubUserData(UserViewModel model)
         {
@@ -83,7 +84,7 @@ namespace TAE.WebServer.Controllers.Admin
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError);
+                    return ResponseException();
                 }
             }
             else
@@ -100,15 +101,16 @@ namespace TAE.WebServer.Controllers.Admin
                     }
                     else
                     {
-                        return Response(HttpStatusCode.InternalServerError);
+                        return ResponseException();
                     }
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError);
+                    return ResponseException();
                 }
             }
         }
+
         [HttpGet]
         public async Task<HttpResponseMessage> GetRoleByUser(string id)
         {

@@ -48,7 +48,7 @@ namespace TAE.WebServer.Controllers.Admin
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError);
+                    return ResponseException();
                 }
             }
             else
@@ -64,12 +64,12 @@ namespace TAE.WebServer.Controllers.Admin
                     }
                     else
                     {
-                        return Response(HttpStatusCode.InternalServerError);
+                        return ResponseException();
                     }
                 }
                 else
                 {
-                    return Response(HttpStatusCode.InternalServerError);
+                    return ResponseException();
                 }
             }
         }

@@ -53,13 +53,15 @@ namespace TAE.WebServer.Common
             }
         }
 
+
+        #region 响应简单封装
         protected HttpResponseMessage Response()
         {
             return Request.CreateResponse(HttpStatusCode.OK, new { msg = "数据提交成功" });
         }
         protected HttpResponseMessage Response(object obj)
         {
-            return Request.CreateResponse(HttpStatusCode.OK,obj);
+            return Request.CreateResponse(HttpStatusCode.OK, obj);
         }
         protected HttpResponseMessage Response<T>(T data)
         {
@@ -75,6 +77,25 @@ namespace TAE.WebServer.Common
             response.Headers.Location = url;
             return response;
         }
+        protected HttpResponseMessage ResponseException(HttpStatusCode statusCode, string msg)
+        {
+            var response = Request.CreateResponse(statusCode);
+            response.Content = new StringContent(msg);
+            return response;
+        }
+        protected HttpResponseMessage ResponseException(HttpStatusCode statusCode)
+        {
+            var response = Request.CreateResponse(statusCode);
+            response.Content = new StringContent("服务器错误");
+            return response;
+        }
+        protected HttpResponseMessage ResponseException()
+        {
+            var response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+            response.Content = new StringContent("服务器错误");
+            return response;
+        } 
+        #endregion
 
         /// <summary>
         /// 将T1映射为T2

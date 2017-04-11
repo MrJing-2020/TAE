@@ -10,9 +10,12 @@ namespace TAE.Data.Model
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public int CompId { get; set; }
-        public int DepId { get; set; }
+        public string CompanyId { get; set; }
+        public string CompanyName { get; set; }
+        public string DepartmentId { get; set; }
+        public string DepartName { get; set; }
         public int Type { get; set; }
+        public string TypeName { get; set; }
         public List<WorkFlowDetail> WorkFlowDetail { get; set; }
     }
 }
