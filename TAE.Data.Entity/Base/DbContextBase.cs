@@ -140,6 +140,7 @@ namespace TAE.Data.Entity
         public DbSet<Company> Company { get; set; }
         public DbSet<Department> Department { get; set; }
         public DbSet<Position> Position { get; set; }
+        public DbSet<Type> Type { get; set; }
         #endregion
     }
 }

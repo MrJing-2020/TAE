@@ -56,16 +56,23 @@ namespace TAE.Core.Cache
             var getDataFromCache = new Func<F>(() =>
             {
                 F data = default(F);
-                var cacheData = Get(key);
-                if (cacheData == null)
+                try
                 {
-                    data = getRealData();
-                    if (data != null)
-                        Set(key, data);
+                    var cacheData = Get(key);
+                    if (cacheData == null)
+                    {
+                        data = getRealData();
+                        if (data != null)
+                            Set(key, data);
+                    }
+                    else
+                    {
+                        data = (F)cacheData;
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    data = (F)cacheData;
+                    return getRealData();
                 }
                 return data;
             });

@@ -73,23 +73,51 @@ namespace TAE.Core.ServiceProvider
         {
         }
 
+        //private static void GetServiceProviders()
+        //{
+        //    if (Instance<T>.ServiceProviders == null)
+        //    {
+        //        lock (Instance<T>.locker)
+        //        {
+        //            if (Instance<T>.ServiceProviders == null)
+        //            {
+        //                Instance<T>.ServiceProviders = new Hashtable();
+
+        //                foreach (Item item in (ConfigurationManager.GetSection("serviceProvider") as ServiceProviderConfig).Items)
+        //                {
+        //                    if (Instance<T>.ServiceProviders.ContainsKey(item.Interface))
+        //                    {
+        //                        throw new ApplicationException(string.Concat("配置文件中最多只能配置一个", item.Interface, "的实现"));
+        //                    }
+        //                    Instance<T>.ServiceProviders.Add(item.Interface, string.Concat(item.NameSpace, ",", item.Assembly));
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
         private static void GetServiceProviders()
         {
-            if (Instance<T>.ServiceProviders == null)
+            if (ServiceProviders == null)
             {
-                lock (Instance<T>.locker)
+                lock (locker)
                 {
-                    if (Instance<T>.ServiceProviders == null)
+                    if (ServiceProviders == null)
                     {
-                        Instance<T>.ServiceProviders = new Hashtable();
-                        foreach (Item item in (ConfigurationManager.GetSection("serviceProvider") as ServiceProviderConfig).Items)
+                        var GetProviders = new Func<Hashtable>(() =>
                         {
-                            if (Instance<T>.ServiceProviders.ContainsKey(item.Interface))
+                            var Providers = new Hashtable();
+                            foreach (Item item in (ConfigurationManager.GetSection("serviceProvider") as ServiceProviderConfig).Items)
                             {
-                                throw new ApplicationException(string.Concat("配置文件中最多只能配置一个", item.Interface, "的实现"));
+                                if (Providers.ContainsKey(item.Interface))
+                                {
+                                    throw new ApplicationException(string.Concat("配置文件中最多只能配置一个", item.Interface, "的实现"));
+                                }
+                                Providers.Add(item.Interface, string.Concat(item.NameSpace, ",", item.Assembly));
                             }
-                            Instance<T>.ServiceProviders.Add(item.Interface, string.Concat(item.NameSpace, ",", item.Assembly));
-                        }
+                            return Providers;
+                        });
+                        ServiceProviders = CacheHelper.Get<Hashtable>("ServiceProviders", GetProviders);
                     }
                 }
             }

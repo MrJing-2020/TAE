@@ -13,10 +13,11 @@ namespace TAE.WebServer.Providers
 {
     using TAE.Data.Entity;
     using TAE.Data.Model;
+
     /// <summary>
     /// 密码验证，token发放
     /// </summary>
-    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
+    public class AppAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {

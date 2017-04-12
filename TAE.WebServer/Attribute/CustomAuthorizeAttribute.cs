@@ -10,6 +10,7 @@ namespace TAE.WebServer.Attribute
     using TAE.Data.Model;
     using TAE.IService;
     using TAE.Utility.Common;
+
     /// <summary>
     /// 此处的AuthorizeAttribute在System.Web.Mvc命名空间下，只能用于mvc的请求验证，对webapi无效
     /// </summary>

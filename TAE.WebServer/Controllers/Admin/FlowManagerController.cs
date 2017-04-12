@@ -20,6 +20,39 @@ namespace TAE.WebServer.Controllers.Admin
 
         #endregion
 
+        [HttpGet]
+        public HttpResponseMessage AllFlowAndType()
+        {
+            var flowList = ServiceBase.FindBy<WorkFlow>();
+            int typeGroup = Convert.ToInt32(TypeEnum.WorkFlow);
+            var typeList = ServiceBase.FindBy<Type>(m => m.TypeGroup == typeGroup);
+            List<JsTreeModel> treeList = new List<JsTreeModel>();
+            foreach (var item in typeList)
+            {
+                var treeItem = new JsTreeModel
+                {
+                    id = item.Id,
+                    text = item.TypeName,
+                    parent = "#",
+                    icon = "fa fa-folder",
+                    state = new TreeStateModel { opened = true }
+                };
+                treeList.Add(treeItem);
+            }
+            foreach (var item in flowList)
+            {
+                var treeItem = new JsTreeModel
+                {
+                    id = item.Id,
+                    text = item.Name,
+                    parent = item.Type,
+                    icon = "fa fa-folder"
+                };
+                treeList.Add(treeItem);
+            }
+            return Response(treeList);
+        }
+
         [HttpPost]
         public HttpResponseMessage AllFlows(dynamic param)
         {
@@ -44,7 +77,7 @@ namespace TAE.WebServer.Controllers.Admin
             }
             else
             {
-                return Response(HttpStatusCode.NotFound, "未找到任何信息");
+                return Response(HttpStatusCode.NotFound, new { msg = "未找到任何信息" });
             }
         }
 
@@ -52,42 +85,26 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetFlow(string id)
         {
             var flow = ServiceBase.FindBy<WorkFlow>(m => m.Id == id).FirstOrDefault();
-            if (flow!=null)
-            {
-                return Response(flow);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NotFound, "未找到任何信息");
-            }
+            return Response(flow);
         }
 
         [HttpGet]
         public HttpResponseMessage GetFlowDetails(string id)
         {
-            var list = ServiceBase.FindBy<WorkFlowDetail>(m => m.WorkFlowId == id).ToList();
-            if (list.Count() > 0)
-            {
-                return Response(list);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NotFound, "未找到任何信息");
-            }
-        }
-
-        /// <summary>
-        /// 工作流类型下拉框
-        /// </summary>
-        /// <param name="id">公司id</param>
-        /// <returns></returns>
-        [HttpGet]
-        public HttpResponseMessage FlowTypeSelectList(string id)
-        {
-            string sql = "select Id as 'Key',PositionName as 'Value' from Position where CompanyId = @Id";
+            string sqlGetFlow = @"select a.*,b.TypeName,c.CompanyName,d.DepartName from WorkFlow a 
+                                        inner join Type b on a.Type=b.Id
+                                        inner join Company c on a.CompanyId=c.Id
+                                        inner join Department d on a.DepartmentId =d.Id
+                                        where a.Id=@Id";
+            string sqlGetFlowDetails = @"select a.*,b.RealName as 'DefualtAuditRealName' from WorkFlowDetail a 
+                                        inner join AspNetUsers b on a.DefualtAuditUserId=b.Id 
+                                        where a.WorkFlowId=@WorkFlowId order by a.Step";
             SqlParameter param = new SqlParameter("@Id", id);
-            List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
-            return Response(list);
+            SqlParameter paramDetail = new SqlParameter("@WorkFlowId", id);
+            FlowViewModel flowDetail = ServiceBase.FindBy<FlowViewModel>(sqlGetFlow, param).FirstOrDefault();
+            var list = ServiceBase.FindBy<FlowDetailViewModel>(sqlGetFlowDetails, paramDetail).ToList();
+            flowDetail.WorkFlowDetail = list;
+            return Response(flowDetail);
         }
 
         [HttpPost]
@@ -100,14 +117,7 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpPost]
         public HttpResponseMessage SubFlowDetail(WorkFlowDetail flowDetail)
         {
-            var flowDetailEntity = ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
-            return Response(flowDetailEntity);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage FlowSelectList()
-        {
-            var flowList = ServiceBase.FindBy<WorkFlow>();
+            ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
             return Response();
         }
 
@@ -117,19 +127,44 @@ namespace TAE.WebServer.Controllers.Admin
         /// <param name="list"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage SubFlowDetail(List<KeyValueModel> list)
+        public HttpResponseMessage SubFlowDetailSort(List<KeyValueModel> list)
         {
             var flowDetailList = ServiceBase.FindBy<WorkFlowDetail>().ToList();
             WorkFlowDetail[] entities = new WorkFlowDetail[list.Count()];
-            int i=0;
+            int i = 0;
             foreach (var item in list)
             {
-                var flowDetailItem=flowDetailList.Where(m=>m.Id==item.Key).FirstOrDefault();
-                flowDetailItem.Step=Convert.ToInt32(item.Value);
+                var flowDetailItem = flowDetailList.Where(m => m.Id == item.Key).FirstOrDefault();
+                flowDetailItem.Step = Convert.ToInt32(item.Value);
                 entities[i] = flowDetailItem;
             }
             ServiceBase.Update<WorkFlowDetail>(entities);
             return Response();
+        }
+
+        /// <summary>
+        /// 工作流下拉框
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage FlowSelectList()
+        {
+            string sql = "select Id as 'Key',Name as 'Value' from WorkFlow";
+            List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql).ToList();
+            return Response(list);
+        }
+
+        /// <summary>
+        /// 工作流类型下拉框
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage FlowTypeSelectList()
+        {
+            string sql = "select Id as 'Key',TypeName as 'Value' from Type where TypeGroup = @group";
+            SqlParameter param = new SqlParameter("@group", Convert.ToInt32(TypeEnum.WorkFlow));
+            List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
+            return Response(list);
         }
 
     }

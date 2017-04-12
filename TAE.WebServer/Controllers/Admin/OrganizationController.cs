@@ -78,14 +78,7 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetComDetail(string id)
         {
             var company = ServiceBase.FindBy<Company>(m => m.Id == id).FirstOrDefault();
-            if (company != null)
-            {
-                return Response(company);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
-            }
+            return Response(company);
         }
 
         /// <summary>
@@ -109,14 +102,7 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetComUsers(string id)
         {
             var users = ServiceIdentity.FindUser(m => m.CompanyId == id).ToList();
-            if (users.Count() > 0)
-            {
-                return Response(users);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
-            }
+            return ResponseList<AppUser>(users);
         }
 
         /// <summary>
@@ -128,14 +114,7 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetDeps(string id)
         {
             var dep = ServiceBase.FindBy<Department>(m => m.CompanyId == id).ToList();
-            if (dep.Count() > 0)
-            {
-                return Response(dep);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
-            }
+            return ResponseList<Department>(dep);
         }
 
         /// <summary>
@@ -147,14 +126,7 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetDepUsers(string id)
         {
             var users = ServiceIdentity.FindUser(m=>m.DepartmentId==id).ToList();
-            if (users.Count() > 0)
-            {
-                return Response(users);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
-            }
+            return ResponseList<AppUser>(users);
         }
 
         /// <summary>
@@ -178,14 +150,7 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetPositions(string id)
         {
             var pos = ServiceBase.FindBy<Position>(m => m.CompanyId == id).ToList();
-            if (pos.Count() > 0)
-            {
-                return Response(pos);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
-            }
+            return ResponseList<Position>(pos);
         }
 
         /// <summary>

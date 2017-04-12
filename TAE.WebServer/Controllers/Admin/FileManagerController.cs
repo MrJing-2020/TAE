@@ -14,6 +14,10 @@ namespace TAE.WebServer.Controllers.Admin
     using TAE.Data.Model;
     using TAE.WebServer.Common;
     using TAE.WebServer.Common.Upload;
+
+    /// <summary>
+    /// 文件管理
+    /// </summary>
     public class FileManagerController : BaseApiController
     {
         [HttpPost]
@@ -74,7 +78,7 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetFileList()
         {
             var fileList = ServiceBase.FindBy<FilesInfo>().ToList();
-            return Response(fileList);
+            return ResponseList<FilesInfo>(fileList);
         }
     }
 }

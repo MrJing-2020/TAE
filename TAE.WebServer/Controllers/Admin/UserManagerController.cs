@@ -38,14 +38,7 @@ namespace TAE.WebServer.Controllers.Admin
         {
             var appUser = await ServiceIdentity.FindUserById(id);
             //var user = Map<AppUser, UserViewModel>(AppUser);
-            if (appUser != null)
-            {
-                return Response(appUser);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "未找到任何信息" });
-            }
+            return Response(appUser);
         }
 
         /// <summary>
@@ -150,6 +143,7 @@ namespace TAE.WebServer.Controllers.Admin
             List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql,param).ToList();
             return Response(list);
         }
+
         /// <summary>
         /// 职位下拉框
         /// </summary>
@@ -159,6 +153,20 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage PosSelectList(string id)
         {
             string sql = "select Id as 'Key',PositionName as 'Value' from Position where CompanyId = @Id";
+            SqlParameter param = new SqlParameter("@Id", id);
+            List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
+            return Response(list);
+        }
+
+        /// <summary>
+        /// 人员下拉框
+        /// </summary>
+        /// <param name="id">公司id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage UserSelectList(string id)
+        {
+            string sql = "select Id as 'Key',RealName as 'Value' from AspNetUsers where CompanyId = @Id";
             SqlParameter param = new SqlParameter("@Id", id);
             List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
             return Response(list);

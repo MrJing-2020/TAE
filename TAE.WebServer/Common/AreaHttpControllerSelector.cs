@@ -13,7 +13,8 @@ namespace TAE.WebServer.Common
     using System.Web.Http.Dispatcher;
 
     /// <summary>  
-    /// 控制器查找类，用来替换默认查找器，以支持不同命名空间下同名的webapi
+    /// 重写控制器查找方法
+    /// 用来替换默认查找器，以支持不同命名空间下同名的webapi，实现类似mvc中area的效果
     /// </summary>  
     public class AreaHttpControllerSelector : DefaultHttpControllerSelector
     {
@@ -29,6 +30,7 @@ namespace TAE.WebServer.Common
                 return this._apiControllerTypes.Value;
             }
         }
+
         /// <summary>  
         /// Initializes a new instance of the AreaHttpControllerSelector class  
         /// </summary>  
@@ -39,6 +41,7 @@ namespace TAE.WebServer.Common
             this._configuration = configuration;
             this._apiControllerTypes = new Lazy<ILookup<string, Type>>(this.GetApiControllerTypes);
         }
+
         /// <summary>  
         /// 获取当前程序集中 IHttpController反射集合  
         /// </summary>  
@@ -50,8 +53,9 @@ namespace TAE.WebServer.Common
                 .GetControllerTypes(assembliesResolver)
                 .ToLookup(t => t.Name.ToLower().Substring(0, t.Name.Length - DefaultHttpControllerSelector.ControllerSuffix.Length), t => t);
         }
+
         /// <summary>  
-        /// Selects a System.Web.Http.Controllers.HttpControllerDescriptor for the given System.Net.Http.HttpRequestMessage.  
+        /// 从HttpRequestMessage中获取信息，并找到对应命名空间下的控制器
         /// </summary>  
         /// <param name="request"></param>  
         /// <returns></returns>  
@@ -65,7 +69,8 @@ namespace TAE.WebServer.Common
                 if (groups != null && groups.Any())
                 {
                     string endString;
-                    var routeDic = request.GetRouteData().Values;//存在controllerName的话必定能取到IHttpRouteData  
+                    var routeDic = request.GetRouteData().Values;
+                    //存在controllerName的话必定能取到IHttpRouteData  
                     if (routeDic.Count > 1)
                     {
                         StringBuilder tmp = new StringBuilder();
@@ -74,7 +79,8 @@ namespace TAE.WebServer.Common
                             tmp.Append('.');
                             tmp.Append(routeDic[key]);
                             if (key.Equals(DefaultHttpControllerSelector.ControllerSuffix, StringComparison.CurrentCultureIgnoreCase))
-                            {//如果是control，则代表命名空间结束  
+                            {
+                                //如果是control，则代表命名空间结束  
                                 break;
                             }
                         }
@@ -87,7 +93,8 @@ namespace TAE.WebServer.Common
                     }
                     //取NameSpace节点数最少的Type  
                     var type = groups.Where(t => t.FullName.EndsWith(endString, StringComparison.CurrentCultureIgnoreCase))
-                        .OrderBy(t => t.FullName.Count(s => s == '.')).FirstOrDefault();//默认返回命名空间节点数最少的第一项  
+                        .OrderBy(t => t.FullName.Count(s => s == '.')).FirstOrDefault();
+                    //默认返回命名空间节点数最少的第一项  
                     if (type != null)
                     {
                         des = new HttpControllerDescriptor(this._configuration, controllerName, type);

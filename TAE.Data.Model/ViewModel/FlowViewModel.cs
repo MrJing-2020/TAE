@@ -14,8 +14,8 @@ namespace TAE.Data.Model
         public string CompanyName { get; set; }
         public string DepartmentId { get; set; }
         public string DepartName { get; set; }
-        public int Type { get; set; }
+        public string Type { get; set; }
         public string TypeName { get; set; }
-        public List<WorkFlowDetail> WorkFlowDetail { get; set; }
+        public List<FlowDetailViewModel> WorkFlowDetail { get; set; }
     }
 }

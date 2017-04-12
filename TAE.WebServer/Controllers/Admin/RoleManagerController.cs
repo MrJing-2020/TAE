@@ -24,14 +24,8 @@ namespace TAE.WebServer.Controllers.Admin
         public async Task<HttpResponseMessage> GetRoleDetail(string id)
         {
             var appRole = await ServiceIdentity.FindRoleById(id);
-            if (appRole != null)
-            {
-                return Response(appRole);
-            }
-            else
-            {
-                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
-            }
+            return Response(appRole);
+
         }
 
         [HttpPost]

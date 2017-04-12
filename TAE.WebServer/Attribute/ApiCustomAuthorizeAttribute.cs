@@ -15,6 +15,10 @@ namespace TAE.WebServer.Attribute
     using TAE.Data.Model;
     using TAE.IService;
     using TAE.Utility.Common;
+
+    /// <summary>
+    /// 重写api权限验证，加入操作权限验证
+    /// </summary>
     public class ApiCustomAuthorizeAttribute : AuthorizeAttribute
     {
         private string[] RoleNames { get; set; }

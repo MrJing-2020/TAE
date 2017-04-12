@@ -13,10 +13,11 @@ namespace TAE.WebServer.Providers
     using TAE.Utility.Common;
     using TAE.Data.Entity;
     using TAE.Data.Model;
+
     /// <summary>
     /// token刷新
     /// </summary>
-    public class SimpleRefreshTokenProvider : IAuthenticationTokenProvider
+    public class AppRefreshTokenProvider : IAuthenticationTokenProvider
     {
         private IServiceIdentity ServiceIdentity
         {

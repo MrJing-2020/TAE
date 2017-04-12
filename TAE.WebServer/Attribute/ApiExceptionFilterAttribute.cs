@@ -10,9 +10,15 @@ using System.Web.Http.Filters;
 
 namespace TAE.WebServer.Attribute
 {
+    /// <summary>
+    /// 自定义异常过滤器
+    /// </summary>
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute 
     {
-        //重写基类的异常处理方法
+        /// <summary>
+        /// 重写基类的异常处理方法
+        /// </summary>
+        /// <param name="actionExecutedContext"></param>
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
             //异常日志记录（正式项目用log4net记录异常日志

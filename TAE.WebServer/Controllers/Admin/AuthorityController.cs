@@ -62,6 +62,11 @@ namespace TAE.WebServer.Controllers.Admin
             return Response(new { optionList = optionList, dataList = dataList });
         }
 
+        /// <summary>
+        /// 获取角色权限信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage GetRoleAuthority(string id)
         {

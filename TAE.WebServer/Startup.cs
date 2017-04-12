@@ -17,7 +17,6 @@ namespace TAE.WebServer
     {
         public void Configuration(IAppBuilder app)
         {
-            //
             app.CreatePerOwinContext<AppIdentityDbContext>(AppIdentityDbContext.Create);
             app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
             app.CreatePerOwinContext<AppRoleManager>(AppRoleManager.Create);
@@ -38,13 +37,12 @@ namespace TAE.WebServer
                 TokenEndpointPath = new PathString("/token"),
                 //过期时间暂时设置为1天
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
-                Provider = new SimpleAuthorizationServerProvider(),
-
+                Provider = new AppAuthorizationServerProvider(),
                 //token刷新程序
-                RefreshTokenProvider = new SimpleRefreshTokenProvider()
+                RefreshTokenProvider = new AppRefreshTokenProvider()
             };
 
-            // Token Generation
+            // Token配置
             app.UseOAuthAuthorizationServer(OAuthServerOptions);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
         }

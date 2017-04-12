@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TAE.Utility.Common
+namespace TAE.Data.Model
 {
-    public enum MenuType
+    public enum TypeEnum
     {
+        WorkFlow = 1
     }
 }
