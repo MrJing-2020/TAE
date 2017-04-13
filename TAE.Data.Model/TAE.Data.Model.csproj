@@ -63,7 +63,10 @@
     <Compile Include="Base\BaseModel.cs" />
     <Compile Include="Base\ComBaseModel.cs" />
     <Compile Include="Common\LoginUser.cs" />
+    <Compile Include="EntityModel\Base\ClassInfo.cs" />
     <Compile Include="EntityModel\Base\Company.cs" />
+    <Compile Include="EntityModel\Base\Course.cs" />
+    <Compile Include="EntityModel\Base\CourseSection.cs" />
     <Compile Include="EntityModel\Base\DataRole.cs" />
     <Compile Include="EntityModel\Base\Department.cs" />
     <Compile Include="EntityModel\Base\FilesInfo.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="EntityModel\Base\MenuRole.cs" />
     <Compile Include="EntityModel\Base\Position.cs" />
     <Compile Include="EntityModel\Base\Type.cs" />
+    <Compile Include="EntityModel\Base\UserRCourse.cs" />
     <Compile Include="EntityModel\Base\WorkFlow.cs" />
     <Compile Include="EntityModel\Base\WorkFlowDetail.cs" />
     <Compile Include="EntityModel\Base\WorkFlowDetailInfo.cs" />

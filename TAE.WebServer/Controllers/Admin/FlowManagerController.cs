@@ -89,7 +89,7 @@ namespace TAE.WebServer.Controllers.Admin
         }
 
         [HttpGet]
-        public HttpResponseMessage GetFlowDetails(string id)
+        public HttpResponseMessage GetFlowAndDetails(string id)
         {
             string sqlGetFlow = @"select a.*,b.TypeName,c.CompanyName,d.DepartName from WorkFlow a 
                                         inner join Type b on a.Type=b.Id
@@ -104,6 +104,13 @@ namespace TAE.WebServer.Controllers.Admin
             FlowViewModel flowDetail = ServiceBase.FindBy<FlowViewModel>(sqlGetFlow, param).FirstOrDefault();
             var list = ServiceBase.FindBy<FlowDetailViewModel>(sqlGetFlowDetails, paramDetail).ToList();
             flowDetail.WorkFlowDetail = list;
+            return Response(flowDetail);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetFlowDetail(string id)
+        {
+            var flowDetail = ServiceBase.FindBy<WorkFlowDetail>(m => m.Id == id).FirstOrDefault();
             return Response(flowDetail);
         }
 
