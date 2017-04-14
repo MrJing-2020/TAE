@@ -1,37 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using TAE.Data.Entity;
+using TAE.Data.Model;
+using TAE.IRepository;
 
 namespace TAE.Repository
 {
-    using TAE.Data.Entity;
-    using TAE.IRepository;
-    using TAE.Data.Model;
-    using Core.Cache;
-
-    /// <summary>
-    /// EF增删查改封装类（仓储层）
-    /// </summary>
-    public class RepositoryBase : IRepositoryBase
+    public class RepositoryExtend : IRepositoryExtend
     {
-        private Func<DbContextBase> func;
-        public DbContextBase Context {
-            get {
-                return CacheHelper.GetItem<DbContextBase>("context", func);
-            }
-        }
-        public RepositoryBase(DbContextBase context)
+        public DbContextExtend Context {get;set;}
+        public RepositoryExtend(DbContextExtend context) 
         {
-            func = new Func<DbContextBase>(() => { return context; });
-        }
-        public RepositoryBase()
-        {
-            func = new Func<DbContextBase>(() => { return new DbContextBase(); });
+            Context = context;
         }
 
         #region 查询相关
@@ -61,7 +46,7 @@ namespace TAE.Repository
         public IQueryable<T> FindAllByPage<T>(int pageNumber, int pageSize, out int total) where T : BaseModel
         {
             var set = Context.Set<T>();
-            return set.FindAll<T>().GetPage<T>(out total,pageNumber,pageSize);
+            return set.FindAll<T>().GetPage<T>(out total, pageNumber, pageSize);
         }
         public IQueryable<T> FindAllByPage<T, TKey>(int pageNumber, int pageSize, out int total, Expression<Func<T, TKey>> orderBy, bool isAsc = true) where T : class
         {
@@ -115,7 +100,7 @@ namespace TAE.Repository
         public void Insert<T>(IEnumerable<T> entities) where T : class
         {
             Context.Insert<T>(entities);
-        } 
+        }
         #endregion
 
         #region 删除相关
@@ -127,7 +112,7 @@ namespace TAE.Repository
         public void Remove<T>(Expression<Func<T, bool>> where) where T : class
         {
             Context.Remove<T>(where);
-        } 
+        }
         #endregion
 
         public void Dispose()

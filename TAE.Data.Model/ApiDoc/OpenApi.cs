@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
-    /// <summary>
-    /// 课程
-    /// </summary>
-    public class Course : BaseModel
+    public class OpenApi : BaseModel
     {
         public string Name { get; set; }
-        public string ClassId { get; set; }
+        public string Description { get; set; }
     }
 }

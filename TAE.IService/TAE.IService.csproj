@@ -56,7 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\IServiceBase.cs" />
+    <Compile Include="Base\IServiceExtend.cs" />
+    <Compile Include="IServiceBase.cs" />
+    <Compile Include="IServiceApiDoc.cs" />
     <Compile Include="IServiceIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

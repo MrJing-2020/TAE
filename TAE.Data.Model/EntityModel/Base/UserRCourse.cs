@@ -7,13 +7,22 @@ using System.Threading.Tasks;
 namespace TAE.Data.Model
 {
     /// <summary>
-    /// 用户-课程关联表
+    /// 用户-课程关联表(适用对象)
     /// </summary>
     public class UserRCourse : BaseModel
     {
         public string UserId { get;set; }
+        public string CompanuId { get; set; }
+        public string DepartmentId { get; set; }
+        public string PositionId { get; set; }
+
+        //课程Id
         public string CourseId { get; set; }
-        public string CourseContentId { get; set; }
-        public string CourseContentType { get; set; }
+
+        //课件Id
+        public string CourseWareId { get; set; }
+
+        //课件附件Id(例：ppt，video)
+        public string CourseAccId { get; set; }
     }
 }

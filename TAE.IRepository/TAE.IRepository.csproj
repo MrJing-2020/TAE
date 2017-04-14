@@ -56,7 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\IRepositoryBase.cs" />
+    <Compile Include="Base\IRepositoryExtend.cs" />
+    <Compile Include="IRepositoryBase.cs" />
+    <Compile Include="IRepositoryApiDoc.cs" />
     <Compile Include="IRepositoryIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
-    public class CourseSection
+    /// <summary>
+    /// 课程章节
+    /// </summary>
+    public class CourseSection : BaseModel
     {
+        public string Name { get; set; }
     }
 }

@@ -56,8 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\ServiceBase.cs" />
+    <Compile Include="Base\ServiceExtend.cs" />
+    <Compile Include="ServiceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceApiDoc.cs" />
     <Compile Include="ServiceIdentity.cs" />
   </ItemGroup>
   <ItemGroup>

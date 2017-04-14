@@ -32,6 +32,13 @@ namespace TAE.WebServer.Common
                 return ServiceContext.Current.ServiceIdentity;
             }
         }
+        protected IServiceApiDoc ServiceApiDoc
+        {
+            get
+            {
+                return ServiceContext.Current.ServiceApiDoc;
+            }
+        }
         protected LoginUser LoginUser
         {
             get

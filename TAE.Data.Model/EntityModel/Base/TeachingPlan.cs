@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 namespace TAE.Data.Model
 {
     /// <summary>
-    /// 课程
+    /// 教学大纲（办班计划）
     /// </summary>
-    public class Course : BaseModel
+    public class TeachingPlan : BaseModel
     {
         public string Name { get; set; }
-        public string ClassId { get; set; }
+        public string Description { get; set; }
+        public string Goal { get; set; }
     }
 }

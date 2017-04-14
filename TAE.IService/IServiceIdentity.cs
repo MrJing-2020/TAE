@@ -8,7 +8,7 @@ using TAE.Data.Model;
 
 namespace TAE.IService
 {
-    public interface IServiceIdentity:IDisposable
+    public interface IServiceIdentity : IDisposable
     {
         #region AppUser增删查改
 

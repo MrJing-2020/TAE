@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
+    /// <summary>
+    /// 班次
+    /// </summary>
     public class ClassInfo : BaseModel
     {
-        public string ClassName { get; set; }
+        public string Name { get; set; }
+        public string TeachingPlanId { get; set; }
         public string CreateCompanyId { get; set; }
         public string Goal { get; set; }
     }

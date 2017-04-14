@@ -13,5 +13,6 @@ namespace TAE.Core.Config
         {
         }
         public String TAE_Base { get; set; }
+        public String TAE_ApiDoc { get; set; }
     }
 }

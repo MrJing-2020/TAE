@@ -33,5 +33,12 @@ namespace TAE.Utility.Common
                 return ServiceHelper.GetService<IServiceIdentity>();
             }
         }
+        public IServiceApiDoc ServiceApiDoc
+        {
+            get
+            {
+                return ServiceHelper.GetService<IServiceApiDoc>();
+            }
+        }
     }
 }
