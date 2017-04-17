@@ -11,17 +11,24 @@ namespace TAE.Repository
 {
     public class RepositoryApiDoc : RepositoryExtend, IRepositoryApiDoc
     {
-        private static DbContextApiDoc context = CacheHelper.GetItem<DbContextApiDoc>("DbContextApiDoc", () => { return new DbContextApiDoc(); });
+        private DbContextApiDoc ContextApiDoc
+        {
+            get
+            {
+                return CacheHelper.GetItem<DbContextApiDoc>("DbContextApiDoc", () => { return new DbContextApiDoc(); });
+            }
+        }
         public RepositoryApiDoc()
-            : base(context)
+            : base(CacheHelper.GetItem<DbContextApiDoc>("DbContextApiDoc", () => { return new DbContextApiDoc(); }))
         {
         }
-        //public void Dispose()
-        //{
-        //    if (Context != null)
-        //    {
-        //        Context.Dispose();
-        //    }
-        //}
+        public new void Dispose()
+        {
+            base.Dispose();
+            if (ContextApiDoc != null)
+            {
+                ContextApiDoc.Dispose();
+            }
+        }
     }
 }

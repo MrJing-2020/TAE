@@ -17,19 +17,26 @@ namespace TAE.Repository
     /// <summary>
     /// EF增删查改封装类（仓储层）
     /// </summary>
-    public class RepositoryBase : RepositoryExtend,IRepositoryBase
+    public class RepositoryBase : RepositoryExtend, IRepositoryBase
     {
-        public static DbContextExtend context = CacheHelper.GetItem<DbContextExtend>("DbContextBase", () => { return new DbContextBase(); });
+        public DbContextBase ContextBase
+        {
+            get
+            {
+                return CacheHelper.GetItem<DbContextBase>("DbContextBase", () => { return new DbContextBase(); });
+            }
+        }
         public RepositoryBase()
-            : base(context)
+            : base(CacheHelper.GetItem<DbContextBase>("DbContextBase", () => { return new DbContextBase(); }))
         {
         }
-        //public void Dispose()
-        //{
-        //    if (Context != null)
-        //    {
-        //        Context.Dispose();
-        //    }
-        //}
+        public new void Dispose()
+        {
+            base.Dispose();
+            if (ContextBase != null)
+            {
+                ContextBase.Dispose();
+            }
+        }
     }
 }

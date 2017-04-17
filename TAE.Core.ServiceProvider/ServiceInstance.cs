@@ -53,7 +53,7 @@ namespace TAE.Core.ServiceProvider
                         t = containerBuilder.Build(ContainerBuildOptions.None).Resolve<T>();
                         return t;
                     });
-                    t = CacheHelper.Get<T>(str5, GetService);
+                    t = CacheHelper.GetItem<T>(str5, GetService);
                 }
                 catch (Exception)
                 {

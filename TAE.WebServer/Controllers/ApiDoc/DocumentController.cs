@@ -12,17 +12,18 @@ namespace TAE.WebServer.Controllers.ApiDoc
 
     public class DocumentController : BaseApiController
     {
-        ///// <summary>
-        /////接口显示
-        ///// </summary>
-        ///// <param name="model"></param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public HttpResponseMessage GetAllDoc()
-        //{
-        //    var list = ServiceApiDoc.FindBy<DocMain>();
-        //    return Response(list);
-        //}
+        /// <summary>
+        ///接口显示
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetApiDocList()
+        {
+            var list = ServiceApiDoc.FindBy<DocMain>().ToList();
+            return Response(list);
+        }
+
         /// <summary>
         /// 提交新增和编辑Api数据
         /// </summary>

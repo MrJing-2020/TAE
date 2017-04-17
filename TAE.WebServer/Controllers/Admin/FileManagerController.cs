@@ -33,6 +33,7 @@ namespace TAE.WebServer.Controllers.Admin
             foreach (var item in fileList)
             {
                 item.LinkId = LoginUser.UserInfo.Id;
+                //
                 item.FileType = 1;
                 item.BusinessType = "";
                 item.UploadUserId = LoginUser.UserInfo.Id;
@@ -72,6 +73,13 @@ namespace TAE.WebServer.Controllers.Admin
                 return Response(HttpStatusCode.InternalServerError, new { msg = "服务器错误" });
             }
             return Response(url);
+        }
+
+        public HttpResponseMessage DelFile(string id)
+        {
+            ServiceBase.Remove<FilesInfo>(id);
+            ServiceBase.DelFile(id);
+            return Response();
         }
 
         [HttpGet]

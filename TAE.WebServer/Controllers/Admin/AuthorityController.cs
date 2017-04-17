@@ -223,6 +223,7 @@ namespace TAE.WebServer.Controllers.Admin
         /// <param name="dataList"></param>
         /// <param name="comList"></param>
         /// <param name="PreCompanyId"></param>
+        [NonAction]
         private void GetPreCompany(List<JsTreeModel> dataList, List<Company> comList, string PreCompanyId)
         {
             if (PreCompanyId == "#")

@@ -13,9 +13,9 @@ namespace TAE.Data.Model
     {
         //1表示类型是工作流
         WorkFlow = 1,
-        //2表示课程类型
+        //2表示课程类型(9大类)
         Course=2,
-        //3表示课程附件
+        //3表示课程附件(ppt,vedio等)
         CourseAccessory = 3
     }
 }

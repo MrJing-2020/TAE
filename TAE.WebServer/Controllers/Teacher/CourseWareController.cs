@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using TAE.Data.Model;
 using TAE.WebServer.Common;
+using TAE.WebServer.Common.Upload;
 
 namespace TAE.WebServer.Controllers.Teacher
 {
@@ -29,12 +32,56 @@ namespace TAE.WebServer.Controllers.Teacher
         /// <param name="id">用户Id</param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage CourseWaresDetail()
+        public HttpResponseMessage CourseWareDetail(string id)
         {
-            string sqlCourseWaresDetail = @"";
-            var list = ServiceBase.FindBy<CourseWare>(sqlCourseWaresDetail);
+            var list = ServiceBase.FindBy<CourseWare>(m=>m.Id==id);
             return Response(list);
         }
+
+        #region 获取课件相关附件
+
+        /// <summary>
+        /// 根据课件id获取讲义(多个)
+        /// </summary>
+        /// <param name="id">课件(CourseWare)id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetHandouts(string id)
+        {
+            var handoutList = ServiceBase.FindBy<Handouts>(m => m.CourseWareId == id).ToList();
+            return Response(handoutList);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetTestQuestion(string id)
+        {
+            var testQuestionList = ServiceBase.FindBy<TestQuestion>(m => m.CourseWareId == id).ToList();
+            return Response();
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetTestPaper(string id)
+        {
+            var testPaperList = ServiceBase.FindBy<TestPaper>(m => m.CourseWareId == id).ToList();
+            return Response();
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetVideo(string id)
+        {
+            var videoList = ServiceBase.FindBy<Video>(m => m.CourseWareId == id).ToList();
+            return Response();
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetPowerPoint(string id)
+        {
+            var powerPointList = ServiceBase.FindBy<PowerPoint>(m => m.CourseWareId == id).ToList();
+            return Response();
+        } 
+        #endregion
+
+        #region 课件编辑相关
 
         [HttpPost]
         public HttpResponseMessage SubCourseWarse(CourseWare model)
@@ -49,5 +96,106 @@ namespace TAE.WebServer.Controllers.Teacher
             ServiceBase.SaveEntity<Handouts>(model);
             return Response();
         }
+
+        [HttpPost]
+        public HttpResponseMessage SubTestQuestion(TestQuestion model)
+        {
+            ServiceBase.SaveEntity<TestQuestion>(model);
+            return Response();
+        }
+
+        [HttpPost]
+        public HttpResponseMessage SubTestPaper(TestPaper model)
+        {
+            ServiceBase.SaveEntity<TestPaper>(model);
+            return Response();
+        }
+
+        /// <summary>
+        /// 保存课件（视频）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> SubVideo()
+        {
+            // 是否请求包含multipart/form-data。
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+            var provider = new MultipartFormDataStreamProvider(UploadHelper.UploadPath);
+            await Request.Content.ReadAsMultipartAsync(provider);
+            Video video = new Video
+            {
+                Id = provider.FormData.GetValues("Id").FirstOrDefault(),
+                Name = provider.FormData.GetValues("Name").FirstOrDefault(),
+                Description = provider.FormData.GetValues("Description").FirstOrDefault(),
+                CourseWareId = provider.FormData.GetValues("CourseWareId").FirstOrDefault(),
+                //是否公开，0表示否
+                IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
+                IsDel = false,
+                CreateUserId = LoginUser.UserInfo.Id
+            };
+            video = ServiceBase.SaveEntity<Video>(video);
+
+            //文件保存
+            var fileList = UploadHelper.uploadFile(provider);
+            foreach (var item in fileList)
+            {
+                item.FileType = 1;
+                //获取业务类型，此处的值为TypeId（Type表中，TypeGroup为TypeEnum.CourseAccessory，TypeName为"PPT"的列的Id）
+                item.BusinessType = provider.FormData.GetValues("CourseAccessory").FirstOrDefault();
+                item.LinkId = video.Id;
+                item.UploadUserId = LoginUser.UserInfo.Id;
+                item.CompanyId = LoginUser.UserInfo.CompanyId;
+                item.DepartmentId = LoginUser.UserInfo.DepartmentId;
+            }
+            ServiceBase.Insert<FilesInfo>(fileList);
+            return Response();
+        }
+
+        /// <summary>
+        /// 保存课件（ppt）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> SubPowerPoint()
+        {
+            // 是否请求包含multipart/form-data。
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+            var provider = new MultipartFormDataStreamProvider(UploadHelper.UploadPath);
+            await Request.Content.ReadAsMultipartAsync(provider);
+            PowerPoint ppt = new PowerPoint
+            {
+                Id = provider.FormData.GetValues("Id").FirstOrDefault(),
+                Name = provider.FormData.GetValues("Name").FirstOrDefault(),
+                CourseWareId = provider.FormData.GetValues("CourseWareId").FirstOrDefault(),
+                //是否公开，0表示否
+                IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
+                IsDel = false,
+                CreateUserId = LoginUser.UserInfo.Id
+            };
+            ServiceBase.Insert<PowerPoint>(ppt);
+
+            //文件保存
+            var fileList = UploadHelper.uploadFile(provider);
+            foreach (var item in fileList)
+            {
+                item.LinkId = LoginUser.UserInfo.Id;
+                item.FileType = 1;
+                //获取业务类型，此处的值为TypeId（Type表中，TypeGroup为TypeEnum.CourseAccessory，TypeName为"PPT"的列的Id）
+                item.BusinessType = provider.FormData.GetValues("CourseAccessory").FirstOrDefault();
+                item.UploadUserId = LoginUser.UserInfo.Id;
+                item.CompanyId = LoginUser.UserInfo.CompanyId;
+                item.DepartmentId = LoginUser.UserInfo.DepartmentId;
+            }
+            ServiceBase.Insert<FilesInfo>(fileList);
+            return Response();
+        } 
+
+        #endregion
     }
 }

@@ -11,10 +11,25 @@ namespace TAE.Service
 {
     public class ServiceApiDoc : ServiceExtend, IServiceApiDoc
     {
-        public static IRepositoryApiDoc repositoryApiDoc = ServiceHelper.GetService<IRepositoryApiDoc>();
-         public ServiceApiDoc()
-            : base(repositoryApiDoc)
+        public IRepositoryApiDoc RepositoryApiDoc
         {
+            get
+            {
+                return ServiceHelper.GetService<IRepositoryApiDoc>();
+            }
+        }
+        public ServiceApiDoc()
+            : base(ServiceHelper.GetService<IRepositoryApiDoc>())
+        {
+        }
+
+        public new void Dispose()
+        {
+            base.Dispose();
+            if (RepositoryApiDoc != null)
+            {
+                RepositoryApiDoc.Dispose();
+            }
         }
     }
 }

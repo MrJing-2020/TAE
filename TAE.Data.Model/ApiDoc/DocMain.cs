@@ -16,5 +16,6 @@ namespace TAE.Data.Model
         public string RequestParms { get; set; }
         public string ReturnData { get; set; }
         public string ErrorResult { get; set; }
+        public string Description { get; set; }
     }
 }

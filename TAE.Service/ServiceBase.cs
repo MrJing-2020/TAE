@@ -12,12 +12,15 @@ namespace TAE.Service
     using TAE.IService;
     using TAE.Data.Model;
     using TAE.Core.ServiceProvider;
+    using System.IO;
 
     public class ServiceBase : ServiceExtend, IServiceBase
     {
-        public static IRepositoryBase repositoryBase = ServiceHelper.GetService<IRepositoryBase>();
+        public IRepositoryBase RepositoryBase { get {
+            return ServiceHelper.GetService<IRepositoryBase>(); 
+        } }
         public ServiceBase()
-            : base(repositoryBase)
+            : base(ServiceHelper.GetService<IRepositoryBase>())
         {
         }
 
@@ -132,12 +135,21 @@ namespace TAE.Service
         } 
         #endregion
 
-        //public void Dispose()
-        //{
-        //    if (repositoryBase != null)
-        //    {
-        //        repositoryBase.Dispose();
-        //    }
-        //}
+        public bool DelFile(string id)
+        {
+            var file = this.FindBy<FilesInfo>(m => m.Id == id).FirstOrDefault();
+            this.Remove<FilesInfo>(file);
+            File.Delete(file.AbsolutePath);
+            return true;
+        }
+
+        public new void Dispose()
+        {
+            base.Dispose();
+            if (RepositoryBase != null)
+            {
+                RepositoryBase.Dispose();
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace TAE.Service
     using TAE.IService;
     public class ServiceIdentity : IServiceIdentity
     {
-        private IRepositoryIdentity repositoryIdentity 
+        public IRepositoryIdentity repositoryIdentity 
         {
             get 
             {

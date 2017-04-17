@@ -10,6 +10,7 @@ namespace TAE.Data.Model
     {
         public string Name { get; set; }
         public string CourseId { get; set; }
+        //9大类
         public string TypeId { get; set; }
         public string CreateUserId { get; set; }
     }

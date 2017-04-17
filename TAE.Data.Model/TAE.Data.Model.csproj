@@ -89,6 +89,7 @@
     <Compile Include="EntityModel\Base\WorkFlow.cs" />
     <Compile Include="EntityModel\Base\WorkFlowDetail.cs" />
     <Compile Include="EntityModel\Base\WorkFlowDetailInfo.cs" />
+    <Compile Include="Enum\FileTypeEnum.cs" />
     <Compile Include="Enum\TypeEnum.cs" />
     <Compile Include="Identity\AppRole.cs" />
     <Compile Include="Identity\AppUser.cs" />

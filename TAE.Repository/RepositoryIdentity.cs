@@ -24,8 +24,8 @@ namespace TAE.Repository
         private AppIdentityDbContext context;
         public RepositoryIdentity()
         {
-            //context = AppIdentityDbContext.Create();
-            context= CacheHelper.GetItem<AppIdentityDbContext>("AppIdentityDbContext", () => { return AppIdentityDbContext.Create(); });
+            context = AppIdentityDbContext.Create();
+            //context = CacheHelper.GetItem<AppIdentityDbContext>("AppIdentityDbContext", () => { return AppIdentityDbContext.Create(); });
         }
         private AppUserManager UserManager
         {
