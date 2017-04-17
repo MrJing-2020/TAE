@@ -132,12 +132,12 @@ namespace TAE.Service
         } 
         #endregion
 
-        public void Dispose()
-        {
-            if (repositoryBase != null)
-            {
-                repositoryBase.Dispose();
-            }
-        }
+        //public void Dispose()
+        //{
+        //    if (repositoryBase != null)
+        //    {
+        //        repositoryBase.Dispose();
+        //    }
+        //}
     }
 }

@@ -14,6 +14,8 @@ namespace TAE.Repository
     using TAE.IRepository;
     using TAE.Data.Entity;
     using TAE.Data.Model;
+    using Core.Cache;
+
     /// <summary>
     /// Identity相关操作
     /// </summary>
@@ -22,7 +24,8 @@ namespace TAE.Repository
         private AppIdentityDbContext context;
         public RepositoryIdentity()
         {
-            context = AppIdentityDbContext.Create();
+            //context = AppIdentityDbContext.Create();
+            context= CacheHelper.GetItem<AppIdentityDbContext>("AppIdentityDbContext", () => { return AppIdentityDbContext.Create(); });
         }
         private AppUserManager UserManager
         {

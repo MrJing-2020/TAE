@@ -13,7 +13,7 @@ namespace TAE.Repository
 {
     public class RepositoryExtend : IRepositoryExtend
     {
-        public DbContextExtend Context {get;set;}
+        public static DbContextExtend Context;
         public RepositoryExtend(DbContextExtend context) 
         {
             Context = context;

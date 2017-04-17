@@ -112,7 +112,7 @@ namespace TAE.Core.Cache
             return GetItem<F>(key, getDataFromCache);
         }
 
-        #region 以下几个方法从HttpContext.Items缓存页面数据，适合页面生命周期，页面载入后就被移除，而非HttpContext.Cache在整个应用程序都有效
+        #region 以下几个方法从HttpContext.Items缓存页面数据，适合页面生命周期，页面载入后就被移除，而非HttpRuntime.Cache在整个应用程序都有效
 
         /// <summary>
         /// 获取HttpContext.Items缓存的数据
@@ -125,7 +125,6 @@ namespace TAE.Core.Cache
         {
             if (HttpContext.Current == null)
                 return getRealData();
-
             var httpContextItems = HttpContext.Current.Items;
             if (httpContextItems.Contains(name))
             {
@@ -133,10 +132,11 @@ namespace TAE.Core.Cache
             }
             else
             {
-                var data = getRealData();
-                if (data != null)
-                    httpContextItems[name] = data;
-                return data;
+                //var data = getRealData();
+                //if (data != null)
+                //    httpContextItems[name] = data;
+                httpContextItems[name] = getRealData();
+                return (F)httpContextItems[name];
             }
         }
         public static F GetItem<F>() where F : new()
