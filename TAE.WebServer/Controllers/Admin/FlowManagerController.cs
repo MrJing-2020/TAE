@@ -16,7 +16,7 @@ namespace TAE.WebServer.Controllers.Admin
 
         private string sqlGetFlow = @"select a.*,b.CompanyName,c.DepartName from WorkFlow a 
                                         inner join Company b on a.CompanyId=b.Id
-                                        inner join Department c on a.DepartmentId=c.Id"; 
+                                        inner join Department c on a.DepartmentId=c.Id";
 
         #endregion
 
@@ -71,7 +71,7 @@ namespace TAE.WebServer.Controllers.Admin
                 string tempId = item.Id;
                 item.WorkFlowDetail = listDetail.Where(m => m.WorkFlowId == tempId).ToList();
             }
-            if (list.Count()>0)
+            if (list.Count() > 0)
             {
                 return Response(list);
             }
@@ -124,7 +124,26 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpPost]
         public HttpResponseMessage SubFlowDetail(WorkFlowDetail flowDetail)
         {
-            ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
+            var WorkFid = flowDetail.WorkFlowId;
+            var list = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.WorkFlowId == WorkFid).ToList();
+            if(list.Count==0)
+            {
+                ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
+            }
+            else
+            {
+                foreach (var item in list)
+                {
+                    if (item.Step > flowDetail.Step)
+                    {
+                        var FirList = ServiceBase.FindBy<WorkFlowDetail>(s => s.Id == item.Id).FirstOrDefault();
+                        FirList.Step = FirList.Step + 1;
+                        ServiceBase.Update<WorkFlowDetail>(FirList);
+                    }
+                }
+                flowDetail.Step = flowDetail.Step + 1;
+                this.ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
+            }
             return Response();
         }
 

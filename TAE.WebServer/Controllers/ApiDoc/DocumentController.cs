@@ -41,9 +41,9 @@ namespace TAE.WebServer.Controllers.ApiDoc
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage DelDocData(string ID)
+        public HttpResponseMessage DelDocData(string id)
         {
-            ServiceApiDoc.Remove<DocMain>(s => s.Id == ID);
+            ServiceApiDoc.Remove<DocMain>(s => s.Id == id);
             return Response();
         }
         /// <summary>
@@ -52,10 +52,10 @@ namespace TAE.WebServer.Controllers.ApiDoc
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetDocDetail(string ID)
+        public HttpResponseMessage GetDocDetail(string id)
         {
-           var list = ServiceApiDoc.FindBy<DocMain>(s => s.Id == ID).FirstOrDefault();
-            return Response(list);
+            var docDetail = ServiceApiDoc.FindBy<DocMain>(s => s.Id == id).FirstOrDefault();
+            return Response(docDetail);
         }
         /// <summary>
         ///接口分类显示
@@ -85,9 +85,9 @@ namespace TAE.WebServer.Controllers.ApiDoc
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage DelApiData(string ID)
+        public HttpResponseMessage DelApiData(string id)
         {
-            ServiceApiDoc.Remove<OpenApi>(s=>s.Id==ID);
+            ServiceApiDoc.Remove<OpenApi>(s=>s.Id==id);
             return Response();
         }
         /// <summary>
@@ -96,9 +96,9 @@ namespace TAE.WebServer.Controllers.ApiDoc
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetApiDetail(string ID)
+        public HttpResponseMessage GetApiDetail(string id)
         {
-            var list = ServiceApiDoc.FindBy<DocMain>(s => s.ApiId == ID).ToList();
+            var list = ServiceApiDoc.FindBy<DocMain>(s => s.ApiId == id).ToList();
             return Response(list);
         }
     }

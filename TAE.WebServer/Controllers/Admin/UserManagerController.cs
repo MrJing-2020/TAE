@@ -161,12 +161,12 @@ namespace TAE.WebServer.Controllers.Admin
         /// <summary>
         /// 人员下拉框
         /// </summary>
-        /// <param name="id">公司id</param>
+        /// <param name="id">部门id</param>
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage UserSelectList(string id)
         {
-            string sql = "select Id as 'Key',RealName as 'Value' from AspNetUsers where CompanyId = @Id";
+            string sql = "select Id as 'Key',RealName as 'Value' from AspNetUsers where DepartmentId = @Id";
             SqlParameter param = new SqlParameter("@Id", id);
             List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
             return Response(list);
