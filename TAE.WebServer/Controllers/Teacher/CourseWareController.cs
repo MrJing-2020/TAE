@@ -28,14 +28,29 @@ namespace TAE.WebServer.Controllers.Teacher
 
         /// <summary>
         /// 获取我的课件详情(包括附件信息)
+        /// *****************查询次数太多，待优化*****************************
         /// </summary>
         /// <param name="id">用户Id</param>
         /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage CourseWareDetail(string id)
         {
-            var list = ServiceBase.FindBy<CourseWare>(m=>m.Id==id);
-            return Response(list);
+            var courseWare = ServiceBase.FindBy<CourseWare>(m => m.Id == id).FirstOrDefault();
+            var handoutsList = ServiceBase.FindBy<Handouts>(m => m.CourseWareId == id).ToList();
+            var testQuestionList = ServiceBase.FindBy<TestQuestion>(m => m.CourseWareId == id).ToList();
+            var testPaperList = ServiceBase.FindBy<TestPaper>(m => m.CourseWareId == id).ToList();
+            var videoList = ServiceBase.FindBy<Video>(m => m.CourseWareId == id).ToList();
+            var powerPointList = ServiceBase.FindBy<PowerPoint>(m => m.CourseWareId == id).ToList();
+            CourseWareViewModel data = new CourseWareViewModel
+            {
+                CourseWare = courseWare,
+                Handouts = handoutsList,
+                TestQuestion = testQuestionList,
+                TestPaper = testPaperList,
+                Video = videoList,
+                PowerPoint = powerPointList
+            };
+            return Response();
         }
 
         #region 获取课件相关附件
@@ -112,7 +127,7 @@ namespace TAE.WebServer.Controllers.Teacher
         }
 
         /// <summary>
-        /// 保存课件（视频）
+        /// 保存课件（视频）,包括文件上传
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -142,7 +157,7 @@ namespace TAE.WebServer.Controllers.Teacher
             var fileList = UploadHelper.uploadFile(provider);
             foreach (var item in fileList)
             {
-                item.FileType = 1;
+                item.FileType = Convert.ToInt32(FileTypeEnum.Vedio); ;
                 //获取业务类型，此处的值为TypeId（Type表中，TypeGroup为TypeEnum.CourseAccessory，TypeName为"PPT"的列的Id）
                 item.BusinessType = provider.FormData.GetValues("CourseAccessory").FirstOrDefault();
                 item.LinkId = video.Id;
@@ -155,7 +170,7 @@ namespace TAE.WebServer.Controllers.Teacher
         }
 
         /// <summary>
-        /// 保存课件（ppt）
+        /// 保存课件（ppt）,包括文件上传
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -178,16 +193,16 @@ namespace TAE.WebServer.Controllers.Teacher
                 IsDel = false,
                 CreateUserId = LoginUser.UserInfo.Id
             };
-            ServiceBase.Insert<PowerPoint>(ppt);
+            ppt = ServiceBase.Insert<PowerPoint>(ppt);
 
             //文件保存
             var fileList = UploadHelper.uploadFile(provider);
             foreach (var item in fileList)
             {
-                item.LinkId = LoginUser.UserInfo.Id;
-                item.FileType = 1;
+                item.FileType = Convert.ToInt32(FileTypeEnum.PPT);
                 //获取业务类型，此处的值为TypeId（Type表中，TypeGroup为TypeEnum.CourseAccessory，TypeName为"PPT"的列的Id）
                 item.BusinessType = provider.FormData.GetValues("CourseAccessory").FirstOrDefault();
+                item.LinkId = ppt.Id;
                 item.UploadUserId = LoginUser.UserInfo.Id;
                 item.CompanyId = LoginUser.UserInfo.CompanyId;
                 item.DepartmentId = LoginUser.UserInfo.DepartmentId;

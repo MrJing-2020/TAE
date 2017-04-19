@@ -96,6 +96,7 @@
     <Compile Include="Identity\RefreshToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\BindOptionModel.cs" />
+    <Compile Include="ViewModel\CourseWareViewModel.cs" />
     <Compile Include="ViewModel\DepViewModel.cs" />
     <Compile Include="ViewModel\FlowDetailViewModel.cs" />
     <Compile Include="ViewModel\FlowViewModel.cs" />
@@ -104,7 +105,9 @@
     <Compile Include="ViewModel\JsTreeModel.cs" />
     <Compile Include="ViewModel\KeyValueModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
+    <Compile Include="ViewModel\OperationViewModel.cs" />
     <Compile Include="ViewModel\OrgnViewModel.cs" />
+    <Compile Include="ViewModel\RoleViewModel.cs" />
     <Compile Include="ViewModel\TreeModelView.cs" />
     <Compile Include="ViewModel\TreeStateModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />

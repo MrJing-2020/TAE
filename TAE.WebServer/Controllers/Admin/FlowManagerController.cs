@@ -124,25 +124,32 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpPost]
         public HttpResponseMessage SubFlowDetail(WorkFlowDetail flowDetail)
         {
-            var WorkFid = flowDetail.WorkFlowId;
-            var list = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.WorkFlowId == WorkFid).ToList();
-            if(list.Count==0)
+            if(flowDetail.Id!="")
             {
                 ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
             }
             else
             {
-                foreach (var item in list)
+                var WorkFid = flowDetail.WorkFlowId;
+                var list = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.WorkFlowId == WorkFid).ToList();
+                if (list.Count == 0)
                 {
-                    if (item.Step > flowDetail.Step)
-                    {
-                        var FirList = ServiceBase.FindBy<WorkFlowDetail>(s => s.Id == item.Id).FirstOrDefault();
-                        FirList.Step = FirList.Step + 1;
-                        ServiceBase.Update<WorkFlowDetail>(FirList);
-                    }
+                    ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
                 }
-                flowDetail.Step = flowDetail.Step + 1;
-                this.ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
+                else
+                {
+                    foreach (var item in list)
+                    {
+                        if (item.Step > flowDetail.Step)
+                        {
+                            var FirList = ServiceBase.FindBy<WorkFlowDetail>(s => s.Id == item.Id).FirstOrDefault();
+                            FirList.Step = FirList.Step + 1;
+                            ServiceBase.Update<WorkFlowDetail>(FirList);
+                        }
+                    }
+                    flowDetail.Step = flowDetail.Step + 1;
+                    this.ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
+                }
             }
             return Response();
         }
@@ -192,6 +199,43 @@ namespace TAE.WebServer.Controllers.Admin
             List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
             return Response(list);
         }
-
+        /// <summary>
+        /// 步骤位置调整
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage FlowDetailTop(string FlowId)
+        {
+            var list = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.Id == FlowId).FirstOrDefault();
+            var Step = list.Step - 1;
+            var listLast = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.Step == Step &&s.WorkFlowId==list.WorkFlowId).FirstOrDefault();
+            if (list.Step != 1)
+            {
+                list.Step = list.Step - 1;
+                listLast.Step = listLast.Step + 1;
+                ServiceBase.Update<WorkFlowDetail>(list);
+                ServiceBase.Update<WorkFlowDetail>(listLast);
+            }
+            return Response();
+        }
+        /// <summary>
+        /// 步骤删除
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage FlowDetailDel(string FlowId)
+        {
+            var WorkFlowId = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.Id == FlowId).FirstOrDefault();
+            var list = ServiceBase.FindBy<WorkFlowDetail>().Where(s=>s.WorkFlowId==WorkFlowId.WorkFlowId && s.Step>WorkFlowId.Step).ToList();
+            foreach (var item in list)
+            {
+                var listl = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.Id == item.Id).FirstOrDefault();
+                listl.Step = listl.Step - 1;
+                ServiceBase.Update<WorkFlowDetail>(listl);
+            }
+            ServiceBase.Remove<WorkFlowDetail>(FlowId);
+            return Response();
+        }
+        
     }
 }

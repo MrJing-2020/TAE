@@ -16,8 +16,8 @@ namespace TAE.WebServer.Controllers.Admin
         [HttpPost]
         public HttpResponseMessage AllRoles(dynamic param)
         {
-            string sqlGetAll = "select * from AspNetRoles";
-            return GetDataList<AppRole>(param, sqlGetAll);
+            string sqlGetAll = "select a.*,b.CompanyName from AspNetRoles a left join Company b on a.CompanyId=b.Id";
+            return GetDataList<RoleViewModel>(param, sqlGetAll);
         }
 
         [HttpGet]
@@ -33,12 +33,10 @@ namespace TAE.WebServer.Controllers.Admin
         {
             if (string.IsNullOrEmpty(model.Id))
             {
-                var role = new AppRole { Name = model.Name};
-                //传入Password并转换成PasswordHash
-                bool result = await ServiceIdentity.CreateRole(role);
+                bool result = await ServiceIdentity.CreateRole(model);
                 if (result == true)
                 {
-                    return Response(role);
+                    return Response(model);
                 }
                 else
                 {
@@ -51,6 +49,7 @@ namespace TAE.WebServer.Controllers.Admin
                 if (role != null)
                 {
                     role.Name = model.Name;
+                    role.CompanyId = model.CompanyId;
                     bool result = await ServiceIdentity.UpdateRole(role);
                     if (result == true)
                     {

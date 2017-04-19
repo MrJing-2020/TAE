@@ -39,6 +39,10 @@ namespace TAE.WebServer.Common
                 return ServiceContext.Current.ServiceApiDoc;
             }
         }
+
+        /// <summary>
+        /// 当前登录用户信息（UserInfo用户基本信息，DataPower数据权限列表(包含公司和部门Id)）
+        /// </summary>
         protected LoginUser LoginUser
         {
             get
@@ -57,6 +61,23 @@ namespace TAE.WebServer.Common
                 loginUser.UserInfo = appUser;
                 loginUser.DataPower = dataPower;
                 return loginUser;
+            }
+        }
+
+        /// <summary>
+        /// 获取当前用户的菜单权限列表
+        /// </summary>
+        protected List<Menu> MenuAuthority
+        {
+            get
+            {
+                //获取用户角色(或许有多个)
+                var roleIds = ServiceIdentity.FindUser(m => m.Id == LoginUser.UserInfo.Id).FirstOrDefault().Roles.Select(m => m.RoleId).ToArray();
+                var roleIdsStr = string.Join("','", roleIds);
+                string sqlGetAuthority = "select * from Menu where Id in (select MenuId from MenuRole where RoleId in ( '" + roleIdsStr + "' )) order by Sort";
+                //根据角色id获取菜单列表
+                List<Menu> menuList = ServiceBase.FindBy<Menu>(sqlGetAuthority).ToList();
+                return menuList;
             }
         }
 
@@ -196,14 +217,8 @@ namespace TAE.WebServer.Common
         /// <returns></returns>
         protected HttpResponseMessage GetDataListFilt<T>(dynamic param, string sqlGetAll) where T : class
         {
-            //数据权限过滤
-            string sqlDataPowerPart = sqlGetAll.Contains("where") ? " and " : " where ";
-            foreach (var item in LoginUser.DataPower)
-            {
-                sqlDataPowerPart += "(a.CompanyId = '" + item.CompanyId + "' and a.DepartmentId = '" + item.DepartmentId + "') or";
-            }
-            sqlDataPowerPart = sqlDataPowerPart.Substring(0, sqlDataPowerPart.LastIndexOf("or"));
-            sqlGetAll += sqlDataPowerPart;
+            //添加数据权限过滤
+            sqlGetAll = SqlStringAddDataPower(sqlGetAll);
             RequestArg arg = new RequestArg()
             {
                 PageNumber = Convert.ToInt32(param.pageNumber),
@@ -243,6 +258,19 @@ namespace TAE.WebServer.Common
             }
             list = ServiceBase.FindAllByPage<T>(sqlGetAll, arg);
             return Request.CreateResponse(list);
+        }
+
+        protected string SqlStringAddDataPower(string sqlString)
+        {
+            //数据权限过滤
+            string sqlDataPowerPart = sqlString.Contains("where") ? " and " : " where ";
+            foreach (var item in LoginUser.DataPower)
+            {
+                sqlDataPowerPart += "(a.CompanyId = '" + item.CompanyId + "' and a.DepartmentId = '" + item.DepartmentId + "') or";
+            }
+            sqlDataPowerPart = sqlDataPowerPart.Substring(0, sqlDataPowerPart.LastIndexOf("or"));
+            sqlString += sqlDataPowerPart;
+            return sqlString;
         }
     }
 }

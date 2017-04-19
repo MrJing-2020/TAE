@@ -28,9 +28,9 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage AllUsers(dynamic param)
         {
             string sqlGetAll = sqlGetUser;
-            return GetDataList<UserViewModel>(param, sqlGetAll);
+            //return GetDataList<UserViewModel>(param, sqlGetAll);
             //过滤数据权限查询
-            //return GetDataListFilt<UserViewModel>(param, sqlGetAll);
+            return GetDataListFilt<UserViewModel>(param, sqlGetAll);
         }
 
         [HttpGet]

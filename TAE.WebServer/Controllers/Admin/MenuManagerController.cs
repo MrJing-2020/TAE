@@ -85,6 +85,10 @@ namespace TAE.WebServer.Controllers.Admin
             {
                 model.MenuApiUrl = "api/" + model.Area + "/" + model.Controller + "/" + model.Action;
             }
+            if (string.IsNullOrEmpty(model.MenuPareId))
+            {
+                model.MenuPareId = "#";
+            }
             ServiceBase.SaveEntity<Menu>(model);
             return Response();
         }

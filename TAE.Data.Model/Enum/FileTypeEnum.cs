@@ -8,11 +8,15 @@ namespace TAE.Data.Model
 {
     public enum FileTypeEnum
     {
-        //1表示类型是工作流
+        //1表示图片
         Img = 1,
-        //2表示课程类型
-        Document = 2,
-        //3表示课程附件
-        Video = 3
+        //2表示文档
+        PPT=2,
+        Word=3,
+        Excel=4,
+        Pdf=5,
+        Txt=6,
+        //视频
+        Vedio=7
     }
 }

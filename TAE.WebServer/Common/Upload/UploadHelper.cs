@@ -104,8 +104,8 @@ namespace TAE.WebServer.Common.Upload
                     AbsolutePath = HttpContext.Current.Server.MapPath(sb.ToString())
                 };
                 list.Add(filesInfo);
-                fileinfo.Delete();//删除原文件
-
+                //删除原文件
+                fileinfo.Delete();
                 //sb.Append(string.Format("Uploaded file: {0} ({1} bytes)\n", fileInfo.Name, fileInfo.Length));
                 //最大文件大小
                 //int maxSize = Convert.ToInt32(SettingConfig.MaxSize);
