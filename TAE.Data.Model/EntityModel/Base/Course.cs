@@ -9,7 +9,7 @@ namespace TAE.Data.Model
     /// <summary>
     /// 课程
     /// </summary>
-    public class Course : BaseModel
+    public class Course : ComBaseModel
     {
         public string Name { get; set; }
         public string ClassId { get; set; }

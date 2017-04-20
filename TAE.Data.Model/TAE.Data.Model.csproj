@@ -72,6 +72,7 @@
     <Compile Include="EntityModel\Base\CourseSection.cs" />
     <Compile Include="EntityModel\Base\Examination.cs" />
     <Compile Include="EntityModel\Base\Handouts.cs" />
+    <Compile Include="EntityModel\Base\Notification.cs" />
     <Compile Include="EntityModel\Base\TestPaper.cs" />
     <Compile Include="EntityModel\Base\Video.cs" />
     <Compile Include="EntityModel\Base\CourseWare.cs" />

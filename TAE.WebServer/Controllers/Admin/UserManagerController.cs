@@ -19,10 +19,14 @@ namespace TAE.WebServer.Controllers.Admin
     /// </summary>
     public class UserManagerController : BaseApiController
     {
+        #region 私有成员
+
         private static string sqlGetUser = @"select a.*,b.CompanyName,c.DepartName,d.PositionName from AspNetUsers a 
                                             left join Company b on a.CompanyId=b.Id
                                             left join Department c on a.DepartmentId=c.Id
-                                            left join Position d on a.PositionId=d.Id";
+                                            left join Position d on a.PositionId=d.Id"; 
+
+        #endregion
 
         [HttpPost]
         public HttpResponseMessage AllUsers(dynamic param)
@@ -113,6 +117,7 @@ namespace TAE.WebServer.Controllers.Admin
             List<AppRole> nonMembers = ServiceIdentity.FindRole().ToList().Except(members).ToList();
             return Response(new { UserIn = members, UserNotIn = nonMembers });
         }
+
         /// <summary>
         /// 角色分配
         /// </summary>
@@ -170,6 +175,26 @@ namespace TAE.WebServer.Controllers.Admin
             SqlParameter param = new SqlParameter("@Id", id);
             List<KeyValueModel> list = ServiceBase.FindBy<KeyValueModel>(sql, param).ToList();
             return Response(list);
+        }
+
+        /// <summary>
+        /// 用户删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<HttpResponseMessage> DelUser(string id)
+        {
+            var user = ServiceIdentity.FindUser(m => m.Id == id).FirstOrDefault();
+            var result = await ServiceIdentity.DeleteUser(user);
+            if (result == true)
+            {
+                return Response(new { msg = "删除成功" });
+            }
+            else
+            {
+                return ResponseException();
+            }
+            
         }
     }
 }

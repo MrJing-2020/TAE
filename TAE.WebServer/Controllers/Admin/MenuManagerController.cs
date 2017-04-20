@@ -92,5 +92,17 @@ namespace TAE.WebServer.Controllers.Admin
             ServiceBase.SaveEntity<Menu>(model);
             return Response();
         }
+
+        /// <summary>
+        /// 菜单删除(及其子菜单)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage DelMenu(string id)
+        {
+            ServiceBase.Remove<Menu>(m => m.Id == id && m.MenuPareId == id);
+            return Response(new { msg = "删除成功" });
+        }
     }
 }

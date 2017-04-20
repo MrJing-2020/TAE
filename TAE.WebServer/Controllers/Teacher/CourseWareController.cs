@@ -212,5 +212,41 @@ namespace TAE.WebServer.Controllers.Teacher
         } 
 
         #endregion
+
+        [HttpPost]
+        public HttpResponseMessage CourseWareLinkToUser(BindOptionModel model)
+        {
+            var courseWareId = model.Id;
+            List<UserRCourse> list = new List<UserRCourse>();
+            foreach (var item in model.BindIds)
+            {
+                var userRCourser = new UserRCourse
+                {
+                    UserId=item,
+                    CourseWareId=courseWareId
+                };
+                list.Add(userRCourser);
+            }
+            ServiceBase.Insert<UserRCourse>(list);
+            return Response();
+        }
+
+        [HttpPost]
+        public HttpResponseMessage CourseAccLinkToUser(BindOptionModel model)
+        {
+            var courseAccId = model.Id;
+            List<UserRCourse> list = new List<UserRCourse>();
+            foreach (var item in model.BindIds)
+            {
+                var userRCourser = new UserRCourse
+                {
+                    UserId = item,
+                    CourseAccId = courseAccId
+                };
+                list.Add(userRCourser);
+            }
+            ServiceBase.Insert<UserRCourse>(list);
+            return Response();
+        }
     }
 }

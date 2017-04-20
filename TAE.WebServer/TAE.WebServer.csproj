@@ -187,7 +187,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\Stutent\" />
-    <Folder Include="Controllers\TrainExam\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -209,7 +208,8 @@
     <Compile Include="Controllers\Admin\MenuManagerController.cs" />
     <Compile Include="Controllers\Admin\OrganizationController.cs" />
     <Compile Include="Controllers\Admin\RoleManagerController.cs" />
-    <Compile Include="Controllers\Admin\TeachingPlanController.cs" />
+    <Compile Include="Controllers\Teacher\CourseController.cs" />
+    <Compile Include="Controllers\Teacher\TeachingPlanController.cs" />
     <Compile Include="Controllers\Admin\UserManagerController.cs" />
     <Compile Include="Controllers\ApiDoc\DocumentController.cs" />
     <Compile Include="Controllers\Teacher\CourseWareController.cs" />

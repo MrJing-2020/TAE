@@ -88,5 +88,25 @@ namespace TAE.WebServer.Controllers.Admin
             await ServiceIdentity.AddToRoleById(model.BindIds, roleId);
             return Response();
         }
+
+        /// <summary>
+        /// 角色删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<HttpResponseMessage> DelRole(string id)
+        {
+            var role = ServiceIdentity.FindRole(m => m.Id == id).FirstOrDefault();
+            var result = await ServiceIdentity.DeleteRole(role);
+            if (result == true)
+            {
+                return Response(new { msg = "删除成功" });
+            }
+            else
+            {
+                return ResponseException();
+            }
+
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace TAE.Data.Model
     public class UserRCourse : BaseModel
     {
         public string UserId { get;set; }
-        public string CompanuId { get; set; }
+        public string CompanyId { get; set; }
         public string DepartmentId { get; set; }
         public string PositionId { get; set; }
 

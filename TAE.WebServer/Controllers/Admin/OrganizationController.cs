@@ -165,6 +165,34 @@ namespace TAE.WebServer.Controllers.Admin
             return Response();
         }
 
+        /// <summary>
+        /// 删除公司（包括公司部门和职位）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage DelCompany(string id)
+        {
+            ServiceBase.Remove<Company>(m => m.Id == id);
+            ServiceBase.Remove<Department>(m => m.CompanyId == id);
+            ServiceBase.Remove<Position>(m => m.CompanyId == id);
+            return Response(new { msg = "删除成功" });
+        }
+
+        [HttpPost]
+        public HttpResponseMessage DelDepartment(string id)
+        {
+            ServiceBase.Remove<Department>(m => m.Id == id);
+            return Response(new { msg = "删除成功" });
+        }
+
+        [HttpPost]
+        public HttpResponseMessage DelPosition(string id)
+        {
+            ServiceBase.Remove<Position>(m => m.Id == id);
+            return Response(new { msg = "删除成功" });
+        }
+
         #region 私有方法
 
         /// <summary>

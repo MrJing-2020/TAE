@@ -236,6 +236,19 @@ namespace TAE.WebServer.Controllers.Admin
             ServiceBase.Remove<WorkFlowDetail>(FlowId);
             return Response();
         }
+
+        /// <summary>
+        /// 流程删除（包括流程步骤）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage DelFlow(string id)
+        {
+            ServiceBase.Remove<WorkFlow>(m => m.Id == id);
+            ServiceBase.Remove<WorkFlowDetail>(m => m.WorkFlowId == id);
+            return Response(new { msg = "删除成功" });
+        }
         
     }
 }
