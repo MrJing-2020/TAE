@@ -33,6 +33,8 @@ namespace TAE.WebServer.Controllers.Admin
         {
             if (string.IsNullOrEmpty(model.Id))
             {
+                var role = new AppRole();
+                model.Id = role.Id;
                 bool result = await ServiceIdentity.CreateRole(model);
                 if (result == true)
                 {
@@ -94,9 +96,12 @@ namespace TAE.WebServer.Controllers.Admin
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> DelRole(string id)
+        [HttpPost]
+        public async Task<HttpResponseMessage> DelRole(OneParam model)
         {
-            var role = ServiceIdentity.FindRole(m => m.Id == id).FirstOrDefault();
+            var role = ServiceIdentity.FindRole(m => m.Id == model.Id).FirstOrDefault();
+            ServiceBase.Remove<DataRole>(m => m.RoleId == model.Id);
+            ServiceBase.Remove<MenuRole>(m => m.RoleId == model.Id);
             var result = await ServiceIdentity.DeleteRole(role);
             if (result == true)
             {

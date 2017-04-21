@@ -171,25 +171,25 @@ namespace TAE.WebServer.Controllers.Admin
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage DelCompany(string id)
+        public HttpResponseMessage DelCompany(OneParam model)
         {
-            ServiceBase.Remove<Company>(m => m.Id == id);
-            ServiceBase.Remove<Department>(m => m.CompanyId == id);
-            ServiceBase.Remove<Position>(m => m.CompanyId == id);
+            ServiceBase.Remove<Company>(m => m.Id == model.Id);
+            ServiceBase.Remove<Department>(m => m.CompanyId == model.Id);
+            ServiceBase.Remove<Position>(m => m.CompanyId == model.Id);
             return Response(new { msg = "删除成功" });
         }
 
         [HttpPost]
-        public HttpResponseMessage DelDepartment(string id)
+        public HttpResponseMessage DelDepartment(OneParam model)
         {
-            ServiceBase.Remove<Department>(m => m.Id == id);
+            ServiceBase.Remove<Department>(m => m.Id == model.Id);
             return Response(new { msg = "删除成功" });
         }
 
         [HttpPost]
-        public HttpResponseMessage DelPosition(string id)
+        public HttpResponseMessage DelPosition(OneParam model)
         {
-            ServiceBase.Remove<Position>(m => m.Id == id);
+            ServiceBase.Remove<Position>(m => m.Id == model.Id);
             return Response(new { msg = "删除成功" });
         }
 

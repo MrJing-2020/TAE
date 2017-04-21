@@ -243,10 +243,10 @@ namespace TAE.WebServer.Controllers.Admin
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage DelFlow(string id)
+        public HttpResponseMessage DelFlow(OneParam model)
         {
-            ServiceBase.Remove<WorkFlow>(m => m.Id == id);
-            ServiceBase.Remove<WorkFlowDetail>(m => m.WorkFlowId == id);
+            ServiceBase.Remove<WorkFlow>(m => m.Id == model.Id);
+            ServiceBase.Remove<WorkFlowDetail>(m => m.WorkFlowId == model.Id);
             return Response(new { msg = "删除成功" });
         }
         

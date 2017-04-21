@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace TAE.Data.Model
 {
+    /// <summary>
+    /// 课程附件基类
+    /// </summary>
     public class CourseAccBaseModel : BaseModel
     {
-        public string CourseWareId { get; set; }
-        public string CreateUserId { get; set; }
+        public string CourseId { get; set; }
+        public string CourseSectionId { get; set; }
         public bool IsPublic { get; set; }
     }
 }

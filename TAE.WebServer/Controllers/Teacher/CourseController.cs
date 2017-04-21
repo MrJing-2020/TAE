@@ -3,64 +3,137 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using TAE.Data.Model;
 using TAE.WebServer.Common;
+using TAE.WebServer.Common.Upload;
 
 namespace TAE.WebServer.Controllers.Teacher
 {
     /// <summary>
-    /// 课程
+    /// 教师端（课程管理，课程编辑...）
     /// </summary>
     public class CourseController : BaseApiController
     {
         /// <summary>
-        /// 获取所有课程
+        /// 获取我创建的所有课程
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage AllCourses(bool onlyOurCompany = false)
+        public HttpResponseMessage AllCourses()
         {
-            List<Course> list = new List<Course>();
-            if (onlyOurCompany == false)
-            {
-                list = ServiceBase.FindBy<Course>().ToList();
-            }
-            else
-            {
-                list = ServiceBase.FindBy<Course>(m => m.CompanyId == LoginUser.UserInfo.CompanyId).ToList();
-            }
+            List<Course> list = ServiceBase.FindBy<Course>(m => m.CreateUserId == LoginUser.UserInfo.Id).ToList();
             return Response(list);
         }
 
+        /// <summary>
+        /// 编辑课程
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public HttpResponseMessage SubCourseData(Course model)
         {
+            model.CompanyId = LoginUser.UserInfo.CompanyId;
+            model.DepartmentId = LoginUser.UserInfo.DepartmentId;
+            model.CreateUserId = LoginUser.UserInfo.Id;
             ServiceBase.SaveEntity<Course>(model);
             return Response();
         }
 
         /// <summary>
-        /// 将课程直接与用户关联
+        /// 课程章节
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpPost]
-        public HttpResponseMessage CourseLinkToUser(BindOptionModel model)
+        public HttpResponseMessage SubCourseSectionData(CourseSection model)
         {
-            var courseId = model.Id;
-            List<UserRCourse> list = new List<UserRCourse>();
-            foreach (var item in model.BindIds)
-            {
-                var userRCourser = new UserRCourse
-                {
-                    UserId = item,
-                    CourseId = courseId
-                };
-                list.Add(userRCourser);
-            }
-            ServiceBase.Insert<UserRCourse>(list);
+            ServiceBase.SaveEntity<CourseSection>(model);
             return Response();
         }
+
+        /// <summary>
+        /// 保存课件（视频）,包括文件上传
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> SubVideo()
+        {
+            // 是否请求包含multipart/form-data。
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+            var provider = new MultipartFormDataStreamProvider(UploadHelper.UploadPath);
+            await Request.Content.ReadAsMultipartAsync(provider);
+            Video video = new Video
+            {
+                Id = provider.FormData.GetValues("Id").FirstOrDefault(),
+                Name = provider.FormData.GetValues("Name").FirstOrDefault(),
+                Description = provider.FormData.GetValues("Description").FirstOrDefault(),
+                //是否公开，0表示否
+                IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
+                IsDel = false
+            };
+            video = ServiceBase.SaveEntity<Video>(video);
+
+            //文件保存
+            var fileList = UploadHelper.uploadFile(provider);
+            foreach (var item in fileList)
+            {
+                item.FileType = Convert.ToInt32(FileTypeEnum.Vedio); ;
+                //获取业务类型，此处的值为TypeId（Type表中，TypeGroup为TypeEnum.CourseAccessory，TypeName为"PPT"的列的Id）
+                item.BusinessType = provider.FormData.GetValues("CourseAccessory").FirstOrDefault();
+                item.LinkId = video.Id;
+                item.UploadUserId = LoginUser.UserInfo.Id;
+                item.CompanyId = LoginUser.UserInfo.CompanyId;
+                item.DepartmentId = LoginUser.UserInfo.DepartmentId;
+            }
+            ServiceBase.Insert<FilesInfo>(fileList);
+            return Response();
+        }
+
+        /// <summary>
+        /// 保存课件（ppt）,包括文件上传
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> SubPowerPoint()
+        {
+            string typeId = ServiceBase.FindBy<TAE.Data.Model.Type>(m => m.TypeGroup == (int)TypeEnum.CourseAccessory && m.TypeName == "PPT").Select(m => m.Id).FirstOrDefault();
+            // 是否请求包含multipart/form-data。
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+            var provider = new MultipartFormDataStreamProvider(UploadHelper.UploadPath);
+            await Request.Content.ReadAsMultipartAsync(provider);
+            PowerPoint ppt = new PowerPoint
+            {
+                //Id = provider.FormData.GetValues("Id").FirstOrDefault(),
+                Name = provider.FormData.GetValues("Name").FirstOrDefault(),
+                //是否公开，0表示否
+                IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
+                IsDel = false,
+            };
+            ppt = ServiceBase.Insert<PowerPoint>(ppt);
+
+            //文件保存
+            var fileList = UploadHelper.uploadFile(provider);
+            foreach (var item in fileList)
+            {
+                item.FileType = Convert.ToInt32(FileTypeEnum.PPT);
+                //获取业务类型，此处的值为TypeId（Type表中，TypeGroup为TypeEnum.CourseAccessory，TypeName为"PPT"的列的Id）
+                //item.BusinessType = provider.FormData.GetValues("TypeId").FirstOrDefault();
+                item.BusinessType = typeId;
+                item.LinkId = ppt.Id;
+                item.UploadUserId = LoginUser.UserInfo.Id;
+                item.CompanyId = LoginUser.UserInfo.CompanyId;
+                item.DepartmentId = LoginUser.UserInfo.DepartmentId;
+            }
+            ServiceBase.Insert<FilesInfo>(fileList);
+            return Response();
+        } 
     }
 }

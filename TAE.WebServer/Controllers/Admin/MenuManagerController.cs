@@ -99,9 +99,10 @@ namespace TAE.WebServer.Controllers.Admin
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        public HttpResponseMessage DelMenu(string id)
+        public HttpResponseMessage DelMenu(OneParam model)
         {
-            ServiceBase.Remove<Menu>(m => m.Id == id && m.MenuPareId == id);
+            ServiceBase.Remove<Menu>(m => m.Id == model.Id || m.MenuPareId == model.Id);
+            ServiceBase.Remove<MenuRole>(m => m.MenuId == model.Id);
             return Response(new { msg = "删除成功" });
         }
     }

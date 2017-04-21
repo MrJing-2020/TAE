@@ -66,13 +66,17 @@
     <Compile Include="Base\ComBaseModel.cs" />
     <Compile Include="Base\CourseAccBaseModel.cs" />
     <Compile Include="Common\LoginUser.cs" />
+    <Compile Include="Common\OneParam.cs" />
     <Compile Include="EntityModel\Base\ClassInfo.cs" />
     <Compile Include="EntityModel\Base\Company.cs" />
     <Compile Include="EntityModel\Base\Course.cs" />
+    <Compile Include="EntityModel\Base\CourseCategory.cs" />
     <Compile Include="EntityModel\Base\CourseSection.cs" />
     <Compile Include="EntityModel\Base\Examination.cs" />
     <Compile Include="EntityModel\Base\Handouts.cs" />
     <Compile Include="EntityModel\Base\Notification.cs" />
+    <Compile Include="EntityModel\Base\SudentInfo.cs" />
+    <Compile Include="EntityModel\Base\TeacherInfo.cs" />
     <Compile Include="EntityModel\Base\TestPaper.cs" />
     <Compile Include="EntityModel\Base\Video.cs" />
     <Compile Include="EntityModel\Base\CourseWare.cs" />
@@ -97,7 +101,7 @@
     <Compile Include="Identity\RefreshToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\BindOptionModel.cs" />
-    <Compile Include="ViewModel\CourseWareViewModel.cs" />
+    <Compile Include="ViewModel\CourseViewModel.cs" />
     <Compile Include="ViewModel\DepViewModel.cs" />
     <Compile Include="ViewModel\FlowDetailViewModel.cs" />
     <Compile Include="ViewModel\FlowViewModel.cs" />

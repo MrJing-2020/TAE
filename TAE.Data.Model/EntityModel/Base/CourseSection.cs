@@ -12,5 +12,7 @@ namespace TAE.Data.Model
     public class CourseSection : BaseModel
     {
         public string Name { get; set; }
+        public string CourseId { get; set; }
+        public string MainContent { get; set; }
     }
 }

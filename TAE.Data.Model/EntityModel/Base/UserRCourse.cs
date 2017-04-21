@@ -19,9 +19,6 @@ namespace TAE.Data.Model
         //课程Id
         public string CourseId { get; set; }
 
-        //课件Id
-        public string CourseWareId { get; set; }
-
         //课件附件Id(例：ppt，video)
         public string CourseAccId { get; set; }
     }

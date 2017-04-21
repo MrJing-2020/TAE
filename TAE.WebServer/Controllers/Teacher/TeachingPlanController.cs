@@ -10,7 +10,7 @@ using TAE.WebServer.Common;
 namespace TAE.WebServer.Controllers.Teacher
 {
     /// <summary>
-    /// 办班计划（教学大纲）
+    /// 办班计划（教学大纲），班次
     /// </summary>
     public class TeachingPlanController : BaseApiController
     {
@@ -80,6 +80,5 @@ namespace TAE.WebServer.Controllers.Teacher
             ServiceBase.Insert<Notification>(list);
             return Response();
         }
-        
     }
 }

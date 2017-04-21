@@ -182,9 +182,10 @@ namespace TAE.WebServer.Controllers.Admin
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<HttpResponseMessage> DelUser(string id)
+        [HttpPost]
+        public async Task<HttpResponseMessage> DelUser(OneParam model)
         {
-            var user = ServiceIdentity.FindUser(m => m.Id == id).FirstOrDefault();
+            var user = ServiceIdentity.FindUser(m => m.Id == model.Id).FirstOrDefault();
             var result = await ServiceIdentity.DeleteUser(user);
             if (result == true)
             {

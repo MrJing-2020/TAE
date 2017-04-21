@@ -186,7 +186,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\Stutent\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +207,7 @@
     <Compile Include="Controllers\Admin\MenuManagerController.cs" />
     <Compile Include="Controllers\Admin\OrganizationController.cs" />
     <Compile Include="Controllers\Admin\RoleManagerController.cs" />
+    <Compile Include="Controllers\Stutent\CourseController.cs" />
     <Compile Include="Controllers\Teacher\CourseController.cs" />
     <Compile Include="Controllers\Teacher\TeachingPlanController.cs" />
     <Compile Include="Controllers\Admin\UserManagerController.cs" />

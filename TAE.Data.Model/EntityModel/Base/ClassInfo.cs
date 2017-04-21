@@ -9,7 +9,7 @@ namespace TAE.Data.Model
     /// <summary>
     /// 班次
     /// </summary>
-    public class ClassInfo : BaseModel
+    public class ClassInfo : ComBaseModel
     {
         public string Name { get; set; }
         public string TeachingPlanId { get; set; }

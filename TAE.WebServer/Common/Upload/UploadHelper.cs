@@ -21,8 +21,15 @@ namespace TAE.WebServer.Common.Upload
         public static string UploadPath
         {   get 
             {
-                return HttpContext.Current.Server.MapPath("~/App_Data/"); 
+                return HttpContext.Current.Server.MapPath(UploadRelativePath); 
             } 
+        }
+        public static string UploadRelativePath
+        {
+            get
+            {
+                return "~/App_Data/";
+            }
         }
         /// <summary>
         /// 文件上传，返回FilesInfo列表，需要补充文件类型，业务类型，关联id后插入数据库
@@ -45,7 +52,7 @@ namespace TAE.WebServer.Common.Upload
                 string fileExt = oldFilename.Substring(oldFilename.LastIndexOf('.'));
                 string newFileName = fileinfo.Name.Substring(fileinfo.Name.IndexOf('_') + 1) + fileExt;
                 fileinfo.CopyTo(Path.Combine(UploadPath, newFileName), true);
-                sb.Append(UploadPath + newFileName);
+                sb.Append(UploadRelativePath + newFileName);
                 FilesInfo filesInfo = new FilesInfo()
                 {
                     OldFileName = oldFilename,
@@ -94,7 +101,7 @@ namespace TAE.WebServer.Common.Upload
                 string fileExt = oldFilename.Substring(oldFilename.LastIndexOf('.'));
                 string newFileName = fileinfo.Name.Substring(fileinfo.Name.IndexOf('_') + 1) + fileExt;
                 fileinfo.CopyTo(Path.Combine(UploadPath, newFileName), true);
-                sb.Append(UploadPath + newFileName);
+                sb.Append(UploadRelativePath + newFileName);
                 FilesInfo filesInfo = new FilesInfo()
                 {
                     OldFileName = oldFilename,
