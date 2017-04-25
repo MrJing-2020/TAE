@@ -190,7 +190,7 @@ namespace TAE.WebServer.Common.Upload
         /// 文件上传
         /// </summary>
         /// <param name="provider"></param>
-        /// <param name="path">相对地址 例"~/Upload/"</param>
+        /// <param name="path">相对地址 例"~/Upload"</param>
         /// <returns></returns>
         public static List<FilesInfo> uploadFile(MultipartFormDataStreamProvider provider,string path)
         {

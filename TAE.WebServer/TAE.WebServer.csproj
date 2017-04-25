@@ -218,7 +218,6 @@
     <Compile Include="Controllers\Teacher\TeachingPlanController.cs" />
     <Compile Include="Controllers\Admin\UserManagerController.cs" />
     <Compile Include="Controllers\ApiDoc\DocumentController.cs" />
-    <Compile Include="Controllers\Teacher\CourseWareController.cs" />
     <Compile Include="Controllers\UserCenter\MyCenterController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

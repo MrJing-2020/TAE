@@ -16,6 +16,7 @@ namespace TAE.WebServer.Controllers.Stutent
         /// </summary>
         /// <param name="param">categoryId:课程分类Id，name:课程名（模糊查询）</param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         public HttpResponseMessage GetCourses(string categoryId = "", string name = "")
         {

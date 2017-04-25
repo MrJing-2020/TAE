@@ -47,6 +47,7 @@ namespace TAE.WebServer.Controllers.Teacher
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [HttpPost]
         public HttpResponseMessage SubCourseSectionData(CourseSection model)
         {
             ServiceBase.SaveEntity<CourseSection>(model);
@@ -71,7 +72,6 @@ namespace TAE.WebServer.Controllers.Teacher
             await Request.Content.ReadAsMultipartAsync(provider);
             Video video = new Video
             {
-                //Id = provider.FormData.GetValues("Id").FirstOrDefault(),
                 Name = provider.FormData.GetValues("Name").FirstOrDefault(),
                 Description = provider.FormData.GetValues("Description").FirstOrDefault(),
                 //是否公开，0表示否

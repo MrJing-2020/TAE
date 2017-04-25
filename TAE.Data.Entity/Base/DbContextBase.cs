@@ -42,8 +42,6 @@ namespace TAE.Data.Entity
         public DbSet<CourseCategory> CourseCategory { get; set; }
         public DbSet<CourseSection> CourseSection { get; set; }
         public DbSet<TeacherInfo> TeacherInfo { get; set; }
-
-        //public DbSet<CourseWare> CourseWare { get; set; }
         public DbSet<Video> Video { get; set; }
         public DbSet<PowerPoint> PowerPoint { get; set; }
         public DbSet<Handouts> Handouts { get; set; }

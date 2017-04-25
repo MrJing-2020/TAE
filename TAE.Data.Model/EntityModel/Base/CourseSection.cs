@@ -14,5 +14,8 @@ namespace TAE.Data.Model
         public string Name { get; set; }
         public string CourseId { get; set; }
         public string MainContent { get; set; }
+
+        //可能存在章节下的小章节
+        public string PreId { get; set; }
     }
 }

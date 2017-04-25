@@ -9,7 +9,7 @@ namespace TAE.WebServer.Controllers.ApiDoc
 {
     using TAE.Data.Model;
     using TAE.WebServer.Common;
-
+    [AllowAnonymous]
     public class DocumentController : BaseApiController
     {
         /// <summary>
@@ -20,7 +20,7 @@ namespace TAE.WebServer.Controllers.ApiDoc
         [HttpGet]
         public HttpResponseMessage GetApiDocList()
         {
-            var list = ServiceApiDoc.FindBy<DocMain>().ToList();
+            var list = ServiceApiDoc.FindBy<DocMain>().OrderBy(m=>m.LastModifiedTime).ToList();
             return Response(list);
         }
 
@@ -65,7 +65,7 @@ namespace TAE.WebServer.Controllers.ApiDoc
         [HttpGet]
         public HttpResponseMessage GetApiData()
         {
-            var list = ServiceApiDoc.FindBy<OpenApi>();
+            var list = ServiceApiDoc.FindBy<OpenApi>().OrderBy(m => m.LastModifiedTime).ToList();
             return Response(list);
         }
         /// <summary>

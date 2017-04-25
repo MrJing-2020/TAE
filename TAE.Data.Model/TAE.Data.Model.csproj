@@ -77,11 +77,11 @@
     <Compile Include="EntityModel\Base\InviteAnswer.cs" />
     <Compile Include="EntityModel\Base\Notification.cs" />
     <Compile Include="EntityModel\Base\QuestionAndAnswer.cs" />
+    <Compile Include="EntityModel\Base\StudentInfo.cs" />
     <Compile Include="EntityModel\Base\SudentInfo.cs" />
     <Compile Include="EntityModel\Base\TeacherInfo.cs" />
     <Compile Include="EntityModel\Base\TestPaper.cs" />
     <Compile Include="EntityModel\Base\Video.cs" />
-    <Compile Include="EntityModel\Base\CourseWare.cs" />
     <Compile Include="EntityModel\Base\DataRole.cs" />
     <Compile Include="EntityModel\Base\Department.cs" />
     <Compile Include="EntityModel\Base\FilesInfo.cs" />
