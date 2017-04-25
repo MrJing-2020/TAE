@@ -13,5 +13,6 @@ namespace TAE.IService
     public interface IServiceBase : IServiceExtend
     {
         bool DelFile(string id);
+        bool DelFile(FilesInfo model);
     }
 }

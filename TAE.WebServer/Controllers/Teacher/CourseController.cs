@@ -14,7 +14,7 @@ namespace TAE.WebServer.Controllers.Teacher
     /// <summary>
     /// 教师端（课程管理，课程编辑...）
     /// </summary>
-    public class CourseController : BaseApiController
+    public class CourseController : TeacherApiController
     {
         /// <summary>
         /// 获取我创建的所有课程
@@ -60,6 +60,8 @@ namespace TAE.WebServer.Controllers.Teacher
         [HttpPost]
         public async Task<HttpResponseMessage> SubVideo()
         {
+            //获取ppt对应的TypeId
+            string typeId = ServiceBase.FindBy<TAE.Data.Model.Type>(m => m.TypeGroup == (int)TypeEnum.CourseAccessory && m.TypeName == "video").Select(m => m.Id).FirstOrDefault();
             // 是否请求包含multipart/form-data。
             if (!Request.Content.IsMimeMultipartContent())
             {
@@ -69,22 +71,30 @@ namespace TAE.WebServer.Controllers.Teacher
             await Request.Content.ReadAsMultipartAsync(provider);
             Video video = new Video
             {
-                Id = provider.FormData.GetValues("Id").FirstOrDefault(),
+                //Id = provider.FormData.GetValues("Id").FirstOrDefault(),
                 Name = provider.FormData.GetValues("Name").FirstOrDefault(),
                 Description = provider.FormData.GetValues("Description").FirstOrDefault(),
                 //是否公开，0表示否
                 IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
                 IsDel = false
             };
-            video = ServiceBase.SaveEntity<Video>(video);
-
+            if (string.IsNullOrEmpty(provider.FormData.GetValues("Id").FirstOrDefault()))
+            {
+                video = ServiceBase.Insert<Video>(video);
+            }
+            else
+            {
+                video.Id = provider.FormData.GetValues("Id").FirstOrDefault(); 
+                video = ServiceBase.Update<Video>(video);
+            }
             //文件保存
             var fileList = UploadHelper.uploadFile(provider);
             foreach (var item in fileList)
             {
                 item.FileType = Convert.ToInt32(FileTypeEnum.Vedio); ;
                 //获取业务类型，此处的值为TypeId（Type表中，TypeGroup为TypeEnum.CourseAccessory，TypeName为"PPT"的列的Id）
-                item.BusinessType = provider.FormData.GetValues("CourseAccessory").FirstOrDefault();
+                //item.BusinessType = provider.FormData.GetValues("CourseAccessory").FirstOrDefault();
+                item.BusinessType = typeId;
                 item.LinkId = video.Id;
                 item.UploadUserId = LoginUser.UserInfo.Id;
                 item.CompanyId = LoginUser.UserInfo.CompanyId;
@@ -101,6 +111,7 @@ namespace TAE.WebServer.Controllers.Teacher
         [HttpPost]
         public async Task<HttpResponseMessage> SubPowerPoint()
         {
+            //获取ppt对应的TypeId
             string typeId = ServiceBase.FindBy<TAE.Data.Model.Type>(m => m.TypeGroup == (int)TypeEnum.CourseAccessory && m.TypeName == "PPT").Select(m => m.Id).FirstOrDefault();
             // 是否请求包含multipart/form-data。
             if (!Request.Content.IsMimeMultipartContent())
@@ -111,14 +122,20 @@ namespace TAE.WebServer.Controllers.Teacher
             await Request.Content.ReadAsMultipartAsync(provider);
             PowerPoint ppt = new PowerPoint
             {
-                //Id = provider.FormData.GetValues("Id").FirstOrDefault(),
                 Name = provider.FormData.GetValues("Name").FirstOrDefault(),
                 //是否公开，0表示否
                 IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
                 IsDel = false,
             };
-            ppt = ServiceBase.Insert<PowerPoint>(ppt);
-
+            if (string.IsNullOrEmpty(provider.FormData.GetValues("Id").FirstOrDefault()))
+            {
+                ppt = ServiceBase.Insert<PowerPoint>(ppt);
+            }
+            else
+            {
+                ppt.Id = provider.FormData.GetValues("Id").FirstOrDefault();
+                ppt = ServiceBase.Update<PowerPoint>(ppt);
+            }
             //文件保存
             var fileList = UploadHelper.uploadFile(provider);
             foreach (var item in fileList)

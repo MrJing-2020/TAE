@@ -50,6 +50,8 @@ namespace TAE.Data.Entity
         //public DbSet<TestQuestion> TestQuestion { get; set; }
         //public DbSet<TestPaper> TestPaper { get; set; }
         //public DbSet<Examination> Examination { get; set; }
+        public DbSet<QuestionAndAnswer> QuestionAndAnswer { get; set; }
+        public DbSet<InviteAnswer> InviteAnswer { get; set; }
 
         public DbSet<UserRCourse> UserRCourse { get; set; }
         public DbSet<Notification> Notification { get; set; }

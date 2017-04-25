@@ -187,6 +187,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Upload\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Common\AutoMapper\ConfigurationAutoMapper.cs" />
     <Compile Include="Common\BaseApiController.cs" />
     <Compile Include="Common\BaseController.cs" />
+    <Compile Include="Common\TeacherApiController.cs" />
     <Compile Include="Common\Upload\UploadHelper.cs" />
     <Compile Include="Controllers\Admin\AuthorityController.cs" />
     <Compile Include="Controllers\Admin\FileManagerController.cs" />
@@ -207,8 +209,12 @@
     <Compile Include="Controllers\Admin\MenuManagerController.cs" />
     <Compile Include="Controllers\Admin\OrganizationController.cs" />
     <Compile Include="Controllers\Admin\RoleManagerController.cs" />
-    <Compile Include="Controllers\Stutent\CourseController.cs" />
+    <Compile Include="Controllers\Stutent\MainController.cs" />
+    <Compile Include="Controllers\Stutent\MyCenterController.cs" />
+    <Compile Include="Controllers\Stutent\QuestionController.cs" />
     <Compile Include="Controllers\Teacher\CourseController.cs" />
+    <Compile Include="Controllers\Teacher\MyCenterController.cs" />
+    <Compile Include="Controllers\Teacher\QuestionController.cs" />
     <Compile Include="Controllers\Teacher\TeachingPlanController.cs" />
     <Compile Include="Controllers\Admin\UserManagerController.cs" />
     <Compile Include="Controllers\ApiDoc\DocumentController.cs" />

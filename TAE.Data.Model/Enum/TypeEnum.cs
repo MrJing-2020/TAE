@@ -18,6 +18,8 @@ namespace TAE.Data.Model
         //3表示课程附件(ppt,vedio等)
         CourseAccessory = 3,
         //教师类型
-        Teacher = 4
+        Teacher = 4,
+        //用户头像（教师头像，普通用户头像）
+        UserPhoto = 5
     }
 }

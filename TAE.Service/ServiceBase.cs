@@ -143,6 +143,13 @@ namespace TAE.Service
             return true;
         }
 
+        public bool DelFile(FilesInfo model)
+        {
+            this.Remove<FilesInfo>(model);
+            File.Delete(model.AbsolutePath);
+            return true;
+        }
+
         public new void Dispose()
         {
             base.Dispose();

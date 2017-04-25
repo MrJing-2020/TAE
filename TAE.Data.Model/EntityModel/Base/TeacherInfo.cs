@@ -17,5 +17,7 @@ namespace TAE.Data.Model
         //教师类型（例：语文，数学老师）
         public string TypeId { get; set; }
         public string Introduction { get; set; }
+        public bool IsRecommend { get; set; }
+        public string PhotoUrl { get; set; }
     }
 }

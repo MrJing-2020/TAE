@@ -74,7 +74,9 @@
     <Compile Include="EntityModel\Base\CourseSection.cs" />
     <Compile Include="EntityModel\Base\Examination.cs" />
     <Compile Include="EntityModel\Base\Handouts.cs" />
+    <Compile Include="EntityModel\Base\InviteAnswer.cs" />
     <Compile Include="EntityModel\Base\Notification.cs" />
+    <Compile Include="EntityModel\Base\QuestionAndAnswer.cs" />
     <Compile Include="EntityModel\Base\SudentInfo.cs" />
     <Compile Include="EntityModel\Base\TeacherInfo.cs" />
     <Compile Include="EntityModel\Base\TestPaper.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\OperationViewModel.cs" />
     <Compile Include="ViewModel\OrgnViewModel.cs" />
+    <Compile Include="ViewModel\QuestionViewModel.cs" />
     <Compile Include="ViewModel\RoleViewModel.cs" />
     <Compile Include="ViewModel\TreeModelView.cs" />
     <Compile Include="ViewModel\TreeStateModel.cs" />
