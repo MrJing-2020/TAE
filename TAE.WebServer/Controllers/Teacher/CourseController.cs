@@ -76,7 +76,9 @@ namespace TAE.WebServer.Controllers.Teacher
                 Description = provider.FormData.GetValues("Description").FirstOrDefault(),
                 //是否公开，0表示否
                 IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
-                IsDel = false
+                IsDel = false,
+                CourseId= provider.FormData.GetValues("CourseId").FirstOrDefault(),
+                CourseSectionId = provider.FormData.GetValues("CourseSectionId").FirstOrDefault()
             };
             if (string.IsNullOrEmpty(provider.FormData.GetValues("Id").FirstOrDefault()))
             {
@@ -126,6 +128,8 @@ namespace TAE.WebServer.Controllers.Teacher
                 //是否公开，0表示否
                 IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
                 IsDel = false,
+                CourseId = provider.FormData.GetValues("CourseId").FirstOrDefault(),
+                CourseSectionId = provider.FormData.GetValues("CourseSectionId").FirstOrDefault()
             };
             if (string.IsNullOrEmpty(provider.FormData.GetValues("Id").FirstOrDefault()))
             {

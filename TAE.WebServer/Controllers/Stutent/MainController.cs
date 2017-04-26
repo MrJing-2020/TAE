@@ -14,11 +14,11 @@ namespace TAE.WebServer.Controllers.Stutent
         /// <summary>
         /// 获取课程列表(未登录也可见)
         /// </summary>
-        /// <param name="param">categoryId:课程分类Id，name:课程名（模糊查询）</param>
+        /// <param name="param">categoryId:课程分类Id，name:课程名（模糊查询）typeId:课程类型（公共，选修，必修）</param>
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
-        public HttpResponseMessage GetCourses(string categoryId = "", string name = "")
+        public HttpResponseMessage GetCourses(string categoryId = "", string name = "",string typeId= "")
         {
             List<Course> list = new List<Course>();
             if (categoryId != "")
@@ -28,6 +28,10 @@ namespace TAE.WebServer.Controllers.Stutent
             else if (name != "")
             {
                 list = ServiceBase.FindBy<Course>(m => m.Name == name && m.IsPublic == true).ToList();
+            }
+            else if (typeId != "")
+            {
+                list = ServiceBase.FindBy<Course>(m => m.TypeId == typeId && m.IsPublic == true).ToList();
             }
             else
             {
@@ -113,6 +117,29 @@ namespace TAE.WebServer.Controllers.Stutent
         public HttpResponseMessage GetVideo(string id)
         {
             var list = ServiceBase.FindBy<Video>(m => m.CourseSectionId == id).ToList();
+            return Response(list);
+        }
+
+        /// <summary>
+        /// 获取课程分类
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage CourseCategory()
+        {
+            var list = ServiceBase.FindBy<CourseCategory>().ToList();
+            return Response(list);
+        }
+
+        /// <summary>
+        /// 获取课程的类型（公共，选修，必修）
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage AllCourseType()
+        {
+            int courseType = Convert.ToInt32(TypeEnum.Course);
+            var list = ServiceApiDoc.FindBy<Data.Model.Type>(m => m.TypeGroup == courseType).ToList();
             return Response(list);
         }
     }

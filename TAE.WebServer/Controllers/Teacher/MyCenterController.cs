@@ -12,7 +12,7 @@ using TAE.WebServer.Common.Upload;
 namespace TAE.WebServer.Controllers.Teacher
 {
     /// <summary>
-    /// 教师端个人中心
+    /// 教师个人中心
     /// </summary>
     public class MyCenterController : TeacherApiController
     {
@@ -66,6 +66,7 @@ namespace TAE.WebServer.Controllers.Teacher
             ServiceBase.Insert<FilesInfo>(fileList);
             var myInfo = ServiceBase.FindBy<TeacherInfo>(m => m.UserId == LoginUser.UserInfo.Id).FirstOrDefault();
             myInfo.PhotoUrl = fileList.FirstOrDefault().RelativePath;
+            ServiceBase.Update<TeacherInfo>(myInfo);
             return Response(new { url = myInfo.PhotoUrl });
         }
     }

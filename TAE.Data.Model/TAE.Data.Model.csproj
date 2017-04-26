@@ -78,7 +78,6 @@
     <Compile Include="EntityModel\Base\Notification.cs" />
     <Compile Include="EntityModel\Base\QuestionAndAnswer.cs" />
     <Compile Include="EntityModel\Base\StudentInfo.cs" />
-    <Compile Include="EntityModel\Base\SudentInfo.cs" />
     <Compile Include="EntityModel\Base\TeacherInfo.cs" />
     <Compile Include="EntityModel\Base\TestPaper.cs" />
     <Compile Include="EntityModel\Base\Video.cs" />

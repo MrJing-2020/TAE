@@ -104,6 +104,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -201,6 +202,7 @@
     <Compile Include="Common\AutoMapper\ConfigurationAutoMapper.cs" />
     <Compile Include="Common\BaseApiController.cs" />
     <Compile Include="Common\BaseController.cs" />
+    <Compile Include="Common\StudentApiController.cs" />
     <Compile Include="Common\TeacherApiController.cs" />
     <Compile Include="Common\Upload\UploadHelper.cs" />
     <Compile Include="Controllers\Admin\AuthorityController.cs" />
@@ -239,7 +241,9 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

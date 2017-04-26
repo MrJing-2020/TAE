@@ -42,6 +42,7 @@ namespace TAE.Data.Entity
         public DbSet<CourseCategory> CourseCategory { get; set; }
         public DbSet<CourseSection> CourseSection { get; set; }
         public DbSet<TeacherInfo> TeacherInfo { get; set; }
+        public DbSet<StudentInfo> StudentInfo { get; set; }
         public DbSet<Video> Video { get; set; }
         public DbSet<PowerPoint> PowerPoint { get; set; }
         public DbSet<Handouts> Handouts { get; set; }
@@ -50,7 +51,6 @@ namespace TAE.Data.Entity
         //public DbSet<Examination> Examination { get; set; }
         public DbSet<QuestionAndAnswer> QuestionAndAnswer { get; set; }
         public DbSet<InviteAnswer> InviteAnswer { get; set; }
-
         public DbSet<UserRCourse> UserRCourse { get; set; }
         public DbSet<Notification> Notification { get; set; }
 
