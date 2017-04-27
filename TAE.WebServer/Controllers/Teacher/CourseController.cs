@@ -155,6 +155,17 @@ namespace TAE.WebServer.Controllers.Teacher
             }
             ServiceBase.Insert<FilesInfo>(fileList);
             return Response();
-        } 
+        }
+
+        /// <summary>
+        /// 保存课件（讲义）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage SubHandouts(Handouts model)
+        {
+            ServiceBase.SaveEntity<Handouts>(model);
+            return Response();
+        }
     }
 }

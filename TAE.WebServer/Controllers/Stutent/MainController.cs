@@ -9,6 +9,7 @@ using TAE.WebServer.Common;
 
 namespace TAE.WebServer.Controllers.Stutent
 {
+    [AllowAnonymous]
     public class MainController : BaseApiController
     {
         /// <summary>
@@ -16,28 +17,42 @@ namespace TAE.WebServer.Controllers.Stutent
         /// </summary>
         /// <param name="param">categoryId:课程分类Id，name:课程名（模糊查询）typeId:课程类型（公共，选修，必修）</param>
         /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet]
-        public HttpResponseMessage GetCourses(string categoryId = "", string name = "",string typeId= "")
+        [HttpPost]
+        public HttpResponseMessage GetCourses(dynamic param)
         {
-            List<Course> list = new List<Course>();
-            if (categoryId != "")
+            PageList<Course> pageList = new PageList<Course>();
+            RequestArg arg = new RequestArg()
             {
-                list = ServiceBase.FindBy<Course>(m => m.CategoryId == categoryId && m.IsPublic == true).ToList();
+                PageNumber = Convert.ToInt32(param.pageNumber),
+                PageSize = Convert.ToInt32(param.pageSize),
+            };
+            if (!string.IsNullOrEmpty(param.categoryId.ToString()))
+            {
+                string categoryId = param.categoryId.ToString();
+                pageList = ServiceBase.FindAllByPage<Course>(m => m.CategoryId == categoryId && m.IsPublic == true,arg);
             }
-            else if (name != "")
+            else if (!string.IsNullOrEmpty(param.name.ToString()))
             {
-                list = ServiceBase.FindBy<Course>(m => m.Name == name && m.IsPublic == true).ToList();
+                string name = param.name.ToString();
+                pageList = ServiceBase.FindAllByPage<Course>(m => m.Name == name && m.IsPublic == true,arg);
             }
-            else if (typeId != "")
+            else if (!string.IsNullOrEmpty(param.typeId.ToString()))
             {
-                list = ServiceBase.FindBy<Course>(m => m.TypeId == typeId && m.IsPublic == true).ToList();
+                string typeId = param.typeId.ToString();
+                pageList = ServiceBase.FindAllByPage<Course>(m => m.TypeId == typeId && m.IsPublic == true,arg);
             }
             else
             {
-                list = ServiceBase.FindBy<Course>(m => m.IsPublic == true).ToList();
+                pageList = ServiceBase.FindAllByPage<Course>(m=>m.IsPublic==true, arg);
+            };
+            if (pageList.Total == 0)
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
             }
-            return Response(list);
+            else
+            {
+                return Response(pageList);
+            }
         }
 
         /// <summary>
@@ -90,9 +105,17 @@ namespace TAE.WebServer.Controllers.Stutent
         /// <param name="id">章节Id</param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetHandouts(string id)
+        public HttpResponseMessage GetHandouts(string id, bool isWholeCourse= false)
         {
-            var list = ServiceBase.FindBy<Handouts>(m => m.CourseSectionId == id).ToList();
+            List<Handouts> list = new List<Handouts>();
+            if (isWholeCourse == false)
+            {
+                list = ServiceBase.FindBy<Handouts>(m => m.CourseSectionId == id).ToList();
+            }
+            else
+            {
+                list = ServiceBase.FindBy<Handouts>(m => m.CourseId == id).ToList();
+            }
             return Response(list);
         }
 
@@ -102,9 +125,17 @@ namespace TAE.WebServer.Controllers.Stutent
         /// <param name="id">章节Id</param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetPPT(string id)
+        public HttpResponseMessage GetPPT(string id, bool isWholeCourse = false)
         {
-            var list = ServiceBase.FindBy<PowerPoint>(m => m.CourseSectionId == id).ToList();
+            List<PowerPoint> list = new List<PowerPoint>();
+            if (isWholeCourse == false)
+            {
+                list = ServiceBase.FindBy<PowerPoint>(m => m.CourseSectionId == id).ToList();
+            }
+            else
+            {
+                list = ServiceBase.FindBy<PowerPoint>(m => m.CourseId == id).ToList();
+            }
             return Response(list);
         }
 
@@ -114,9 +145,29 @@ namespace TAE.WebServer.Controllers.Stutent
         /// <param name="id">章节Id</param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage GetVideo(string id)
+        public HttpResponseMessage GetVideo(string id, bool isWholeCourse = false)
         {
-            var list = ServiceBase.FindBy<Video>(m => m.CourseSectionId == id).ToList();
+            List<Video> list = new List<Video>();
+            if (isWholeCourse == false)
+            {
+                list = ServiceBase.FindBy<Video>(m => m.CourseSectionId == id).ToList();
+            }
+            else
+            {
+                list = ServiceBase.FindBy<Video>(m => m.CourseId == id).ToList();
+            }
+            return Response(list);
+        }
+
+        /// <summary>
+        /// 通过id获取文件信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public HttpResponseMessage GetFileInfo(string id)
+        {
+            var list = ServiceBase.FindBy<FilesInfo>(m => m.LinkId == id);
             return Response(list);
         }
 
@@ -139,7 +190,8 @@ namespace TAE.WebServer.Controllers.Stutent
         public HttpResponseMessage AllCourseType()
         {
             int courseType = Convert.ToInt32(TypeEnum.Course);
-            var list = ServiceApiDoc.FindBy<Data.Model.Type>(m => m.TypeGroup == courseType).ToList();
+            string sqlGetAllCourseType = @"select * from Type where TypeGroup = " + courseType;
+            var list = ServiceBase.FindBy<Data.Model.Type>(sqlGetAllCourseType).ToList();
             return Response(list);
         }
     }

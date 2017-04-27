@@ -78,6 +78,10 @@ namespace TAE.Repository
         {
             Context.Update<T>(entitis);
         }
+        public void Update<T>(IEnumerable<T> entitis) where T : class
+        {
+            Context.Update<T>(entitis);
+        }
         public T SaveEntity<T>(T entity) where T : BaseModel
         {
             if (!string.IsNullOrEmpty(entity.Id))

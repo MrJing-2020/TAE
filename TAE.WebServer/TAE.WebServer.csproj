@@ -206,11 +206,13 @@
     <Compile Include="Common\TeacherApiController.cs" />
     <Compile Include="Common\Upload\UploadHelper.cs" />
     <Compile Include="Controllers\Admin\AuthorityController.cs" />
+    <Compile Include="Controllers\Admin\ComTypeController.cs" />
     <Compile Include="Controllers\Admin\FileManagerController.cs" />
     <Compile Include="Controllers\Admin\FlowManagerController.cs" />
     <Compile Include="Controllers\Admin\MenuManagerController.cs" />
     <Compile Include="Controllers\Admin\OrganizationController.cs" />
     <Compile Include="Controllers\Admin\RoleManagerController.cs" />
+    <Compile Include="Controllers\Admin\TeacherController.cs" />
     <Compile Include="Controllers\Stutent\MainController.cs" />
     <Compile Include="Controllers\Stutent\MyCenterController.cs" />
     <Compile Include="Controllers\Stutent\QuestionController.cs" />

@@ -93,6 +93,16 @@ namespace TAE.Data.Entity
             }
             this.SaveChanges();
         }
+        public void Update<T>(IEnumerable<T> entitis) where T : class
+        {
+            var set = this.Set<T>();
+            foreach (var item in entitis)
+            {
+                set.Attach(item);
+                this.Entry<T>(item).State = EntityState.Modified;
+            }
+            this.SaveChanges();
+        }
 
         public T Insert<T>(T entity) where T : class
         {

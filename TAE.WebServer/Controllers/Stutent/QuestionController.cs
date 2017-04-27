@@ -20,18 +20,24 @@ namespace TAE.WebServer.Controllers.Stutent
         /// <param name="onlyAboutMy"></param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage AllMyQuestion(bool onlyAboutMy = false)
+        public HttpResponseMessage AllMyQuestion(int pageNumber=1, int pageSize=10,bool onlyAboutMy = false)
         {
-            List<QuestionAndAnswer> list = new List<QuestionAndAnswer>();
+            RequestArg arg = new RequestArg()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
+            PageList<QuestionAndAnswer> pageList = new PageList<QuestionAndAnswer>();
             List<QuestionViewModel> listResult = new List<QuestionViewModel>();
             if (onlyAboutMy == false)
             {
-                list = ServiceBase.FindBy<QuestionAndAnswer>().ToList();
+                pageList = ServiceBase.FindAllByPage<QuestionAndAnswer>(arg);
             }
             else
             {
-                list = ServiceBase.FindBy<QuestionAndAnswer>(m=>m.UserId==LoginUser.UserInfo.Id).ToList();
+                pageList = ServiceBase.FindAllByPage<QuestionAndAnswer>(m=>m.UserId==LoginUser.UserInfo.Id,arg);
             }
+            List<QuestionAndAnswer> list = pageList.DataList.ToList();
             foreach (var item in list)
             {
                 QuestionViewModel question = new QuestionViewModel
@@ -49,7 +55,7 @@ namespace TAE.WebServer.Controllers.Stutent
         }
 
         /// <summary>
-        /// 提问或回答问题
+        /// 提出或回答问题
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>

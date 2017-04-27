@@ -67,6 +67,7 @@
     <Compile Include="Base\CourseAccBaseModel.cs" />
     <Compile Include="Common\LoginUser.cs" />
     <Compile Include="Common\OneParam.cs" />
+    <Compile Include="Common\OneParamList.cs" />
     <Compile Include="EntityModel\Base\ClassInfo.cs" />
     <Compile Include="EntityModel\Base\Company.cs" />
     <Compile Include="EntityModel\Base\Course.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="ViewModel\OrgnViewModel.cs" />
     <Compile Include="ViewModel\QuestionViewModel.cs" />
     <Compile Include="ViewModel\RoleViewModel.cs" />
+    <Compile Include="ViewModel\TeacherBind.cs" />
     <Compile Include="ViewModel\TreeModelView.cs" />
     <Compile Include="ViewModel\TreeStateModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
