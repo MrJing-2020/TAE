@@ -12,5 +12,6 @@ namespace TAE.Data.Model
         public string Name { get; set; }
         public int Step { get; set; }
         public string DefualtAuditUserId { get; set; }
+        public int AuditUserCount { get; set; }
     }
 }

@@ -14,7 +14,25 @@ namespace TAE.WebServer.Common
         {
             get
             {
-                return ServiceBase.FindBy<StudentInfo>(m => m.UserId == LoginUser.UserInfo.Id).FirstOrDefault();
+                var studentinfo = ServiceBase.FindBy<StudentInfo>(m => m.UserId == LoginUser.UserInfo.Id).FirstOrDefault();
+                if (studentinfo == null)
+                {
+                    AppUser user = LoginUser.UserInfo;
+                    StudentInfo student = new StudentInfo
+                    {
+                        UserId = user.Id,
+                        NickName = "默认昵称",
+                        PhotoUrl = "",
+                        CompanyId = user.CompanyId,
+                        DepartmentId = user.DepartmentId
+                    };
+                    ServiceBase.Insert<StudentInfo>(student);
+                    return student;
+                }
+                else
+                {
+                    return studentinfo;
+                }
             }
         }
     }

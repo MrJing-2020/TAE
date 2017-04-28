@@ -34,7 +34,7 @@ namespace TAE.WebServer.Controllers.Stutent
             else if (!string.IsNullOrEmpty(param.name.ToString()))
             {
                 string name = param.name.ToString();
-                pageList = ServiceBase.FindAllByPage<Course>(m => m.Name == name && m.IsPublic == true,arg);
+                pageList = ServiceBase.FindAllByPage<Course>("select * from Course where Name like '%" + name + "%'", arg);
             }
             else if (!string.IsNullOrEmpty(param.typeId.ToString()))
             {
@@ -159,6 +159,40 @@ namespace TAE.WebServer.Controllers.Stutent
             return Response(list);
         }
 
+        [HttpPost]
+        public HttpResponseMessage GetVideoList(dynamic param)
+        {
+            PageList<Video> pageList = new PageList<Video>();
+            RequestArg arg = new RequestArg()
+            {
+                PageNumber = Convert.ToInt32(param.pageNumber),
+                PageSize = Convert.ToInt32(param.pageSize),
+            };
+            if (!string.IsNullOrEmpty(param.categoryId.ToString()))
+            {
+                string categoryId = param.categoryId.ToString();
+                var coursesId = ServiceBase.FindBy<Course>(m => m.CategoryId == categoryId).Select(m => m.Id).ToArray();
+                pageList = ServiceBase.FindAllByPage<Video>(m => coursesId.Any(n => n == m.CourseId), arg);
+            }
+            else if (!string.IsNullOrEmpty(param.name.ToString()))
+            {
+                string name = param.name.ToString();
+                pageList = ServiceBase.FindAllByPage<Video>("select * from Video where Name like '%" + name + "%'", arg);
+            }
+            else
+            {
+                pageList = ServiceBase.FindAllByPage<Video>(m => m.IsPublic == true, arg);
+            };
+            if (pageList.Total == 0)
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+            else
+            {
+                return Response(pageList);
+            }
+        }
+
         /// <summary>
         /// 通过id获取文件信息
         /// </summary>
@@ -178,7 +212,8 @@ namespace TAE.WebServer.Controllers.Stutent
         [HttpGet]
         public HttpResponseMessage CourseCategory()
         {
-            var list = ServiceBase.FindBy<CourseCategory>().ToList();
+            var list = ServiceBase.FindBy<CourseCategory>("select * from CourseCategory order by LastModifiedTime").ToList();
+            
             return Response(list);
         }
 

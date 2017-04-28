@@ -9,6 +9,7 @@ namespace TAE.WebServer.Controllers.Admin
 {
     using System.Data.SqlClient;
     using TAE.Data.Model;
+    using TAE.Data.Model.ViewModel;
     using TAE.WebServer.Common;
     public class FlowManagerController : BaseApiController
     {
@@ -59,7 +60,31 @@ namespace TAE.WebServer.Controllers.Admin
             string sqlGetAll = sqlGetFlow;
             return GetDataList<FlowViewModel>(param, sqlGetAll);
         }
-
+        [HttpGet]
+        public HttpResponseMessage DepUser(string id)
+        {
+            var list = new List<DepUserViewModel>();
+            var dep = ServiceBase.FindBy<Department>(s => s.CompanyId == id).ToList();
+            foreach (var item in dep)
+            {
+                DepUserViewModel depu = new DepUserViewModel();
+                depu.Id = item.Id;
+                depu.DepartName = item.DepartName;
+                string sql = "select Id,CompanyId,DepartmentId,PositionId,RealName from AspNetUsers where DepartmentId = @DepID";
+                SqlParameter parameter = new SqlParameter("@DepID", item.Id);
+                depu.UserAuditViewModel = ServiceBase.FindBy<UserAuditViewModel>(sql,parameter).ToList();
+                var workflow = ServiceBase.FindBy<WorkFlowDetail>(s => s.DepartmentId == item.Id).ToList();
+                foreach (var k in workflow)
+                {
+                    if(k.DefualtAuditUserId==depu.UserAuditViewModel.FirstOrDefault().Id)
+                    {
+                        depu.UserAuditViewModel.FirstOrDefault().IsAudit = true;
+                    }
+                }
+                list.Add(depu);
+            }
+            return Response(list);
+        }
         [HttpPost]
         public HttpResponseMessage AllFlowAndDetails(dynamic param)
         {
@@ -111,7 +136,9 @@ namespace TAE.WebServer.Controllers.Admin
         public HttpResponseMessage GetFlowDetail(string id)
         {
             var flowDetail = ServiceBase.FindBy<WorkFlowDetail>(m => m.Id == id).FirstOrDefault();
-            return Response(flowDetail);
+            var wfid = ServiceBase.FindBy<WorkFlowDetail>(s => s.Step == flowDetail.Step && s.WorkFlowId==flowDetail.WorkFlowId).Select(s=>s.Id).ToArray();
+            var list = ServiceBase.FindBy<WorkFlowDetail>(s => wfid.Contains(s.Id)).ToList();
+            return Response(list);
         }
 
         [HttpPost]
@@ -122,33 +149,35 @@ namespace TAE.WebServer.Controllers.Admin
         }
 
         [HttpPost]
-        public HttpResponseMessage SubFlowDetail(WorkFlowDetail flowDetail)
+        public HttpResponseMessage SubFlowDetail(List<WorkFlowDetail> flowDetail)
         {
-            if(flowDetail.Id!="")
+            var WorkFid = flowDetail.FirstOrDefault().WorkFlowId;
+            var list = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.WorkFlowId == WorkFid).ToList();
+            if(list.Count==0)
             {
-                ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
+                foreach (var item in flowDetail)
+                {
+                    item.DepartmentId = ServiceIdentity.FindUser(s => s.Id == item.DefualtAuditUserId).FirstOrDefault().DepartmentId;
+                    ServiceBase.SaveEntity<WorkFlowDetail>(item);
+                }
             }
             else
             {
-                var WorkFid = flowDetail.WorkFlowId;
-                var list = ServiceBase.FindBy<WorkFlowDetail>().Where(s => s.WorkFlowId == WorkFid).ToList();
-                if (list.Count == 0)
+                var step = flowDetail.FirstOrDefault().Step;
+                foreach (var item in list)
                 {
-                    ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
-                }
-                else
-                {
-                    foreach (var item in list)
+                    if(item.Step>step)
                     {
-                        if (item.Step > flowDetail.Step)
-                        {
-                            var FirList = ServiceBase.FindBy<WorkFlowDetail>(s => s.Id == item.Id).FirstOrDefault();
-                            FirList.Step = FirList.Step + 1;
-                            ServiceBase.Update<WorkFlowDetail>(FirList);
-                        }
+                        var FirList = ServiceBase.FindBy<WorkFlowDetail>(s => s.Id == item.Id).FirstOrDefault();
+                        FirList.Step = FirList.Step + 1;
+                        ServiceBase.Update<WorkFlowDetail>(FirList);
                     }
-                    flowDetail.Step = flowDetail.Step + 1;
-                    this.ServiceBase.SaveEntity<WorkFlowDetail>(flowDetail);
+                }
+                foreach (var item in flowDetail)
+                {
+                    item.DepartmentId = ServiceIdentity.FindUser(s => s.Id == item.DefualtAuditUserId).FirstOrDefault().DepartmentId;
+                    item.Step = item.Step + 1;
+                    this.ServiceBase.SaveEntity<WorkFlowDetail>(item);
                 }
             }
             return Response();

@@ -20,24 +20,30 @@ namespace TAE.WebServer.Controllers.Stutent
         /// <param name="onlyAboutMy"></param>
         /// <returns></returns>
         [HttpGet]
-        public HttpResponseMessage AllMyQuestion(int pageNumber=1, int pageSize=10,bool onlyAboutMy = false)
+        public HttpResponseMessage AllMyQuestion(int pageNumber = 1, int pageSize = 10, bool onlyAboutMy = false)
         {
             RequestArg arg = new RequestArg()
             {
                 PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageSize = pageSize
             };
             PageList<QuestionAndAnswer> pageList = new PageList<QuestionAndAnswer>();
-            List<QuestionViewModel> listResult = new List<QuestionViewModel>();
             if (onlyAboutMy == false)
             {
-                pageList = ServiceBase.FindAllByPage<QuestionAndAnswer>(arg);
+                pageList = ServiceBase.FindAllByPage<QuestionAndAnswer>(m => m.IsQuestion == true, arg);
             }
             else
             {
-                pageList = ServiceBase.FindAllByPage<QuestionAndAnswer>(m=>m.UserId==LoginUser.UserInfo.Id,arg);
+                pageList = ServiceBase.FindAllByPage<QuestionAndAnswer>(m => m.UserId == LoginUser.UserInfo.Id && m.IsQuestion == true, arg);
             }
+            PageList<QuestionViewModel> pageListResult = new PageList<QuestionViewModel>
+            {
+                PageNumber = pageList.PageNumber,
+                PageSize = pageList.PageSize,
+                Total = pageList.Total
+            };
             List<QuestionAndAnswer> list = pageList.DataList.ToList();
+            List<QuestionViewModel> listDataResult = new List<QuestionViewModel>();
             foreach (var item in list)
             {
                 QuestionViewModel question = new QuestionViewModel
@@ -49,9 +55,10 @@ namespace TAE.WebServer.Controllers.Stutent
                 {
                     question.Answer.Add(item1);
                 }
-                listResult.Add(question);
+                listDataResult.Add(question);
             }
-            return Response(listResult);
+            pageListResult.DataList = listDataResult.AsQueryable<QuestionViewModel>();
+            return Response(pageListResult);
         }
 
         /// <summary>
