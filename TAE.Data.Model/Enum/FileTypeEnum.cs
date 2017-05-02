@@ -17,6 +17,7 @@ namespace TAE.Data.Model
         Pdf=5,
         Txt=6,
         //视频
-        Vedio=7
+        Vedio=7,
+        Other=8
     }
 }

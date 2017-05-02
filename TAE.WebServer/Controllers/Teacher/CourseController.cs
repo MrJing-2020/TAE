@@ -167,5 +167,57 @@ namespace TAE.WebServer.Controllers.Teacher
             ServiceBase.SaveEntity<Handouts>(model);
             return Response();
         }
+
+        /// <summary>
+        /// 保存课件（讲义和讲义附件）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<HttpResponseMessage> SubHandoutsAndFile()
+        {
+            //获取ppt对应的TypeId
+            string typeId = ServiceBase.FindBy<TAE.Data.Model.Type>(m => m.TypeGroup == (int)TypeEnum.CourseAccessory && m.TypeName == "Handouts").Select(m => m.Id).FirstOrDefault();
+            // 是否请求包含multipart/form-data。
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+            var provider = new MultipartFormDataStreamProvider(UploadHelper.UploadPath);
+            await Request.Content.ReadAsMultipartAsync(provider);
+            Handouts handdouts = new Handouts
+            {
+                Name = provider.FormData.GetValues("Name").FirstOrDefault(),
+                //是否公开，0表示否
+                IsPublic = provider.FormData.GetValues("IsPublic").FirstOrDefault() == "0" ? false : true,
+                IsDel = false,
+                CourseId = provider.FormData.GetValues("CourseId").FirstOrDefault(),
+                CourseSectionId = provider.FormData.GetValues("CourseSectionId").FirstOrDefault(),
+                MainContent = provider.FormData.GetValues("MainContent").FirstOrDefault()
+            };
+            if (string.IsNullOrEmpty(provider.FormData.GetValues("Id").FirstOrDefault()))
+            {
+                handdouts = ServiceBase.Insert<Handouts>(handdouts);
+            }
+            else
+            {
+                handdouts.Id = provider.FormData.GetValues("Id").FirstOrDefault();
+                handdouts = ServiceBase.Update<Handouts>(handdouts);
+            }
+            //文件保存
+            var fileList = UploadHelper.uploadFile(provider);
+            foreach (var item in fileList)
+            {
+                item.FileType = Convert.ToInt32(FileTypeEnum.Other);
+                //获取业务类型，此处的值为TypeId（Type表中，TypeGroup为TypeEnum.CourseAccessory，TypeName为"Handouts"的列的Id）
+                //item.BusinessType = provider.FormData.GetValues("TypeId").FirstOrDefault();
+                item.BusinessType = typeId;
+                item.LinkId = handdouts.Id;
+                item.UploadUserId = LoginUser.UserInfo.Id;
+                item.CompanyId = LoginUser.UserInfo.CompanyId;
+                item.DepartmentId = LoginUser.UserInfo.DepartmentId;
+            }
+            ServiceBase.Insert<FilesInfo>(fileList);
+            return Response();
+        }
     }
 }

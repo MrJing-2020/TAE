@@ -55,10 +55,49 @@ namespace TAE.WebServer.Controllers.Stutent
                 {
                     question.Answer.Add(item1);
                 }
+                question.AnswerCount = question.Answer.Count();
                 listDataResult.Add(question);
             }
+
             pageListResult.DataList = listDataResult.AsQueryable<QuestionViewModel>();
             return Response(pageListResult);
+        }
+
+        /// <summary>
+        /// 获取问题详情（问题，回答，回答的回复数量）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>question:问题, answer:回答列表, answerCount:回答数量</returns>
+        [HttpGet]
+        public HttpResponseMessage GetQuestionDetail(string id)
+        {
+            var question = ServiceBase.FindBy<QuestionAndAnswer>(m => m.Id == id).FirstOrDefault();
+            var list = ServiceBase.FindBy<QuestionAndAnswer>(m => m.PreId == id).ToList();
+            var AllAnswerList = ServiceBase.FindBy<QuestionAndAnswer>(m => m.IsQuestion == false);
+            List<QuestionViewModel> AnswerList = new List<QuestionViewModel>();
+            foreach (var item in list)
+            {
+                QuestionViewModel answer = new QuestionViewModel();
+                //回答
+                answer.Question = item;
+                //回答的回复
+                answer.Answer = AllAnswerList.Where(m => m.PreId == item.Id).ToList();
+                //回复的数量
+                answer.AnswerCount = answer.Answer.Count();
+                AnswerList.Add(answer);
+            }
+            return Response(new { question = question, answer = AnswerList, answerCount = list.Count() });
+        }
+
+        /// <summary>
+        /// 获取回复列表
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public HttpResponseMessage GetAnswerReply(string id)
+        {
+            var replyList = ServiceBase.FindBy<QuestionAndAnswer>(m => m.PreId == id).ToList();
+            return Response(replyList);
         }
 
         /// <summary>

@@ -9,6 +9,9 @@ using TAE.WebServer.Common;
 
 namespace TAE.WebServer.Controllers.Stutent
 {
+    /// <summary>
+    /// 允许匿名访问
+    /// </summary>
     [AllowAnonymous]
     public class MainController : BaseApiController
     {
@@ -120,6 +123,45 @@ namespace TAE.WebServer.Controllers.Stutent
         }
 
         /// <summary>
+        /// 获取讲义列表
+        /// </summary>
+        /// <param name="param">categoryId:课程分类id，name：讲义名</param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage GetHandoutsList(dynamic param)
+        {
+            PageList<Handouts> pageList = new PageList<Handouts>();
+            RequestArg arg = new RequestArg()
+            {
+                PageNumber = Convert.ToInt32(param.pageNumber),
+                PageSize = Convert.ToInt32(param.pageSize),
+            };
+            if (!string.IsNullOrEmpty(param.categoryId.ToString()))
+            {
+                string categoryId = param.categoryId.ToString();
+                var coursesId = ServiceBase.FindBy<Course>(m => m.CategoryId == categoryId).Select(m => m.Id).ToArray();
+                pageList = ServiceBase.FindAllByPage<Handouts>(m => coursesId.Any(n => n == m.CourseId), arg);
+            }
+            else if (!string.IsNullOrEmpty(param.name.ToString()))
+            {
+                string name = param.name.ToString();
+                pageList = ServiceBase.FindAllByPage<Handouts>("select * from Handouts where Name like '%" + name + "%'", arg);
+            }
+            else
+            {
+                pageList = ServiceBase.FindAllByPage<Handouts>(m => m.IsPublic == true, arg);
+            };
+            if (pageList.Total == 0)
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+            else
+            {
+                return Response(pageList);
+            }
+        }
+
+        /// <summary>
         /// 获取章节对应的PPT
         /// </summary>
         /// <param name="id">章节Id</param>
@@ -137,6 +179,45 @@ namespace TAE.WebServer.Controllers.Stutent
                 list = ServiceBase.FindBy<PowerPoint>(m => m.CourseId == id).ToList();
             }
             return Response(list);
+        }
+
+        /// <summary>
+        /// 获取PPT列表
+        /// </summary>
+        /// <param name="param">categoryId:课程分类id，name：PPT名</param>
+        /// <returns></returns>
+        [HttpPost]
+        public HttpResponseMessage GetPPTList(dynamic param)
+        {
+            PageList<PowerPoint> pageList = new PageList<PowerPoint>();
+            RequestArg arg = new RequestArg()
+            {
+                PageNumber = Convert.ToInt32(param.pageNumber),
+                PageSize = Convert.ToInt32(param.pageSize),
+            };
+            if (!string.IsNullOrEmpty(param.categoryId.ToString()))
+            {
+                string categoryId = param.categoryId.ToString();
+                var coursesId = ServiceBase.FindBy<Course>(m => m.CategoryId == categoryId).Select(m => m.Id).ToArray();
+                pageList = ServiceBase.FindAllByPage<PowerPoint>(m => coursesId.Any(n => n == m.CourseId), arg);
+            }
+            else if (!string.IsNullOrEmpty(param.name.ToString()))
+            {
+                string name = param.name.ToString();
+                pageList = ServiceBase.FindAllByPage<PowerPoint>("select * from PowerPoint where Name like '%" + name + "%'", arg);
+            }
+            else
+            {
+                pageList = ServiceBase.FindAllByPage<PowerPoint>(m => m.IsPublic == true, arg);
+            };
+            if (pageList.Total == 0)
+            {
+                return Response(HttpStatusCode.NoContent, new { msg = "没有任何信息" });
+            }
+            else
+            {
+                return Response(pageList);
+            }
         }
 
         /// <summary>
@@ -159,6 +240,11 @@ namespace TAE.WebServer.Controllers.Stutent
             return Response(list);
         }
 
+        /// <summary>
+        /// 获取视频列表
+        /// </summary>
+        /// <param name="param">categoryId:课程分类id，name：视频名</param>
+        /// <returns></returns>
         [HttpPost]
         public HttpResponseMessage GetVideoList(dynamic param)
         {

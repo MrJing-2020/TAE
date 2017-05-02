@@ -10,5 +10,6 @@ namespace TAE.Data.Model
     {
         public QuestionAndAnswer Question { get; set; }
         public List<QuestionAndAnswer> Answer { get; set; }
+        public int AnswerCount { get; set; }
     }
 }
